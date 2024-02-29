@@ -1,14 +1,18 @@
-import React from 'react'
-import BarChart from '../components/BarChart';
+import React, { useEffect, useState } from "react"
+import axios from "axios"
+import CancelledOrders from "../components/CancelledOrders"
+import TimeTake from "../components/TimeTaken"
+import {Box} from "@mui/material"
 
 const Orders = () => {
 
-    const [data, setData] = React.useState([])
-
-
   return (
+    <div>
 
-    <BarChart/>
+      <CancelledOrders/>
+      <Box m={4} />
+      <TimeTake/>
+     </div>
   )
 }
 

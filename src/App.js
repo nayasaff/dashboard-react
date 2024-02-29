@@ -1,22 +1,16 @@
-import logo from './logo.svg';
 import './App.css';
 import Orders from './pages/Orders';
-import AppDrawer from './components/AppDrawer';
 import { ThemeProvider, createTheme } from '@mui/material';
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Link
-} from "react-router-dom";
+import { BrowserRouter as Router,Routes, Route, Link} from "react-router-dom";
 import Vendors from './pages/Vendors';
 import {SupervisorAccount, ShoppingCart, ContactPage} from '@mui/icons-material'
-import { AppBar, Box, CssBaseline, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography } from '@mui/material';
+import { AppBar, Box, CssBaseline, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar } from '@mui/material';
+
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#f12939'
+      main: '#17236A'
     },
     secondary: {
       main: '#f44336'
@@ -30,11 +24,13 @@ const drawerWidth = 240;
 const list =[
   {
     'name' : "Orders",
-    'icon' : <ShoppingCart/>
+    'icon' : <ShoppingCart/>,
+    "link" : "/"
   },
   {
     "name" : "Vendors",
-    'icon' : <SupervisorAccount/>
+    'icon' : <SupervisorAccount/>,
+    "link" : "/vendors"
   },
   {
     "name" : "Contact",
@@ -45,8 +41,10 @@ const list =[
 
 function App() {
   return (
+    
     <ThemeProvider theme={theme}>
       <Router>
+      
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <Drawer
@@ -56,33 +54,35 @@ function App() {
           '& .MuiDrawer-paper': {
             width: drawerWidth,
             boxSizing: 'border-box',
+            color: 'white',
+            backgroundColor: '#f44336'
           },
         }}
         variant="permanent"
         anchor="left"
       >
-        <Toolbar />
+        <Toolbar/>
         <Divider />
         <List>
           
           {list.map((text, index) => (
-            <ListItem key={index} disablePadding>
+            <Link key={index} to={text.link}>
+              <ListItem  disablePadding>
               <ListItemButton>
-                <ListItemIcon>
+                <ListItemIcon sx={{color : "white"}}>
                   {text.icon}
                 </ListItemIcon>
-                <ListItemText primary={text.name} />
+                <ListItemText sx={{color : "white" , textDecoration : "none"}} primary={text.name} />
               </ListItemButton>
             </ListItem>
+            </Link>
           ))}
         </List>
       </Drawer>
-      <AppBar color='secondary'>
-        <Toolbar>
-          <Typography variant="h6" noWrap component="div">
-            Permanent drawer
-          </Typography>
-        </Toolbar>
+      <AppBar style={{backgroundColor : "white"}}>
+        <div style={{display : "flex", justifyContent : "end", padding : '1rem 0'}}>
+
+        </div>
       </AppBar>
       <Box
         component="main"
@@ -97,8 +97,10 @@ function App() {
       </Box>
 
     </Box>
+  
     </Router>
     </ThemeProvider>
+    
   );
 }
 

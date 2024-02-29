@@ -24,3 +24,7 @@ code {
 .gap{
   gap : 2rem
 }
+
+a{
+  text-decoration: none;
+}

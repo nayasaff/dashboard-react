@@ -1,0 +1,94 @@
+import React, { useEffect, useState } from "react"
+import { Typography } from "@mui/material"
+import Plot from "react-plotly.js"
+
+const TimeTaken = () => {
+  const [data, setData] = useState()
+
+  useEffect(()=>{
+    fetch("http://localhost:5000/timeTaken")
+    .then(res=>res.json())
+    .then(data=>setData(data))
+    .catch(err=>console.log(err))
+  }, [])
+
+
+
+  if (!data) return <div>Loading...</div>
+  return (
+    <>
+      <Typography sx={{textAlign : "center"}} variant="h5" gutterBottom>
+        Time taken by each vendors to respond to the customer
+      </Typography>
+      <div className="center">
+      <Plot
+        data={[
+          {
+            y: data["average_time"]['averageTime'],
+            x: data["average_time"]['vendor_name'],
+            type: "bar", 
+            name: "Time Taken",
+            marker : {
+                color: "purple"
+            }
+          },
+        ]}
+        layout={{
+            title : 'Average Time',
+            width: 520,
+            height: 340,
+            yaxis: {
+              title: "Average Time Taken (in hours)",
+            },
+          }}
+      />
+            <Plot
+        data={[
+          {
+            y: data["maximum_time"]['maxTime'],
+            x: data["maximum_time"]['vendor_name'],
+            type: "bar", 
+            name: "Time Taken",
+            marker : {
+                color: "DarkRed"
+            }
+          },
+        ]}
+        layout={{
+            title : 'Maximum Time',
+            width: 520,
+            height: 340,
+            yaxis: {
+              title: "Average Time Taken (in hours)",
+            },
+          }}
+      />
+      </div>
+      <div className="center">
+      <Plot
+        data={[
+          {
+            y: data["minimum_time"]['minTime'],
+            x: data["minimum_time"]['vendor_name'],
+            type: "bar", 
+            name: "Time Taken",
+            marker : {
+                color: ""
+            }
+          },
+        ]}
+        layout={{
+            title : 'Minimum Time',
+            width: 520,
+            height: 340,
+            yaxis: {
+              title: "Average Time Taken (in hours)",
+            },
+          }}
+      />
+      </div>
+    </>
+  )
+}
+
+export default TimeTaken

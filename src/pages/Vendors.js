@@ -1,10 +1,78 @@
-import React from 'react'
+import axios from 'axios';
+import React, { useEffect, useState } from 'react'
+import Plot from "react-plotly.js";
+import { FormControl, InputLabel, Select, MenuItem, Typography , TextField, Stack } from '@mui/material';
+import { DatePicker } from '@mui/lab';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+
 
 const Vendors = () => {
-  return (
+
+  const [avgTime, setAvgTime] = useState([])
+  const [vendor, setVendor] = useState('')
+  const [fromDate, setFromDate] = useState()
+
+  useEffect(()=>{
+    const fetchData = ()=>{
+     axios.get("http://localhost:5000/averageTime")
+      .then(res => {
+        setAvgTime(res.data)
+        setVendor(Object.keys(res.data)[0])
+      })
+      .catch(err => console.log(err))
+    }
+
+    fetchData()
+  }, [])
+
+
+
+  if(!(avgTime && vendor)) return <div>Loading...</div>
+  else return (
+    
     <div>
-      
+      <div style={{display : "flex", alignItems : "center", gap : "1rem"}}>
+      <Typography variant="h4" gutterBottom>
+        Select vendor
+      </Typography>
+      <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+        <InputLabel id="demo-simple-select-label">Vendor</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={vendor}
+          label="Vendor"
+          onChange={(e) => setVendor(e.target.value)}
+        >
+          {Object.keys(avgTime).map((vendor, index) => (
+            <MenuItem key={index} value={vendor}>{vendor}</MenuItem>
+          ))}
+
+        </Select>
+      </FormControl>
+      </div>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <Stack spacing={2} sx={{width : "250px"}}>
+      <DatePicker label="Date Picker"
+      renderInput={(params) => <TextField {...params} />}
+      value={fromDate}
+      onChange={(newValue) => setFromDate(newValue)}
+      />
+</Stack>
+</LocalizationProvider>
+     
+    <div className='center'>
+            <Plot
+      data={[
+        {type : "scatter",mode: "markers" ,x: Array.from({length: avgTime[vendor].length }, (_, i) => i + 1), y: avgTime[vendor], marker: {color: 'blue'}},
+      ]}
+      layout={{ title: `Hours taken for ${vendor} to accept order`, width: 420, height: 340 }}
+      />
+
     </div>
+    </div>
+   
   )
 }
 
