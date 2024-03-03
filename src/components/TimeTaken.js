@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from "react"
 import { Typography } from "@mui/material"
 import Plot from "react-plotly.js"
+import { useSelector } from "react-redux"
 
 const TimeTaken = () => {
   const [data, setData] = useState()
+  const state = useSelector((state) => state);
+  const {number, startDate, endDate} = state;
 
   useEffect(()=>{
-    fetch("http://localhost:5000/timeTaken")
+    fetch(`http://localhost:5000/timeTaken?number=${number}&startDate=${startDate.format('YYYY-MM-DD')}&endDate=${endDate.format('YYYY-MM-DD')}`)
     .then(res=>res.json())
     .then(data=>setData(data))
     .catch(err=>console.log(err))
-  }, [])
+  }, [number, startDate, endDate])
 
 
 

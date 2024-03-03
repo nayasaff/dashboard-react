@@ -1,7 +1,4 @@
 import {
-  Grid,
-  Item,
-  Paper,
   FormControl,
   Select,
   MenuItem,
@@ -11,65 +8,28 @@ import {
 import React, { useEffect, useState } from "react"
 import Plot from "react-plotly.js"
 import axios from "axios"
-import Slider, {
-} from "@mui/material/Slider"
-import { styled } from "@mui/material/styles"
+import { useSelector } from 'react-redux';
 
-const PrettoSlider = styled(Slider)({
-  color: "#52af77",
-  height: 6,
-  "& .MuiSlider-track": {
-    border: "none",
-  },
-  "& .MuiSlider-thumb": {
-    height: 20,
-    width: 20,
-    backgroundColor: "#fff",
-    border: "2px solid currentColor",
-    "&:focus, &:hover, &.Mui-active, &.Mui-focusVisible": {
-      boxShadow: "inherit",
-    },
-    "&::before": {
-      display: "none",
-    },
-  },
-  "& .MuiSlider-valueLabel": {
-    lineHeight: 1.2,
-    fontSize: 12,
-    background: "unset",
-    padding: 0,
-    width: 32,
-    height: 32,
-    borderRadius: "50% 50% 50% 0",
-    backgroundColor: "#52af77",
-    transformOrigin: "bottom left",
-    transform: "translate(50%, -100%) rotate(-45deg) scale(0)",
-    "&::before": { display: "none" },
-    "&.MuiSlider-valueLabelOpen": {
-      transform: "translate(50%, -100%) rotate(-45deg) scale(1)",
-    },
-    "& > *": {
-      transform: "rotate(45deg)",
-    },
-  },
-})
 
 const CancelledOrders = () => {
   const [data, setData] = useState()
   const [isAscending, setIsAscending] = useState(false)
-  const [number, setNumber] = useState(10)
+  const state = useSelector((state) => state);
+  const {number, startDate, endDate} = state;
+  console.log(number)
 
   useEffect(() => {
+    console.log(startDate)
     const fetchData = () => {
       axios
-        .get(`http://localhost:5000/cancelledOrder?isAscending=${isAscending}&number=${number}`)
+        .get(`http://localhost:5000/cancelledOrder?isAscending=${isAscending}&number=${number}&startDate=${startDate.format('YYYY-MM-DD')}&endDate=${endDate.format('YYYY-MM-DD')}` )
         .then((res) => {
           setData(res.data)
         })
         .catch((err) => console.log(err))
     }
     fetchData()
-  }, [isAscending, number])
+  }, [isAscending, number, startDate, endDate])
 
   if (!data) return <div>Loading...</div>
   return (
@@ -98,26 +58,7 @@ const CancelledOrders = () => {
             <MenuItem value={true}>Lowest</MenuItem>
           </Select>
         </FormControl>
-        <div
-          style={{
-            width: "10rem",
-            display: "flex",
-            alignItems: "center",
-            gap: "0.5rem",
-          }}
-        >
-          <span>0</span>{" "}
-          <PrettoSlider
-            valueLabelDisplay="auto"
-            aria-label="pretto slider"
-            defaultValue={10}
-            min={0}
-            max={25}
-            value={number}
-            onChange={(e) => setNumber(e.target.value)}
-          />
-          <span>25</span>
-        </div>
+
       </div>
       <div className="center">
         {" "}
