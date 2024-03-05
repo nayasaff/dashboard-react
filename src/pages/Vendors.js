@@ -5,6 +5,7 @@ import { FormControl, InputLabel, Select, MenuItem, Typography , TextField, Stac
 import { DatePicker } from '@mui/lab';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import AppContainer from '../components/AppContainer';
 
 
 const Vendors = () => {
@@ -31,7 +32,7 @@ const Vendors = () => {
   if(!(avgTime && vendor)) return <div>Loading...</div>
   else return (
     
-    <div>
+    <AppContainer>
       <div style={{display : "flex", alignItems : "center", gap : "1rem"}}>
       <Typography variant="h4" gutterBottom>
         Select vendor
@@ -52,15 +53,6 @@ const Vendors = () => {
         </Select>
       </FormControl>
       </div>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Stack spacing={2} sx={{width : "250px"}}>
-      <DatePicker label="Date Picker"
-      renderInput={(params) => <TextField {...params} />}
-      value={fromDate}
-      onChange={(newValue) => setFromDate(newValue)}
-      />
-</Stack>
-</LocalizationProvider>
      
     <div className='center'>
             <Plot
@@ -71,7 +63,7 @@ const Vendors = () => {
       />
 
     </div>
-    </div>
+    </AppContainer>
    
   )
 }

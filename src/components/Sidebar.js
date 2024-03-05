@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Divider } from "@mui/material";
 import { SupervisorAccount, ShoppingCart, ContactPage } from "@mui/icons-material";
 
@@ -24,6 +24,9 @@ const list = [
 
 export default function Sidebar() {
 
+  const location = useLocation()
+  console.log(location.pathname) 
+
     return (
       <Drawer
       sx={{
@@ -35,6 +38,7 @@ export default function Sidebar() {
           color: "white",
           backgroundColor: "#f44336", 
         },
+        display: {xs : 'none',  sm: "none", md: "block" },
       }}
       variant="permanent"
       anchor="left"
@@ -44,7 +48,7 @@ export default function Sidebar() {
       <List>
         {list.map((text, index) => (
           <Link key={index} to={text.link}>
-            <ListItem disablePadding>
+            <ListItem sx={{backgroundColor : location.pathname === text.link ? '#f21f10' : ''}} disablePadding>
               <ListItemButton>
                 <ListItemIcon sx={{ color: "white" }}>
                   {text.icon}

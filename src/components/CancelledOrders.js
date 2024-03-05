@@ -13,13 +13,10 @@ import { useSelector } from 'react-redux';
 
 const CancelledOrders = () => {
   const [data, setData] = useState()
-  const [isAscending, setIsAscending] = useState(false)
   const state = useSelector((state) => state);
-  const {number, startDate, endDate} = state;
-  console.log(number)
+  const {number, startDate, endDate, isAscending} = state;
 
   useEffect(() => {
-    console.log(startDate)
     const fetchData = () => {
       axios
         .get(`http://localhost:5000/cancelledOrder?isAscending=${isAscending}&number=${number}&startDate=${startDate.format('YYYY-MM-DD')}&endDate=${endDate.format('YYYY-MM-DD')}` )
@@ -38,42 +35,31 @@ const CancelledOrders = () => {
         style={{
           display: "flex",
           alignItems: "center",
-          gap: "1rem",
           justifyContent: "center",
         }}
       >
+        {/* Title */}
         <Typography variant="h5" gutterBottom>
           Rate of cancellation order by vendors
         </Typography>
-        <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-          <InputLabel id="demo-select-small-label">Rate</InputLabel>
-          <Select
-            labelId="demo-select-small-label"
-            id="demo-select-small"
-            label="Age"
-            onChange={(e) => setIsAscending(e.target.value)}
-            value={isAscending}
-          >
-            <MenuItem value={false}>Highest</MenuItem>
-            <MenuItem value={true}>Lowest</MenuItem>
-          </Select>
-        </FormControl>
 
       </div>
+      {/*To make graphs next to each other */}
       <div className="center">
         {" "}
+        {/* Stacked Bar chart for cancelled orers and total price */}
         <Plot
           data={[
             {
-              x: data["vendor_name"],
-              y: data["cancelled_count"],
+              x: data['percentage']["vendor_name"],
+              y: data['percentage']["cancelled_count"],
               type: "bar",
               marker: { color: "coral" },
               name: "Cancelled Orders",
             },
             {
-              x: data["vendor_name"],
-              y: data["total_count"],
+              x: data['percentage']["vendor_name"],
+              y: data['percentage']["total_count"],
               type: "bar",
               marker: { color: "navy" },
               name: "Total Orders",
@@ -89,8 +75,8 @@ const CancelledOrders = () => {
         <Plot
           data={[
             {
-              x: data["vendor_name"],
-              y: data["total_price"],
+              x: data['total_price']["vendor_name"],
+              y: data['total_price']["total_price"],
               type: "bar",
               marker: { color: "green" },
               name: "Total Price",

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import {AppBar, Typography} from "@mui/material"
+import {AppBar, Typography, Box} from "@mui/material"
 import Slider from "@mui/material/Slider"
 import { styled } from "@mui/material/styles"
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
@@ -9,6 +9,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker"
 import { useDispatch, useSelector } from 'react-redux';
 import { setEndDate, setNumber, setStartDate } from '../redux/Reducer';
 import axios from 'axios';
+import { Menu } from '@mui/icons-material';
 
 
 const drawerWidth = 240;
@@ -40,15 +41,15 @@ const PrettoSlider = styled(Slider)({
     fontSize: 12,
     background: "unset",
     padding: 0,
-    width: 28,
-    height: 28,
+    width: 24,
+    height: 24,
     borderRadius: "50% 50% 50% 0",
     backgroundColor: "#17236A",
     transformOrigin: "bottom left",
-    transform: "translate(50%, -80%) rotate(-45deg) scale(0)",
+    transform: "translate(50%, -70%) rotate(-45deg) scale(0)",
     "&::before": { display: "none" },
     "&.MuiSlider-valueLabelOpen": {
-      transform: "translate(50%, -80%) rotate(-45deg) scale(1)",
+      transform: "translate(50%, -70%) rotate(-45deg) scale(1)",
     },
     "& > *": {
       transform: "rotate(45deg)",
@@ -59,30 +60,32 @@ const PrettoSlider = styled(Slider)({
 export default function Header() {
 
   const state = useSelector((state) => state);
-  console.log(state)
+
   const { number, startDate, endDate } = state;
   const dispatch = useDispatch()
 
   return (
      <LocalizationProvider dateAdapter={AdapterDayjs}>
     <AppBar sx={{ backgroundColor: "white", color: "black" }}>
-    <div
-      style={{
-        paddingLeft: ` ${drawerWidth + 7}px`,
+    <Box
+      sx={{
+        paddingLeft:  `${drawerWidth + 7}px`,
         display: "flex",
         justifyContent: "space-between",
       }}
     >
       <div
-        style={{ display: "flex", alignItems: "baseline", gap: "2rem", marginTop : '2rem' }}
+        style={{ display: "flex", alignItems: "center", gap: "2rem"}}
       >
-        <Typography variant="h5">Count</Typography>
+        <Menu sx={{ cursor : 'pointer', fontSize : '25px' }}/>
+        <Typography sx={{marginTop : '0.5rem'}} variant="h5">Count</Typography>
         <div
           style={{
             width: "15rem",
             display: "flex",
             alignItems: "center",
             gap: "0.5rem",
+            marginTop : '1rem'
           }}
         >
           <span>1</span>{" "}
@@ -116,7 +119,7 @@ export default function Header() {
         onChange={(newValue) => dispatch(setEndDate(newValue))}
         />
       </div>
-    </div>
+    </Box>
   </AppBar>
    </LocalizationProvider>
   );
