@@ -7,8 +7,14 @@ import {
   Link,
   TextField,
   Typography,
+    InputAdornment,
+    IconButton
 } from "@mui/material"
+import { Visibility, VisibilityOff } from "@mui/icons-material"
 import { useState } from "react"
+import axios from "axios"
+import { useNavigate } from "react-router-dom"
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
 function Copyright(props) {
   return (
@@ -32,8 +38,54 @@ const Signup = () => {
   const [username, setUsername] = useState("")
   const [usernameError, setUsernameError] = useState(false)
 
-  const handleSubmit =()=>{
-    
+  const [password, setPassword] = useState("")
+  const [passwordError, setPasswordError] = useState(false)
+
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const [confirmPasswordError, setConfirmPasswordError] = useState(false)
+
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+
+  const [showError, setShowError] = useState(false)
+
+  const navigate = useNavigate()
+
+  const handleSubmit = async(event) => {
+    event.preventDefault()
+    if (!username) {
+      setUsernameError("Username is required")
+    } else if (username.length < 4) {
+      setUsernameError("Username must be at least 4 characters long")
+    }
+
+    if (!password) {
+      setPasswordError("Password is required")
+    } else if (password.length < 8) {
+      setPasswordError("Password must be at least 6 characters long")
+    }
+
+    if(confirmPassword !== password){
+        setConfirmPasswordError("Passwords do not match")
+    }
+
+    if (username && password && confirmPassword === password) {
+      setUsernameError(false)
+      setPasswordError(false)
+      setConfirmPasswordError(false)
+      try{
+        const response = await axios.post("http://localhost:5000/auth/signup", {username, password})
+        if(response.status === 200){
+          localStorage.setItem('token', response.data.token)
+          navigate("/orders")
+        }
+      }
+      catch(err){
+        if(err.response.data.message)
+          setShowError(err.response.data.message)
+        
+      }
+    }
   }
 
   return (
@@ -73,25 +125,63 @@ const Signup = () => {
             required
             fullWidth
             label="Password"
-            type="password"
+            type={showPassword ? "text" : "password"}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            error={passwordError}
+            helperText={passwordError}
+            InputProps={{ // <-- This is where the toggle button is added.
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={() => setShowPassword(!showPassword)}
+                      onMouseDown={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                )
+              }}
           />
           <TextField
             margin="normal"
             required
             fullWidth
-            name="confirm-password"
             label="Confirm Password"
-            type="password"
+            type={showConfirmPassword ? "text" : "password"}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            error={confirmPasswordError}
+            helperText={confirmPasswordError}
+            InputProps={{ // <-- This is where the toggle button is added.
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      onMouseDown={() => setShowConfirmPassword(!showConfirmPassword)}
+                    >
+                      {showConfirmPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                )
+              }}
           />
           <Button
             type="submit"
             fullWidth
             variant="contained"
-            onSubmit={()=> handleSubmit()}
+            onClick={(event) => handleSubmit(event)}
             sx={{ mt: 3, mb: 2 }}
           >
             Sign Up
           </Button>
+                      {/*Error message */}
+                      {showError && <Box sx={{display : 'flex', alignItems : 'center', gap : '0.5rem', padding : 1, borderRadius : 1, border : 2, marginBottom : '1rem' ,backgroundColor : '#FADDDC', borderColor : '#D9574D'}}>
+                <ErrorOutlineIcon sx={{color : '#D9574D'}}/>
+                <Typography>{showError}</Typography>
+            </Box>}
           <Box
             sx={{
               display: "flex",
