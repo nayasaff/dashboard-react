@@ -69,6 +69,7 @@ const Login = () => {
            if(response.status === 200){
             //if response is success then save token in local storage
             localStorage.setItem('token', response.data.token)
+            localStorage.setItem('role', response.data.role)
             navigate("/orders") //navigate to homepage
            }
         }

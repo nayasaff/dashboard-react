@@ -77,6 +77,7 @@ const Signup = () => {
         const response = await axios.post("http://localhost:5000/auth/signup", {username, password})
         if(response.status === 200){
           localStorage.setItem('token', response.data.token)
+          localStorage.setItem('role', response.data.role)
           navigate("/orders")
         }
       }

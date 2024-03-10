@@ -19,7 +19,6 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker"
 import ShoppingCart from "@mui/icons-material/ShoppingCart"
 import SupervisorAccount from "@mui/icons-material/SupervisorAccount"
 import ContactPage from "@mui/icons-material/ContactPage"
-import Menu from '@mui/icons-material/Menu'
 //Styling Mui component
 import { styled } from "@mui/material/styles"
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
@@ -27,6 +26,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
 //Rexux reducer
 import { useDispatch, useSelector } from 'react-redux';
 import { setEndDate, setNumber, setStartDate } from '../redux/Reducer';
+import Settings from '@mui/icons-material/Settings';
 
 const drawerWidth = 240
 
@@ -34,7 +34,7 @@ const list = [
   {
     name: "Orders",
     icon: <ShoppingCart />,
-    link: "/",
+    link: "/orders",
   },
   {
     name: "Vendors",
@@ -45,6 +45,11 @@ const list = [
     name: "Contact",
     icon: <ContactPage />,
   },
+  {
+    name: "Configuration",
+    icon: <Settings />,
+    link: "/configuration",
+  }
 ]
 
 const PrettoSlider = styled(Slider)({
@@ -145,7 +150,7 @@ const AppContainer = ({ children }) => {
       {/*App Bar */}
       <LocalizationProvider dateAdapter={AdapterDayjs}> {/* This is for date picker */}
     <AppBar sx={{ backgroundColor: "white", color: "black" }}>
-    <Box
+    {location.pathname === '/orders' ? <Box
       sx={{
         paddingLeft:  `${drawerWidth + 7}px`,
         display: "flex",
@@ -156,7 +161,6 @@ const AppContainer = ({ children }) => {
       <div
         style={{ display: "flex", alignItems: "center", gap: "2rem"}}
       >
-        <Menu sx={{ cursor : 'pointer', fontSize : '25px' }}/>
         <Typography sx={{marginTop : '0.5rem'}} variant="h5">Count</Typography>
         <div
           style={{
@@ -203,7 +207,7 @@ const AppContainer = ({ children }) => {
         onChange={(newValue) => dispatch(setEndDate(newValue))}
         />
       </div>
-    </Box>
+    </Box> : <Box sx={{padding : "1rem 0"}}>Test</Box>}
   </AppBar>
    </LocalizationProvider>
       <Box

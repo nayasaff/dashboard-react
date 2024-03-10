@@ -1,10 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import Plot from "react-plotly.js";
-import { FormControl, InputLabel, Select, MenuItem, Typography , TextField, Stack } from '@mui/material';
-import { DatePicker } from '@mui/lab';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { FormControl, InputLabel, Select, MenuItem, Typography } from '@mui/material';
 import AppContainer from '../components/AppContainer';
 
 
@@ -12,7 +9,6 @@ const Vendors = () => {
 
   const [avgTime, setAvgTime] = useState([])
   const [vendor, setVendor] = useState('')
-  const [fromDate, setFromDate] = useState()
 
   useEffect(()=>{
     const fetchData = ()=>{
