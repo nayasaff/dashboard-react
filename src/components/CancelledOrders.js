@@ -13,7 +13,7 @@ import { useSelector } from 'react-redux';
 
 const CancelledOrders = () => {
   const [data, setData] = useState()
-  const state = useSelector((state) => state);
+  const state = useSelector((state) => state.app);
   const {number, startDate, endDate, isAscending} = state;
 
   useEffect(() => {

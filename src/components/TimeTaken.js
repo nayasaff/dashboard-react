@@ -6,7 +6,7 @@ import axios from "axios"
 
 const TimeTaken = () => {
   const [data, setData] = useState()
-  const state = useSelector((state) => state)
+  const state = useSelector((state) => state.app)
   const { number, startDate, endDate, isAscending } = state
 
   useEffect(() => {

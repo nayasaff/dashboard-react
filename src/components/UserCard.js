@@ -9,12 +9,16 @@ import { Button, Collapse, List, ListItem, Typography } from "@mui/material"
 import { Delete, Edit } from "@mui/icons-material"
 import { ExpandMore as ExpandMoreIcon } from "@mui/icons-material"
 import ExpandMore from "@mui/material/IconButton"
+import UserModal from "./UserModal"
+import DeleteModal from "./DeleteModal"
 
 const UserCard = ({ user }) => {
   const [expanded, setExpanded] = useState(false)
+  const [openModal, setOpenModal] = useState(false)
+  const [openDialogue, setOpenDialogue] = useState(false)
 
   const formatDate = (date) => {
-    return `${date.getDay()} ${date.toLocaleString("default", {
+    return `${date.getDate()} ${date.toLocaleString("default", {
       month: "long",
     })}, ${date.getFullYear()}`
   }
@@ -102,6 +106,7 @@ const UserCard = ({ user }) => {
           variant="outlined"
           sx={{ color: red[500], border: `1px solid ${red[500]}` }}
           endIcon={<Delete />}
+          onClick={()=> setOpenDialogue(true)}
         >
           Delete
         </Button>
@@ -109,9 +114,12 @@ const UserCard = ({ user }) => {
           variant="contained"
           sx={{ bgcolor: blue[700] }}
           endIcon={<Edit />}
+          onClick={() => setOpenModal(true)}
         >
           Edit
         </Button>
+       {openModal && <UserModal openModal={openModal} setOpenModal={setOpenModal} isEditable={true} user={user} />}
+       {openDialogue && <DeleteModal openDialogue={openDialogue} setOpenDialogue={setOpenDialogue} userId={user._id}/>}
       </CardActions>
     </Card>
   )

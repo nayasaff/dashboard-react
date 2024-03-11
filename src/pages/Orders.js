@@ -3,12 +3,12 @@ import CancelledOrders from "../components/CancelledOrders"
 import TimeTake from "../components/TimeTaken"
 import {Box, Typography, FormControl, Select, MenuItem, InputLabel} from "@mui/material"
 import { useDispatch, useSelector } from "react-redux"
-import {setIsAscending} from '../redux/Reducer'
+import {setIsAscending} from '../redux/AppReducer'
 import AppContainer from "../components/AppContainer"
 
 const Orders = () => {
 
-  const isAscending = useSelector((state) => state.isAscending)
+  const isAscending = useSelector((state) => state.app.isAscending)
   const dispatch = useDispatch()
 
 

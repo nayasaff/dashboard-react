@@ -7,14 +7,14 @@ import {
   Link,
   TextField,
   Typography,
-    InputAdornment,
-    IconButton
+  InputAdornment,
+  IconButton,
 } from "@mui/material"
 import { Visibility, VisibilityOff } from "@mui/icons-material"
 import { useState } from "react"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline"
 
 function Copyright(props) {
   return (
@@ -51,7 +51,7 @@ const Signup = () => {
 
   const navigate = useNavigate()
 
-  const handleSubmit = async(event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
     if (!username) {
       setUsernameError("Username is required")
@@ -65,26 +65,26 @@ const Signup = () => {
       setPasswordError("Password must be at least 6 characters long")
     }
 
-    if(confirmPassword !== password){
-        setConfirmPasswordError("Passwords do not match")
+    if (confirmPassword !== password) {
+      setConfirmPasswordError("Passwords do not match")
     }
 
     if (username && password && confirmPassword === password) {
       setUsernameError(false)
       setPasswordError(false)
       setConfirmPasswordError(false)
-      try{
-        const response = await axios.post("http://localhost:5000/auth/signup", {username, password})
-        if(response.status === 200){
-          localStorage.setItem('token', response.data.token)
-          localStorage.setItem('role', response.data.role)
+      try {
+        const response = await axios.post("http://localhost:5000/auth/signup", {
+          username,
+          password,
+        })
+        if (response.status === 200) {
+          localStorage.setItem("token", response.data.token)
+          localStorage.setItem("role", response.data.role)
           navigate("/orders")
         }
-      }
-      catch(err){
-        if(err.response.data.message)
-          setShowError(err.response.data.message)
-        
+      } catch (err) {
+        if (err.response.data.message) setShowError(err.response.data.message)
       }
     }
   }
@@ -131,19 +131,20 @@ const Signup = () => {
             onChange={(e) => setPassword(e.target.value)}
             error={passwordError}
             helperText={passwordError}
-            InputProps={{ // <-- This is where the toggle button is added.
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={() => setShowPassword(!showPassword)}
-                      onMouseDown={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? <Visibility /> : <VisibilityOff />}
-                    </IconButton>
-                  </InputAdornment>
-                )
-              }}
+            InputProps={{
+              // <-- This is where the toggle button is added.
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => setShowPassword(!showPassword)}
+                    onMouseDown={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
           <TextField
             margin="normal"
@@ -155,19 +156,22 @@ const Signup = () => {
             onChange={(e) => setConfirmPassword(e.target.value)}
             error={confirmPasswordError}
             helperText={confirmPasswordError}
-            InputProps={{ // <-- This is where the toggle button is added.
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      onMouseDown={() => setShowConfirmPassword(!showConfirmPassword)}
-                    >
-                      {showConfirmPassword ? <Visibility /> : <VisibilityOff />}
-                    </IconButton>
-                  </InputAdornment>
-                )
-              }}
+            InputProps={{
+              // <-- This is where the toggle button is added.
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    onMouseDown={() =>
+                      setShowConfirmPassword(!showConfirmPassword)
+                    }
+                  >
+                    {showConfirmPassword ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
           <Button
             type="submit"
@@ -178,11 +182,25 @@ const Signup = () => {
           >
             Sign Up
           </Button>
-                      {/*Error message */}
-                      {showError && <Box sx={{display : 'flex', alignItems : 'center', gap : '0.5rem', padding : 1, borderRadius : 1, border : 2, marginBottom : '1rem' ,backgroundColor : '#FADDDC', borderColor : '#D9574D'}}>
-                <ErrorOutlineIcon sx={{color : '#D9574D'}}/>
-                <Typography>{showError}</Typography>
-            </Box>}
+          {/*Error message */}
+          {showError && (
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                padding: 1,
+                borderRadius: 1,
+                border: 2,
+                marginBottom: "1rem",
+                backgroundColor: "#FADDDC",
+                borderColor: "#D9574D",
+              }}
+            >
+              <ErrorOutlineIcon sx={{ color: "#D9574D" }} />
+              <Typography>{showError}</Typography>
+            </Box>
+          )}
           <Box
             sx={{
               display: "flex",

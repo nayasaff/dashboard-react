@@ -25,7 +25,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
 //Rexux reducer
 import { useDispatch, useSelector } from 'react-redux';
-import { setEndDate, setNumber, setStartDate } from '../redux/Reducer';
+import { setEndDate, setNumber, setStartDate } from '../redux/AppReducer';
 import Settings from '@mui/icons-material/Settings';
 
 const drawerWidth = 240
