@@ -12,7 +12,13 @@ const TimeTaken = () => {
   useEffect(() => {
     const fetchData = () => {
       axios
-        .get(`http://localhost:5000/timeTaken?isAscending=${isAscending}&number=${number}&startDate=${startDate.format('YYYY-MM-DD')}&endDate=${endDate.format('YYYY-MM-DD')}`)
+        .get(`http://localhost:5000/timeTaken?isAscending=${isAscending}&number=${number}&startDate=${startDate.format('YYYY-MM-DD')}&endDate=${endDate.format('YYYY-MM-DD')}`
+        ,{
+          headers: {
+            Authorization : localStorage.getItem("token")
+          }
+        }
+        )
         .then((res) => setData(res.data))
         .catch((err) => console.log(err))
     }

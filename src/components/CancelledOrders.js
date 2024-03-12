@@ -19,7 +19,13 @@ const CancelledOrders = () => {
   useEffect(() => {
     const fetchData = () => {
       axios
-        .get(`http://localhost:5000/cancelledOrder?isAscending=${isAscending}&number=${number}&startDate=${startDate.format('YYYY-MM-DD')}&endDate=${endDate.format('YYYY-MM-DD')}` )
+        .get(`http://localhost:5000/cancelledOrder?isAscending=${isAscending}&number=${number}&startDate=${startDate.format('YYYY-MM-DD')}&endDate=${endDate.format('YYYY-MM-DD')}`,
+          {
+            headers: {
+              Authorization : localStorage.getItem("token")
+            }
+          }
+         )
         .then((res) => {
           setData(res.data)
         })

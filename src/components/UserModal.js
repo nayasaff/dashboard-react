@@ -7,9 +7,9 @@ import TextField from "@mui/material/TextField"
 import Box from "@mui/material/Box"
 import {
   Typography,
-  Autocomplete,
   Stack,
   Button as MuiButton,
+  Autocomplete
 } from "@mui/material"
 import Chip from "@mui/material/Chip"
 import axios from "axios"
@@ -17,7 +17,7 @@ import { addUser, updateUser } from "../redux/UserReducer"
 import { useDispatch, useSelector } from "react-redux"
 
 
-const UserModal = ({ openModal, setOpenModal, setUsers, isEditable, user }) => {
+const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
   const [value, setValue] = useState(null)
   const [selectedVendors, setSelectedVendors] = useState(isEditable ? user.vendors : [])
 
@@ -35,7 +35,7 @@ const UserModal = ({ openModal, setOpenModal, setUsers, isEditable, user }) => {
     setValue("")
     setSelectedVendors((prev) => {
       if (prev.includes(newValue)) return prev
-      return [...prev, newValue]
+      return [...prev, {"_id" : newValue['_id'], "name" : newValue['name'] } ]
     })
   }
 
@@ -151,8 +151,8 @@ const UserModal = ({ openModal, setOpenModal, setUsers, isEditable, user }) => {
             {selectedVendors.length > 0 &&
               selectedVendors.map((selectedValue) => (
                 <Chip
-                key={selectedValue}
-                  label={selectedValue}
+                key={selectedValue._id}
+                  label={selectedValue.name.en}
                   onDelete={() => handleDelete(selectedValue)}
                   color="primary"
                   variant="outlined"
@@ -168,11 +168,11 @@ const UserModal = ({ openModal, setOpenModal, setUsers, isEditable, user }) => {
             }}
           >
             <Typography sx={{ width: "100px" }}>Vendors</Typography>
-            <Autocomplete
+             <Autocomplete
               fullWidth
-              value={value}
               onChange={(event, newValue) => handleChange(newValue)}
               options={vendors}
+              getOptionLabel={(option) => option['name']['en']}
               disableClearable
               renderInput={(params) => (
                 <TextField
@@ -184,9 +184,9 @@ const UserModal = ({ openModal, setOpenModal, setUsers, isEditable, user }) => {
                   clearIcon={null}
                 />
               )}
-            />
+            /> 
           </Box>
-          <Stack direction="row" justifyContent="end" spacing={1}>
+          <Stack direction="row" justifyContent="end" spacing={1} sx={{flexWrap : 'wrap'}}>
             <MuiButton
               variant="outlined"
               size="small"

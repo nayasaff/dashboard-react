@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react"
 import AppContainer from "../components/AppContainer"
-import { Box, Grid, TextField, InputAdornment, Typography } from "@mui/material"
-import Search from "@mui/icons-material/Search"
-import { Clear, AddCircle } from "@mui/icons-material"
+import { Box, Grid } from "@mui/material"
+import { AddCircle } from "@mui/icons-material"
 import UserCard from "../components/UserCard"
 import axios from "axios"
-import { red, blue } from "@mui/material/colors"
 import UserModal from "../components/UserModal"
 import { useDispatch, useSelector } from "react-redux"
 import { setUsers, setVendors } from "../redux/UserReducer"
@@ -13,20 +11,11 @@ import { setUsers, setVendors } from "../redux/UserReducer"
 const Admin = () => {
   const state = useSelector(state => state.users)
   const {users} = state
-  const [showClearIcon, setShowClearIcon] = useState("none")
 
   const [openModal, setOpenModal] = useState(false)
 
   const dispatch = useDispatch()
 
-  const handleChange = (event) => {
-    setShowClearIcon(event.target.value === "" ? "none" : "flex")
-  }
-
-  const handleClick = () => {
-    // TODO: Clear the search input
-    console.log("clicked the clear icon...")
-  }
 
   useEffect(() => {
     const fetchUsers = async () => {

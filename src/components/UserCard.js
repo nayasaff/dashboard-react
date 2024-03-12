@@ -55,13 +55,13 @@ const UserCard = ({ user }) => {
         >
           {user.vendors.map((vendor, i) => (
             <ListItem key={i} disablePadding>
-              {vendor}
+              {vendor.name.en}
             </ListItem>
           ))}
           <Collapse in={expanded} timeout="auto" unmountOnExit>
             {user.vendors.slice(3).map((vendor, i) => (
                 <ListItem key={i} disablePadding>
-                    {vendor}
+                    {vendor.name.en}
                 </ListItem>
             ))}
           </Collapse>
