@@ -4,8 +4,7 @@ import TimeTake from "../components/TimeTaken"
 import {Box, Typography, FormControl, Select, MenuItem, InputLabel} from "@mui/material"
 import { useDispatch, useSelector } from "react-redux"
 import {setIsAscending} from '../redux/AppReducer'
-import AppContainer from "../components/AppContainer"
-
+import TableComponent from "../components/TableComponent"
 const Orders = () => {
 
   const isAscending = useSelector((state) => state.app.isAscending)
@@ -13,7 +12,7 @@ const Orders = () => {
 
 
   return (
-    <AppContainer>
+    <>
       <div style={{display : 'flex', alignItems : 'center', gap : '1rem'}}>
       <Typography variant="h5" gutterBottom>
         Sort by
@@ -32,10 +31,12 @@ const Orders = () => {
           </Select>
         </FormControl>
       </div>
+     
       <CancelledOrders/>
       <Box m={4} />
       <TimeTake/>
-     </AppContainer>
+
+     </>
   )
 }
 

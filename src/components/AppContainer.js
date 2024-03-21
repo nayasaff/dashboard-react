@@ -1,5 +1,5 @@
 import React from "react"
-import { Link, useLocation } from "react-router-dom"
+import { Link, Routes, useLocation } from "react-router-dom"
 //MUI Components
 import Box from "@mui/material/Box"
 import AppBar from "@mui/material/AppBar"
@@ -24,9 +24,15 @@ import { styled } from "@mui/material/styles"
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
 //Rexux reducer
-import { useDispatch, useSelector } from 'react-redux';
-import { setEndDate, setNumber, setStartDate } from '../redux/AppReducer';
-import Settings from '@mui/icons-material/Settings';
+import { useDispatch, useSelector } from "react-redux"
+import { setEndDate, setNumber, setStartDate } from "../redux/AppReducer"
+import Settings from "@mui/icons-material/Settings"
+import Orders from "../pages/Orders"
+import ProtectedRoute from "../ProtectedRoute"
+import { Route } from "react-router-dom"
+import Vendors from "../pages/Vendors"
+import Admin from "../pages/Admin"
+import TableComponent from "../components/TableComponent"
 
 const drawerWidth = 240
 
@@ -49,56 +55,55 @@ const list = [
     name: "Configuration",
     icon: <Settings />,
     link: "/configuration",
-  }
+  },
 ]
 
 const PrettoSlider = styled(Slider)({
-    color: "#17236A",
-    height: 6,
-    //Slider track (the line that the thumb moves along)
-    "& .MuiSlider-track": {
-      border: "none",
+  color: "#17236A",
+  height: 6,
+  //Slider track (the line that the thumb moves along)
+  "& .MuiSlider-track": {
+    border: "none",
+  },
+  //Slider thumb (the circle that moves around the slider)
+  "& .MuiSlider-thumb": {
+    height: 20,
+    width: 20,
+    backgroundColor: "#fff",
+    border: "2px solid currentColor",
+    boxShadow: "inherit", // Always show shadow
+    "&::before": {
+      display: "none",
     },
-    //Slider thumb (the circle that moves around the slider)
-    "& .MuiSlider-thumb": {
-      height: 20,
-      width: 20,
-      backgroundColor: "#fff",
-      border: "2px solid currentColor",
-      boxShadow: 'inherit', // Always show shadow
-      '&::before': {
-        display: 'none',
-      },
+  },
+  //Slider value label (the number that appears on the thumb)
+  "& .MuiSlider-valueLabel": {
+    lineHeight: 1.2,
+    fontSize: 12,
+    background: "unset",
+    padding: 0,
+    width: 24,
+    height: 24,
+    borderRadius: "50% 50% 50% 0",
+    backgroundColor: "#17236A",
+    transformOrigin: "bottom left",
+    transform: "translate(50%, -70%) rotate(-45deg) scale(0)",
+    "&::before": { display: "none" },
+    "&.MuiSlider-valueLabelOpen": {
+      transform: "translate(50%, -70%) rotate(-45deg) scale(1)",
     },
-    //Slider value label (the number that appears on the thumb)
-    "& .MuiSlider-valueLabel": {
-      lineHeight: 1.2,
-      fontSize: 12,
-      background: "unset",
-      padding: 0,
-      width: 24,
-      height: 24,
-      borderRadius: "50% 50% 50% 0",
-      backgroundColor: "#17236A",
-      transformOrigin: "bottom left",
-      transform: "translate(50%, -70%) rotate(-45deg) scale(0)",
-      "&::before": { display: "none" },
-      "&.MuiSlider-valueLabelOpen": {
-        transform: "translate(50%, -70%) rotate(-45deg) scale(1)",
-      },
-      "& > *": {
-        transform: "rotate(45deg)",
-      },
+    "& > *": {
+      transform: "rotate(45deg)",
     },
-  })
-  
+  },
+})
 
 const AppContainer = ({ children }) => {
   const location = useLocation()
 
-  const state = useSelector((state) => state);
+  const state = useSelector((state) => state.app)
 
-  const { number, startDate, endDate } = state;
+  const { number, startDate, endDate } = state
   const dispatch = useDispatch()
 
   return (
@@ -148,74 +153,109 @@ const AppContainer = ({ children }) => {
         </List>
       </Drawer>
       {/*App Bar */}
-      <LocalizationProvider dateAdapter={AdapterDayjs}> {/* This is for date picker */}
-    <AppBar sx={{ backgroundColor: "white", color: "black" }}>
-    {location.pathname === '/orders' ? <Box
-      sx={{
-        paddingLeft:  `${drawerWidth + 7}px`,
-        display: "flex",
-        justifyContent: "space-between",
-      }}
-    >
-        {/**Count number that show how many bar chart */}
-      <div
-        style={{ display: "flex", alignItems: "center", gap: "2rem"}}
-      >
-        <Typography sx={{marginTop : '0.5rem'}} variant="h5">Count</Typography>
-        <div
-          style={{
-            width: "15rem",
-            display: "flex",
-            alignItems: "center",
-            gap: "0.5rem",
-            marginTop : '1rem'
-          }}
-        >
-            {/*Minimum is one*/}
-          <span>1</span>{" "}
-          <PrettoSlider
-            aria-label="pretto slider"
-            min={1}
-            max={25}
-            value={number}
-            onChange={(e) => dispatch(setNumber(e.target.value))}
-            valueLabelDisplay="on"
-          />
-            {/*Maximum is 25*/}
-          <span>25</span>
-        </div>
-      </div>
-      {/*Date range (start date and end date) to display orders in that range */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "0.8rem",
-          padding : '1rem 0.5rem'
-        }}
-      >
-        {/*Start date*/}
-        <DatePicker label="Start Date"
-        value={startDate}
-        slotProps={{ textField: { size: 'small' } }}
-        onChange={(newValue) => dispatch(setStartDate(newValue))}
-        />
-        {/*End date*/}
-        <DatePicker label="End Date"
-        value={endDate} //get current date
-        slotProps={{ textField: { size: 'small' } }}
-        onChange={(newValue) => dispatch(setEndDate(newValue))}
-        />
-      </div>
-    </Box> : <Box sx={{padding : "1rem 0"}}>Test</Box>}
-  </AppBar>
-   </LocalizationProvider>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        {" "}
+        {/* This is for date picker */}
+        <AppBar sx={{ backgroundColor: "white", color: "black" }}>
+          {location.pathname === "/orders" ? (
+            <Box
+              sx={{
+                paddingLeft: `${drawerWidth + 7}px`,
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              {/**Count number that show how many bar chart */}
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "2rem" }}
+              >
+                <Typography sx={{ marginTop: "0.5rem" }} variant="h5">
+                  Count
+                </Typography>
+                <div
+                  style={{
+                    width: "15rem",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                    marginTop: "1rem",
+                  }}
+                >
+                  {/*Minimum is one*/}
+                  <span>1</span>{" "}
+                  <PrettoSlider
+                    aria-label="pretto slider"
+                    min={1}
+                    max={25}
+                    value={number}
+                    onChange={(e) => dispatch(setNumber(e.target.value))}
+                    valueLabelDisplay="on"
+                  />
+                  {/*Maximum is 25*/}
+                  <span>25</span>
+                </div>
+              </div>
+              {/*Date range (start date and end date) to display orders in that range */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.8rem",
+                  padding: "1rem 0.5rem",
+                }}
+              >
+                {/*Start date*/}
+                <DatePicker
+                  label="Start Date"
+                  value={startDate}
+                  slotProps={{ textField: { size: "small" } }}
+                  onChange={(newValue) => dispatch(setStartDate(newValue))}
+                />
+                {/*End date*/}
+                <DatePicker
+                  label="End Date"
+                  value={endDate} //get current date
+                  slotProps={{ textField: { size: "small" } }}
+                  onChange={(newValue) => dispatch(setEndDate(newValue))}
+                />
+              </div>
+            </Box>
+          ) : (
+            <Box sx={{ padding: "1rem 0" }}>Test</Box>
+          )}
+        </AppBar>
+      </LocalizationProvider>
       <Box
         component="main"
         sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
       >
         <Toolbar />
-        {children} {/*This is where the children components are rendered*/}
+        {/********************ROUTES********************** */}
+        <Routes>
+          <Route
+            path="orders"
+            element={
+              <ProtectedRoute>
+                <Orders />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="vendors" element={<Vendors />} />
+          <Route
+            path="configuration"
+            element={
+                <Admin />
+            }
+          />
+          <Route
+          path="table"
+          element={
+            <ProtectedRoute>
+              <TableComponent />
+            </ProtectedRoute>
+          }
+          />
+        </Routes>
       </Box>
     </Box>
   )

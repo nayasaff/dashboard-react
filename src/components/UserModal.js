@@ -68,7 +68,7 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
 
   const editUser = async() => {
     try{
-        const response = await axios.patch(`http://localhost:5000/users/edit/${user._id}`, {username, password, vendors : selectedVendors}, {
+        const response = await axios.patch(`http://localhost:5000/users/edit/${user._id}`, {username, vendors : selectedVendors}, {
           headers: {
             Authorization: localStorage.getItem("token"),
           },
@@ -182,6 +182,7 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
                   fullWidth
                   variant="outlined"
                   clearIcon={null}
+                  value={value}
                 />
               )}
             /> 

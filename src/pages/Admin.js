@@ -50,7 +50,7 @@ const Admin = () => {
   if(!users) return <div>Loading...</div>
 
   return (
-    <AppContainer>
+    <>
       <Box sx={{ margin: "1rem 2rem", display : 'flex', alignItems : 'center'}}>
         {users ? (
           <>
@@ -71,7 +71,7 @@ const Admin = () => {
         )}
       </Box>
       <UserModal setUsers={setUsers} openModal={openModal} setOpenModal={setOpenModal}/>
-    </AppContainer>
+    </>
   )
 }
 
