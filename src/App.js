@@ -14,6 +14,7 @@ import Signup from "./pages/Signup"
 import ProtectedRoute from "./ProtectedRoute"
 import Admin from "./pages/Admin"
 import AppContainer from "./components/AppContainer"
+import './index.css'
 
 //mui them
 const theme = createTheme({
@@ -24,6 +25,9 @@ const theme = createTheme({
     secondary: {
       main: "#f44336",
     },
+    background : {
+      default: "#f6f8fa"
+    }
   },
 })
 

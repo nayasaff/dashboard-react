@@ -4,12 +4,13 @@ import {
   MenuItem,
   InputLabel,
   Typography,
+  Box,
 } from "@mui/material"
 import React, { useEffect, useState } from "react"
 import Plot from "react-plotly.js"
 import axios from "axios"
 import { useSelector } from 'react-redux';
-
+import { grey } from "@mui/material/colors";
 
 const CancelledOrders = () => {
   const [data, setData] = useState()
@@ -34,50 +35,39 @@ const CancelledOrders = () => {
     fetchData()
   }, [isAscending, number, startDate, endDate])
 
+
   if (!data) return <div>Loading...</div>
   return (
     <>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        {/* Title */}
-        <Typography variant="h5" gutterBottom>
-          Rate of cancellation order by vendors
-        </Typography>
-
-      </div>
-      {/*To make graphs next to each other */}
-      <div className="center">
-        {" "}
+      <Box sx={{display : 'flex', borderRadius : '16px', backgroundColor : 'white', width : 'auto', border : `1px ${grey[400]} solid`}}>
         {/* Stacked Bar chart for cancelled orers and total price */}
         <Plot
           data={[
-            {
-              x: data['percentage']["vendor_name"],
-              y: data['percentage']["cancelled_count"],
-              type: "bar",
-              marker: { color: "coral" },
-              name: "Cancelled Orders",
-            },
+  
             {
               x: data['percentage']["vendor_name"],
               y: data['percentage']["total_count"],
               type: "bar",
-              marker: { color: "navy" },
+              marker: { color: "navy", textPosition: "top"},
               name: "Total Orders",
+            },
+            {
+              x: data['percentage']["vendor_name"],
+              y: data['percentage']["cancelled_count"],
+              type: "bar",
+              marker: { color: "coral",  textPosition: "top" },
+              name: "Cancelled Orders",
             },
           ]}
           layout={{
             title: "Cancelled Orders",
-            width: 520,
+            width: 450,
             height: 340,
-            barmode: "stack",
+            legend : {x : 0.6, y : 1.3},
+            paper_bgcolor: "transparent"
           }}
         />
+
         <Plot
           data={[
             {
@@ -90,11 +80,12 @@ const CancelledOrders = () => {
           ]}
           layout={{
             title: "Total price of cancelled orders",
-            width: 520,
+            width: 450,
             height: 340,
+            paper_bgcolor: "transparent"
           }}
         />
-      </div>
+      </Box>
     </>
   )
 }

@@ -13,7 +13,6 @@ import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state"
 import { FilterList, Search } from "@mui/icons-material"
 import { Box, Stack } from "@mui/material"
 import { Pagination, Typography, InputAdornment, MenuItem } from "@mui/material"
-import InputLabel from "@mui/material/InputLabel"
 import TextField from "@mui/material/TextField"
 import { visuallyHidden } from "@mui/utils"
 import TableSortLabel from "@mui/material/TableSortLabel"
@@ -29,22 +28,6 @@ const columns = [
   { name: "Avg Delivery Time", value: "average_delivery_time" },
   { name: "Last Updated time", value: "upated_item" },
 ]
-
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1
-  }
-  return 0
-}
-
-function getComparator(order, orderBy) {
-  return order === "desc"
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy)
-}
 
 function stableSort(array, order, orderBy) {
   return array.sort((a, b) => {
@@ -64,8 +47,8 @@ function stableSort(array, order, orderBy) {
   })
 }
 
-const TableComponent = () => {
-  const [insights, setInsights] = useState([])
+const TableComponent = ({insights, setInsights}) => {
+  
   const [page, setPage] = useState(0)
 
   const [order, setOrder] = useState("desc")
@@ -73,48 +56,12 @@ const TableComponent = () => {
 
   const [searchValue, setSearchValue] = useState("")
 
-  useEffect(() => {
-    try {
-      axios
-        .get("http://localhost:5000/all_insights", {
-          headers: {
-            Authorization: localStorage.getItem("token"),
-          },
-        })
-        .then((res) => setInsights(res.data))
-    } catch (e) {
-      console.log(e)
-    }
-  }, [])
+
 
   const emptyRows =
     page === Math.ceil(insights.length / 10) - 1
       ? Math.max(0, (1 + page) * 10 - insights.length)
       : 0
-
-  const sortData = (column, order) => {
-    setInsights((prev) => {
-      return prev.sort((a, b) => {
-        if (order === "asc") {
-          if (a[column] > b[column]) {
-            return 1
-          } else {
-            return -1
-          }
-        } else {
-          if (a[column] < b[column]) {
-            return 1
-          } else {
-            return -1
-          }
-        }
-      })
-    })
-  }
-
-
-
-  
 
   const formateNumber = (number) => {
     return number.toFixed(2)
@@ -136,9 +83,10 @@ const TableComponent = () => {
   }
 
   const filteredInsights = React.useMemo(() => {
-    return insights.filter(insight => insight.vendor_name.toLowerCase().includes(searchValue.toLowerCase()) )
+    return insights.filter((insight) =>
+      insight.vendor_name.toLowerCase().includes(searchValue.toLowerCase())
+    )
   }, [insights, searchValue])
-
 
   const visibleRows = React.useMemo(
     () =>
@@ -152,7 +100,16 @@ const TableComponent = () => {
   if (!insights) return <div></div>
 
   return (
-    <>
+    <Box
+      sx={{
+        minWidth: 275,
+        borderRadius: "16px",
+        border: `1px ${grey[400]} solid`,
+        boxShadow: "none",
+        backgroundColor: "white",
+        padding: "1rem 1.5rem",
+      }}
+    >
       <Typography variant="h4" sx={{ fontWeight: "bold" }} margin={0}>
         Vendors
       </Typography>
@@ -261,15 +218,6 @@ const TableComponent = () => {
             ))}
 
             {/********************************************EMPTY ROWS FOR LAST PAGE************************************************************ */}
-            {emptyRows > 0 && (
-              <TableRow
-                style={{
-                  height: 30 * emptyRows,
-                }}
-              >
-                <TableCell colSpan={6} />
-              </TableRow>
-            )}
           </TableBody>
         </Table>
       </TableContainer>
@@ -284,7 +232,7 @@ const TableComponent = () => {
           size="large"
         />
       </Box>
-    </>
+    </Box>
   )
 }
 
