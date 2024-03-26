@@ -1,11 +1,4 @@
-import {
-  FormControl,
-  Select,
-  MenuItem,
-  InputLabel,
-  Typography,
-  Box,
-} from "@mui/material"
+import {Box} from "@mui/material"
 import React, { useEffect, useState } from "react"
 import Plot from "react-plotly.js"
 import axios from "axios"
@@ -56,11 +49,11 @@ const CancelledOrders = () => {
               y: data['percentage']["cancelled_count"],
               type: "bar",
               marker: { color: "coral",  textPosition: "top" },
-              name: "Cancelled Orders",
+              name: "Incompleted Orders",
             },
           ]}
           layout={{
-            title: "Cancelled Orders",
+            title: "Incompleted Orders",
             width: 450,
             height: 340,
             legend : {x : 0.6, y : 1.3},
@@ -79,7 +72,7 @@ const CancelledOrders = () => {
             },
           ]}
           layout={{
-            title: "Total price of cancelled orders",
+            title: "Total Price of Incompleted Orders",
             width: 450,
             height: 340,
             paper_bgcolor: "transparent"

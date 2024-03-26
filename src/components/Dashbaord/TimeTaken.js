@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Box, Typography } from "@mui/material"
+import { Box } from "@mui/material"
 import Plot from "react-plotly.js"
 import { useSelector } from "react-redux"
 import axios from "axios"
@@ -44,11 +44,14 @@ const TimeTaken = () => {
           },
         ]}
         layout={{
-          title: "Maximum Time",
+          title: "Maximum Response Time",
           width: 400,
           height: 340,
           yaxis: {
-            title: "Average Time Taken (in hours)",
+            title: "Time (in hours)",
+          },
+          xaxis : {
+            title : "Vendor Name"
           },
           paper_bgcolor : 'transparent'
         }}
@@ -65,18 +68,20 @@ const TimeTaken = () => {
             y: data["average_time"]["averageTime"],
             x: data["average_time"]["vendor_name"],
             type: "bar",
-            name: "Time Taken",
             marker: {
               color: "purple",
             },
           },
         ]}
         layout={{
-          title: "Average Time",
+          title: "Average Response Time",
           width: 400,
           height: 340,
           yaxis: {
-            title: "Average Time Taken (in hours)",
+            title: "Time (in hours)",
+          },
+          xaxis : {
+            title : "Vendor Name"
           },
           paper_bgcolor : 'transparent'
         }}
@@ -89,18 +94,20 @@ const TimeTaken = () => {
             y: data["minimum_time"]["minTime"],
             x: data["minimum_time"]["vendor_name"],
             type: "bar",
-            name: "Time Taken",
             marker: {
               color: "",
             },
           },
         ]}
         layout={{
-          title: "Minimum Time",
+          title: "Minimum Response Time",
           width: 400,
           height: 340,
           yaxis: {
-            title: "Average Time Taken (in hours)",
+            title: "Time (in hours)",
+          },
+          xaxis : {
+            title : "Vendor Name"
           },
           paper_bgcolor : 'transparent'
         }}

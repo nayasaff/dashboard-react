@@ -2,7 +2,7 @@ import { Box, Card, CardContent, Typography } from "@mui/material"
 import React from "react"
 import { grey } from "@mui/material/colors"
 import { Stack } from "@mui/material"
-import { ShoppingCart } from "@mui/icons-material"
+
 
 const Tag = ({ title, count, icon }) => {
   return (

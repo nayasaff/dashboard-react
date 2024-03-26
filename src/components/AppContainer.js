@@ -21,7 +21,7 @@ import ProtectedRoute from "../ProtectedRoute"
 import { Route } from "react-router-dom"
 import Vendors from "../pages/Vendors"
 import Admin from "../pages/Admin"
-import TableComponent from "../components/TableComponent"
+import TableComponent from "../components/dashbaord/TableComponent"
 import Avatar from "@mui/material/Avatar"
 
 const drawerWidth = 240

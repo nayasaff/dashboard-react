@@ -16,8 +16,8 @@ import { Pagination, Typography, InputAdornment, MenuItem } from "@mui/material"
 import TextField from "@mui/material/TextField"
 import { visuallyHidden } from "@mui/utils"
 import TableSortLabel from "@mui/material/TableSortLabel"
-import axios from "axios"
 import { useState } from "react"
+import { Link } from "react-router-dom"
 
 const columns = [
   { name: "Total Orders", value: "total_orders" },
@@ -47,16 +47,13 @@ function stableSort(array, order, orderBy) {
   })
 }
 
-const TableComponent = ({insights, setInsights}) => {
-  
+const TableComponent = ({ insights, setInsights }) => {
   const [page, setPage] = useState(0)
 
   const [order, setOrder] = useState("desc")
   const [orderBy, setOrderBy] = useState("total_orders")
 
   const [searchValue, setSearchValue] = useState("")
-
-
 
   const emptyRows =
     page === Math.ceil(insights.length / 10) - 1
@@ -165,8 +162,9 @@ const TableComponent = ({insights, setInsights}) => {
             <TableRow>
               {/*************************TABLE COLUMNS************************************************ */}
               <TableCell>Name</TableCell>
-              {columns.map((column) => (
+              {columns.map((column, columnIndex) => (
                 <TableCell
+                  key={columnIndex}
                   sortDirection={orderBy === column.name ? order : false}
                 >
                   <TableSortLabel
@@ -189,14 +187,28 @@ const TableComponent = ({insights, setInsights}) => {
           </TableHead>
           <TableBody>
             {/********************************************TABLE DATA************************************************************* */}
-            {visibleRows.map((insight) => (
+            {visibleRows.map((insight, insightIndex) => (
               <TableRow
-                key={insight.name}
+                key={insightIndex}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
                   <Stack direction="row" spacing={0.5} alignItems="center">
-                    <span>{insight.vendor_name}</span>
+                    <Link to="/vendors"
+                    state={{_id : insight._vendor, name : {en : insight.vendor_name}}}
+                    >
+                      <Box
+                        sx={{
+                          "&:hover": {
+                            color: "blue",
+                            textDecoration: "underline",
+                          },
+                          cursor: "pointer",
+                        }}
+                      >
+                        {insight.vendor_name}
+                      </Box>
+                    </Link>
                   </Stack>
                 </TableCell>
                 <TableCell align="center">{insight.total_orders}</TableCell>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
-import CancelledOrders from "../components/Dashbaord/CancelledOrders"
-import TimeTake from "../components/Dashbaord/TimeTaken"
+import CancelledOrders from "../components/dashbaord/CancelledOrders"
+import TimeTake from "../components/dashbaord/TimeTaken"
 import {
   Box,
   Typography,
@@ -21,8 +21,9 @@ import { styled } from "@mui/material/styles"
 import Tag from "../components/Tag"
 import axios from "axios"
 import { People, ShoppingCart } from "@mui/icons-material"
-import TableComponent from "../components/TableComponent"
-import DeliveryTime from "../components/Dashbaord/DeliveryTime"
+import TableComponent from "../components/dashbaord/TableComponent"
+import DeliveryTime from "../components/dashbaord/DeliveryTime"
+import LastOrder from "../components/dashbaord/LastOrder"
 
 const PrettoSlider = styled(Slider)({
   color: "#17236A",
@@ -91,14 +92,14 @@ const Orders = () => {
   useEffect(() => {
     axios
       .get("http://localhost:5000/totalOrders", {
-        headers :{
-          "Authorization" : localStorage.getItem("token")
-        }
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
       })
       .then((res) => setTotalOrders(res.data.total_orders))
   }, [])
 
-  if(!totalOrders) return <div>Loading...</div>
+  if (!totalOrders) return <div>Loading...</div>
 
   return (
     <>
@@ -172,59 +173,35 @@ const Orders = () => {
         </div>
       </LocalizationProvider>
       <Box m={2} />
-      <TableComponent insights={insights} setInsights={setInsights}/>
-      <Box m={2} />
-      <Stack direction="row" spacing={2}>
+      <Stack direction="column" spacing={2}>
+        <TableComponent insights={insights} setInsights={setInsights} />
+
+        <Stack direction="row" spacing={2}>
+          <CancelledOrders />
+          <Box>
+            <Tag
+              title="Orders"
+              count={totalOrders}
+              icon={<ShoppingCart sx={{ fontSize: "3rem" }} />}
+            />
+            <Box m={2} />
+            <Tag
+              title="Vendors"
+              count={insights.length}
+              icon={<People sx={{ fontSize: "3.2rem" }} />}
+            />
+          </Box>
+        </Stack>
+        <TimeTake />
+
+        <DeliveryTime />
+
+        <LastOrder />
+
         <CancelledOrders />
-        <Box>
-          <Tag
-            title="Orders"
-            count={totalOrders}
-            icon={<ShoppingCart sx={{ fontSize: "3rem" }}/>}
-            
-          />
-          <Box m={2} />
-          <Tag 
-          title="Vendors"
-          count={insights.length}
-          icon={<People sx={{ fontSize: "3.2rem" }}/>}
-          />
-        </Box>
       </Stack>
-      <Box m={4} />
-      <TimeTake />
-      <Box m={1} />
-      <DeliveryTime/>
-      <Box m={2} />
-      
     </>
   )
 }
 
 export default Orders
-
-// {location.pathname === "/orders" ? (
-//   <Box
-//     sx={{
-//       paddingLeft: `${drawerWidth + 7}px`,
-//       display: "flex",
-//       justifyContent: "space-between",
-//     }}
-//   >
-//     {/**Count number that show how many bar chart */}
-
-//     {/*Date range (start date and end date) to display orders in that range */}
-//     <div
-//       style={{
-//         display: "flex",
-//         alignItems: "center",
-//         gap: "0.8rem",
-//         padding: "1rem 0.5rem",
-//       }}
-//     >
-
-//     </div>
-//   </Box>
-// ) : (
-//   <Box sx={{ padding: "1rem 0" }}>Test</Box>
-// )}
