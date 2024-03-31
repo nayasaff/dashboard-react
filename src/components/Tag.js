@@ -9,6 +9,7 @@ const Tag = ({ title, count, icon }) => {
     <Card
       sx={{
         minWidth: 275,
+        maxWidth: 275,
         borderRadius: "16px",
         border: `1px ${grey[400]} solid`,
         boxShadow: "none",

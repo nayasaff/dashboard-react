@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React from "react"
 import Table from "@mui/material/Table"
 import TableBody from "@mui/material/TableBody"
 import TableCell from "@mui/material/TableCell"
@@ -55,10 +55,10 @@ const TableComponent = ({ insights, setInsights }) => {
 
   const [searchValue, setSearchValue] = useState("")
 
-  const emptyRows =
-    page === Math.ceil(insights.length / 10) - 1
-      ? Math.max(0, (1 + page) * 10 - insights.length)
-      : 0
+  // const emptyRows =
+  //   page === Math.ceil(insights.length / 10) - 1
+  //     ? Math.max(0, (1 + page) * 10 - insights.length)
+  //     : 0
 
   const formateNumber = (number) => {
     return number.toFixed(2)
@@ -194,8 +194,12 @@ const TableComponent = ({ insights, setInsights }) => {
               >
                 <TableCell component="th" scope="row">
                   <Stack direction="row" spacing={0.5} alignItems="center">
-                    <Link to="/vendors"
-                    state={{_id : insight._vendor, name : {en : insight.vendor_name}}}
+                    <Link
+                      to="/vendors"
+                      state={{
+                        _id: insight._vendor,
+                        name: { en: insight.vendor_name },
+                      }}
                     >
                       <Box
                         sx={{
@@ -220,7 +224,7 @@ const TableComponent = ({ insights, setInsights }) => {
                 </TableCell>
                 <TableCell align="center">{insight.last_order}</TableCell>
                 <TableCell align="center">
-                  {formateNumber(insight.average_time)}
+                  {formateNumber(insight.average_response_time)}
                 </TableCell>
                 <TableCell align="center">
                   {fomratTimeDelta(insight.average_delivery_time)}

@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from "react"
 import CancelledOrders from "../components/dashbaord/CancelledOrders"
 import TimeTake from "../components/dashbaord/TimeTaken"
-import {
-  Box,
-  Typography,
-  FormControl,
-  Select,
-  MenuItem,
-  InputLabel,
-  Stack,
-} from "@mui/material"
+import { Box, Stack } from "@mui/material"
+import Typography from "@mui/material/Typography"
+import InputLabel from "@mui/material/InputLabel"
+import { FormControl, Select, MenuItem } from "@mui/material"
 import { useDispatch, useSelector } from "react-redux"
 import { setIsAscending } from "../redux/AppReducer"
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
@@ -25,46 +20,6 @@ import TableComponent from "../components/dashbaord/TableComponent"
 import DeliveryTime from "../components/dashbaord/DeliveryTime"
 import LastOrder from "../components/dashbaord/LastOrder"
 
-const PrettoSlider = styled(Slider)({
-  color: "#17236A",
-  height: 6,
-  //Slider track (the line that the thumb moves along)
-  "& .MuiSlider-track": {
-    border: "none",
-  },
-  //Slider thumb (the circle that moves around the slider)
-  "& .MuiSlider-thumb": {
-    height: 20,
-    width: 20,
-    backgroundColor: "#fff",
-    border: "2px solid currentColor",
-    boxShadow: "inherit", // Always show shadow
-    "&::before": {
-      display: "none",
-    },
-  },
-  //Slider value label (the number that appears on the thumb)
-  "& .MuiSlider-valueLabel": {
-    lineHeight: 1.2,
-    fontSize: 12,
-    background: "unset",
-    padding: 0,
-    width: 24,
-    height: 24,
-    borderRadius: "50% 50% 50% 0",
-    backgroundColor: "#17236A",
-    transformOrigin: "bottom left",
-    transform: "translate(50%, -70%) rotate(-45deg) scale(0)",
-    "&::before": { display: "none" },
-    "&.MuiSlider-valueLabelOpen": {
-      transform: "translate(50%, -70%) rotate(-45deg) scale(1)",
-    },
-    "& > *": {
-      transform: "rotate(45deg)",
-    },
-  },
-})
-
 const Orders = () => {
   const isAscending = useSelector((state) => state.app.isAscending)
   const dispatch = useDispatch()
@@ -74,30 +29,26 @@ const Orders = () => {
   const [insights, setInsights] = useState([])
 
   useEffect(() => {
-    try {
-      axios
-        .get("http://localhost:5000/all_insights", {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/all_insights", {
           headers: {
             Authorization: localStorage.getItem("token"),
           },
         })
-        .then((res) => setInsights(res.data))
-    } catch (e) {
-      console.log(e)
+
+        if (response.status === 200) {
+          setTotalOrders(response.data.totalOrders)
+          setInsights(response.data.insights)
+        }
+      } catch (e) {
+        console.log(e)
+      }
     }
+    fetchData()
   }, [])
 
   const { number, startDate, endDate } = state
-
-  useEffect(() => {
-    axios
-      .get("http://localhost:5000/totalOrders", {
-        headers: {
-          Authorization: localStorage.getItem("token"),
-        },
-      })
-      .then((res) => setTotalOrders(res.data.total_orders))
-  }, [])
 
   if (!totalOrders) return <div>Loading...</div>
 
@@ -203,5 +154,45 @@ const Orders = () => {
     </>
   )
 }
+
+const PrettoSlider = styled(Slider)({
+  color: "#17236A",
+  height: 6,
+  //Slider track (the line that the thumb moves along)
+  "& .MuiSlider-track": {
+    border: "none",
+  },
+  //Slider thumb (the circle that moves around the slider)
+  "& .MuiSlider-thumb": {
+    height: 20,
+    width: 20,
+    backgroundColor: "#fff",
+    border: "2px solid currentColor",
+    boxShadow: "inherit", // Always show shadow
+    "&::before": {
+      display: "none",
+    },
+  },
+  //Slider value label (the number that appears on the thumb)
+  "& .MuiSlider-valueLabel": {
+    lineHeight: 1.2,
+    fontSize: 12,
+    background: "unset",
+    padding: 0,
+    width: 24,
+    height: 24,
+    borderRadius: "50% 50% 50% 0",
+    backgroundColor: "#17236A",
+    transformOrigin: "bottom left",
+    transform: "translate(50%, -70%) rotate(-45deg) scale(0)",
+    "&::before": { display: "none" },
+    "&.MuiSlider-valueLabelOpen": {
+      transform: "translate(50%, -70%) rotate(-45deg) scale(1)",
+    },
+    "& > *": {
+      transform: "rotate(45deg)",
+    },
+  },
+})
 
 export default Orders
