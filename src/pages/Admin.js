@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react"
-import AppContainer from "../components/AppContainer"
 import { Box, Grid } from "@mui/material"
 import { AddCircle } from "@mui/icons-material"
 import UserCard from "../components/UserCard"
@@ -60,17 +59,20 @@ const Admin = () => {
                 <UserCard user={user} />
               </Grid>
             ))}
-          </Grid>
-          <AddCircle 
+          <Grid item xs={12} sm={6} md={4} sx={{ display: 'flex', justifyContent : users.length % 3 === 0 ? "center" : "start" ,alignItems: 'center' }}>
+            <AddCircle 
             onClick={() => setOpenModal(true)}
             color="primary"
-            style={{ alignSelf : 'center', justifySelf : 'center' ,fontSize : '45px', cursor : 'pointer'}}/>
+            style={{ fontSize : '45px', cursor : 'pointer'}}/>
+            </Grid>
+          </Grid>
+
           </>
         ) : (
           <div>Loading...</div>
         )}
       </Box>
-      <UserModal setUsers={setUsers} openModal={openModal} setOpenModal={setOpenModal}/>
+      {openModal && <UserModal setUsers={setUsers} openModal={openModal} setOpenModal={setOpenModal}/>}
     </>
   )
 }

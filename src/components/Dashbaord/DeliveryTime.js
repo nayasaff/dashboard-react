@@ -41,8 +41,8 @@ const DeliveryTime = () => {
         <Plot
           data={[
             {
-              y: deliveryTime["maximum_time"]["maxTime"],
-              x: deliveryTime["maximum_time"]["vendor_name"],
+              y: deliveryTime["max"]["maxTime"],
+              x: deliveryTime["max"]["vendor_name"],
               type: "bar",
               name: "Time Taken",
               marker: {
@@ -55,7 +55,7 @@ const DeliveryTime = () => {
             width: 400,
             height: 340,
             yaxis: {
-              title: "Time (in minutes)",
+              title: "Time (in hours)",
             },
             xaxis: {
               title: "Vendor Name",
@@ -74,8 +74,8 @@ const DeliveryTime = () => {
         <Plot
           data={[
             {
-              y: deliveryTime["average_time"]["averageTime"],
-              x: deliveryTime["average_time"]["vendor_name"],
+              y: deliveryTime["avg"]["averageTime"],
+              x: deliveryTime["avg"]["vendor_name"],
               type: "bar",
               marker: {
                 color: "purple",
@@ -87,7 +87,7 @@ const DeliveryTime = () => {
             width: 400,
             height: 340,
             yaxis: {
-              title: "Time (in minutes)",
+              title: "Time (in hours)",
             },
             xaxis: {
               title: "Vendor Name",
@@ -106,8 +106,8 @@ const DeliveryTime = () => {
         <Plot
           data={[
             {
-              y: deliveryTime["minimum_time"]["minTime"],
-              x: deliveryTime["minimum_time"]["vendor_name"],
+              y: deliveryTime["min"]["minTime"],
+              x: deliveryTime["min"]["vendor_name"],
               type: "bar",
               name: "Time Taken",
               marker: {
@@ -120,7 +120,7 @@ const DeliveryTime = () => {
             width: 400,
             height: 340,
             yaxis: {
-              title: "Time (in minutes)",
+              title: "Time (in hours)",
             },
             xaxis: {
               title: "Vendor Name",

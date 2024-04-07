@@ -67,8 +67,7 @@ const Vendors = () => {
     fetchData()
   }, [currentVendor])
 
-  if (!insights) return <div>Loading...</div>
-  else
+
     return (
       <Stack direction="column" alignItems="" spacing={2}>
         <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
@@ -97,7 +96,7 @@ const Vendors = () => {
             />
           </FormControl>
         </div>
-        <Stack direction="row" spacing={2}>
+        { insights && data && <Stack direction="row" spacing={2}>
           <Stack direction="column" spacing={2}>
             <Stack direction="row" spacing={2}>
               <Tag
@@ -201,7 +200,7 @@ const Vendors = () => {
               icon={<MoneyOff sx={{ fontSize: "3rem" }} />}
             />
           </Stack>
-        </Stack>
+        </Stack> }
 
        {data && <TimeStat data={data} />}
         <OrderType currentVendor={currentVendor}/>

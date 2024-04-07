@@ -144,12 +144,14 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
           </Box>
           <Stack
             direction="row"
+            sx={{flexWrap : 'wrap'}}
             spacing={1}
             style={{ marginBottom: "0.25rem", marginLeft: "85px" }}
           >
             {selectedVendors.length > 0 &&
               selectedVendors.map((selectedValue) => (
                 <Chip
+                style={{marginTop : '0.25rem'}}
                 key={selectedValue._id}
                   label={selectedValue.name.en}
                   onDelete={() => handleDelete(selectedValue)}
@@ -186,7 +188,7 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
               )}
             /> 
           </Box>
-          <Stack direction="row" justifyContent="end" spacing={1} sx={{flexWrap : 'wrap'}}>
+          <Stack direction="row" justifyContent="end" spacing={1} >
             <MuiButton
               variant="outlined"
               size="small"

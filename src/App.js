@@ -1,6 +1,5 @@
 import React from "react"
 import "./App.css"
-import Orders from "./pages/Orders"
 import { ThemeProvider, createTheme } from "@mui/material"
 import {
   BrowserRouter as Router,
@@ -8,11 +7,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom"
-import Vendors from "./pages/Vendors"
 import Login from "./pages/Login"
-import Signup from "./pages/Signup"
-import ProtectedRoute from "./ProtectedRoute"
-import Admin from "./pages/Admin"
 import AppContainer from "./components/AppContainer"
 import './index.css'
 

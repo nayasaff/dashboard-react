@@ -77,10 +77,10 @@ const AppContainer = ({ children }) => {
           spacing={1}
         >
           <Avatar sx={{ bgcolor: "blue", color: "white" }} aria-label="recipe">
-            N
+            {localStorage.getItem("username")[0].toUpperCase()}
           </Avatar>
           <Typography variant="p" sx={{ padding: "0", margin: "0" }}>
-            Naya
+            {localStorage.getItem("username")}
           </Typography>
         </Stack>
         <Divider />
@@ -128,8 +128,17 @@ const AppContainer = ({ children }) => {
               </ProtectedRoute>
             }
           />
-          <Route path="vendors" element={<Vendors />} />
-          <Route path="configuration" element={<Admin />} />
+          <Route
+            path="vendors"
+            element={
+              <ProtectedRoute adminRequired={true}>
+                <Vendors />
+              </ProtectedRoute>
+            }
+          />
+          {localStorage.getItem("role") === "admin" && (
+            <Route path="configuration" element={<Admin />} />
+          )}
           <Route
             path="table"
             element={

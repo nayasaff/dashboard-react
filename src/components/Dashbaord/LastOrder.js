@@ -71,7 +71,7 @@ const LastOrder = () => {
         <Plot
           data={[
             {
-              x: lastUpdatedItems["0"],
+              x: lastUpdatedItems["lastUpdatedItem"],
               y: lastOrders["vendor_name"],
               type: "scatter",
               mode: "markers",

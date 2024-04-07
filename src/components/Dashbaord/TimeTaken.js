@@ -34,8 +34,8 @@ const TimeTaken = () => {
       <Plot
         data={[
           {
-            y: data["maximum_time"]["maxTime"],
-            x: data["maximum_time"]["vendor_name"],
+            y: data["max"]["maxTime"],
+            x: data["max"]["vendor_name"],
             type: "bar",
             name: "Time Taken",
             marker: {
@@ -48,7 +48,7 @@ const TimeTaken = () => {
           width: 400,
           height: 340,
           yaxis: {
-            title: "Time (in hours)",
+            title: "Time (in minutes)",
           },
           xaxis : {
             title : "Vendor Name"
@@ -65,8 +65,8 @@ const TimeTaken = () => {
       <Plot
         data={[
           {
-            y: data["average_time"]["averageTime"],
-            x: data["average_time"]["vendor_name"],
+            y: data["avg"]["averageTime"],
+            x: data["avg"]["vendor_name"],
             type: "bar",
             marker: {
               color: "purple",
@@ -78,7 +78,7 @@ const TimeTaken = () => {
           width: 400,
           height: 340,
           yaxis: {
-            title: "Time (in hours)",
+            title: "Time (in minutes)",
           },
           xaxis : {
             title : "Vendor Name"
@@ -91,8 +91,8 @@ const TimeTaken = () => {
       <Plot
         data={[
           {
-            y: data["minimum_time"]["minTime"],
-            x: data["minimum_time"]["vendor_name"],
+            y: data["min"]["minTime"],
+            x: data["min"]["vendor_name"],
             type: "bar",
             marker: {
               color: "",
@@ -104,7 +104,7 @@ const TimeTaken = () => {
           width: 400,
           height: 340,
           yaxis: {
-            title: "Time (in hours)",
+            title: "Time (in minutes)",
           },
           xaxis : {
             title : "Vendor Name"

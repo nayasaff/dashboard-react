@@ -227,7 +227,7 @@ const TableComponent = ({ insights, setInsights }) => {
                   {formateNumber(insight.average_response_time)}
                 </TableCell>
                 <TableCell align="center">
-                  {fomratTimeDelta(insight.average_delivery_time)}
+                  {insight.average_delivery_time}
                 </TableCell>
                 <TableCell align="center">{insight.upated_item}</TableCell>
               </TableRow>
