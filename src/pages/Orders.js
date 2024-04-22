@@ -50,7 +50,7 @@ const Orders = () => {
 
   const { number, startDate, endDate } = state
 
-  if (!totalOrders) return <div>Loading...</div>
+
 
   return (
     <>
@@ -125,11 +125,11 @@ const Orders = () => {
       </LocalizationProvider>
       <Box m={2} />
       <Stack direction="column" spacing={2}>
-        <TableComponent insights={insights} setInsights={setInsights} />
+        {insights && <TableComponent insights={insights} setInsights={setInsights} />}
 
         <Stack direction="row" spacing={2}>
           <CancelledOrders />
-          <Box>
+          {insights && totalOrders && <Box>
             <Tag
               title="Orders"
               count={totalOrders}
@@ -141,7 +141,7 @@ const Orders = () => {
               count={insights.length}
               icon={<People sx={{ fontSize: "3.2rem" }} />}
             />
-          </Box>
+          </Box> }
         </Stack>
         <TimeTake />
 

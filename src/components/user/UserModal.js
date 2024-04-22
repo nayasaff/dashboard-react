@@ -12,7 +12,7 @@ import {
 } from "@mui/material"
 import Chip from "@mui/material/Chip"
 import axios from "axios"
-import { addUser, updateUser } from "../redux/UserReducer"
+import { addUser, updateUser } from "../../redux/UserReducer"
 import { useDispatch, useSelector } from "react-redux"
 
 

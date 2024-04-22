@@ -28,6 +28,11 @@ const drawerWidth = 240
 
 const list = [
   {
+    name : "Power BI", 
+    icon : <ContactPage />,
+    link : "/powerbi"
+  },
+  {
     name: "Orders",
     icon: <ShoppingCart />,
     link: "/orders",

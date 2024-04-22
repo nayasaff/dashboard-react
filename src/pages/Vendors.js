@@ -11,6 +11,7 @@ import {EditCalendar,Event,MoneyOff,RemoveShoppingCart,} from "@mui/icons-materi
 import { grey } from "@mui/material/colors"
 import { TimeStat } from "../components/vendor/TimeStat"
 import OrderType from "../components/vendor/OrderType"
+import OrderTaken from "../components/vendor/OrderTaken"
 
 const Vendors = () => {
 
@@ -55,7 +56,7 @@ const Vendors = () => {
         .catch((err) => console.log(err))
 
         axios
-        .get(`http://localhost:5000/timeTaken/${currentVendor._id}`, {
+        .get(`http://localhost:5000/timeStats/${currentVendor._id}`, {
           headers: {
             Authorization: localStorage.getItem("token"),
           },
@@ -123,28 +124,7 @@ const Vendors = () => {
                 backgroundColor: "white",
               }}
             >
-              <Plot
-                data={[
-                  {
-                    x: data["orderTaken"],
-                    y: data["orderTakenCount"],
-                    type: "scatter",
-                    mode: "lines+markers",
-                    marker: { size: 5 },
-                    line: { shape: "spline" },
-                  },
-                ]}
-                layout={{
-                  title: "Order Taken",
-                  xaxis: { type: "date", autorange: true },
-                  yaxis: {
-                    range: [0, Math.max(...data["orderTakenCount"]) + 1],
-                  },
-                  width: 850,
-                  height: 340,
-                  paper_bgcolor: "transparent",
-                }}
-              />
+              <OrderTaken currentVendor={currentVendor} />
             </Box>
             <Box
               sx={{

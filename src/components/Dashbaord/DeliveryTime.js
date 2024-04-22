@@ -4,6 +4,8 @@ import { grey } from "@mui/material/colors"
 import axios from "axios"
 import Plot from "react-plotly.js"
 import { useSelector } from "react-redux"
+import GraphPlaceholder from "../placeholder/GraphPlaceholder"
+import FadeIn from "react-fade-in"
 
 const DeliveryTime = () => {
   const [deliveryTime, setDeliveryTime] = useState()
@@ -27,109 +29,114 @@ const DeliveryTime = () => {
       .catch((err) => console.log(err))
   }, [isAscending, number, startDate, endDate])
 
-  if (!deliveryTime) return <div></div>
+  if (!deliveryTime) return <GraphPlaceholder />
 
   return (
-    <Box sx={{ display: "flex", gap: "1em" }}>
-      <Box
-        sx={{
-          borderRadius: "16px",
-          border: `1px ${grey[400]} solid`,
-          backgroundColor: "white",
-        }}
-      >
-        <Plot
-          data={[
-            {
-              y: deliveryTime["max"]["maxTime"],
-              x: deliveryTime["max"]["vendor_name"],
-              type: "bar",
-              name: "Time Taken",
-              marker: {
-                color: "#e75480",
-              },
-            },
-          ]}
-          layout={{
-            title: "Maximum Delivery Time",
-            width: 400,
-            height: 340,
-            yaxis: {
-              title: "Time (in hours)",
-            },
-            xaxis: {
-              title: "Vendor Name",
-            },
-            paper_bgcolor: "transparent",
+    <>
+    <FadeIn>
+      <Box sx={{ display: "flex", gap: "1em" }}>
+        {" "}
+        <Box
+          sx={{
+            borderRadius: "16px",
+            border: `1px ${grey[400]} solid`,
+            backgroundColor: "white",
           }}
-        />
-      </Box>
-      <Box
-        sx={{
-          borderRadius: "16px",
-          border: `1px ${grey[400]} solid`,
-          backgroundColor: "white",
-        }}
-      >
-        <Plot
-          data={[
-            {
-              y: deliveryTime["avg"]["averageTime"],
-              x: deliveryTime["avg"]["vendor_name"],
-              type: "bar",
-              marker: {
-                color: "purple",
+        >
+          <Plot
+            data={[
+              {
+                y: deliveryTime["max"]["maxTime"],
+                x: deliveryTime["max"]["vendor_name"],
+                type: "bar",
+                name: "Time Taken",
+                marker: {
+                  color: "#e75480",
+                },
               },
-            },
-          ]}
-          layout={{
-            title: "Average Delivery Time",
-            width: 400,
-            height: 340,
-            yaxis: {
-              title: "Time (in hours)",
-            },
-            xaxis: {
-              title: "Vendor Name",
-            },
-            paper_bgcolor: "transparent",
-          }}
-        />
-      </Box>
-      <Box
-        sx={{
-          borderRadius: "16px",
-          border: `1px ${grey[400]} solid`,
-          backgroundColor: "white",
-        }}
-      >
-        <Plot
-          data={[
-            {
-              y: deliveryTime["min"]["minTime"],
-              x: deliveryTime["min"]["vendor_name"],
-              type: "bar",
-              name: "Time Taken",
-              marker: {
-                color: "",
+            ]}
+            layout={{
+              title: "Maximum Delivery Time",
+              width: 400,
+              height: 340,
+              yaxis: {
+                title: "Time (in hours)",
               },
-            },
-          ]}
-          layout={{
-            title: "Minimum Delivery Time",
-            width: 400,
-            height: 340,
-            yaxis: {
-              title: "Time (in hours)",
-            },
-            xaxis: {
-              title: "Vendor Name",
-            },
-            paper_bgcolor: "transparent",
+              xaxis: {
+                title: "Vendor Name",
+              },
+              paper_bgcolor: "transparent",
+            }}
+          />
+        </Box>
+        <Box
+          sx={{
+            borderRadius: "16px",
+            border: `1px ${grey[400]} solid`,
+            backgroundColor: "white",
           }}
-        />
+        >
+          <Plot
+            data={[
+              {
+                y: deliveryTime["avg"]["averageTime"],
+                x: deliveryTime["avg"]["vendor_name"],
+                type: "bar",
+                marker: {
+                  color: "purple",
+                },
+              },
+            ]}
+            layout={{
+              title: "Average Delivery Time",
+              width: 400,
+              height: 340,
+              yaxis: {
+                title: "Time (in hours)",
+              },
+              xaxis: {
+                title: "Vendor Name",
+              },
+              paper_bgcolor: "transparent",
+            }}
+          />
+        </Box>
+        <Box
+          sx={{
+            borderRadius: "16px",
+            border: `1px ${grey[400]} solid`,
+            backgroundColor: "white",
+          }}
+        >
+          <Plot
+            data={[
+              {
+                y: deliveryTime["min"]["minTime"],
+                x: deliveryTime["min"]["vendor_name"],
+                type: "bar",
+                name: "Time Taken",
+                marker: {
+                  color: "",
+                },
+              },
+            ]}
+            layout={{
+              title: "Minimum Delivery Time",
+              width: 400,
+              height: 340,
+              yaxis: {
+                title: "Time (in hours)",
+              },
+              xaxis: {
+                title: "Vendor Name",
+              },
+              paper_bgcolor: "transparent",
+            }}
+          />
+        </Box>
       </Box>
-    </Box>
+    </FadeIn>
+    </>
   )
 }
 

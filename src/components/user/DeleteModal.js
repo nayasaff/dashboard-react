@@ -8,7 +8,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { red } from '@mui/material/colors';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { deleteUser } from '../redux/UserReducer';
+import { deleteUser } from '../../redux/UserReducer';
 
 export default function DeleteModal({openDialogue, setOpenDialogue, userId}) {
 
