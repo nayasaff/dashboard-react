@@ -3,33 +3,39 @@ import React, { useEffect, useState } from "react"
 import Plot from "react-plotly.js"
 import { Box } from "@mui/material"
 import { grey } from "@mui/material/colors"
+import GraphPlaceholder from "../placeholder/GraphPlaceholder"
+import { randomColor } from "../../utils/utils"
+import { useSelector } from "react-redux"
 
 const LastOrder = () => {
   const [lastOrders, setLastOrders] = useState()
   const [lastUpdatedItems, setLastUpdatedItems] = useState()
+  const state = useSelector((state) => state.app)
+
+  const { number, startDate, endDate, isAscending } = state
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/lastOrder`, {
+      .get(`http://localhost:5000/lastOrder?isAscending=${isAscending}&number=${number}&startDate=${startDate.format("YYYY-MM-DD")}&endDate=${endDate.format("YYYY-MM-DD")}`, {
         headers: {
           Authorization: localStorage.getItem("token"),
         },
       })
       .then((res) => setLastOrders(res.data))
       .catch((err) => console.log(err))
-  }, [])
+  }, [isAscending, number, startDate, endDate])
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/lastItemUpdated`, {
+      .get(`http://localhost:5000/lastItemUpdated?isAscending=${isAscending}&number=${number}&startDate=${startDate.format("YYYY-MM-DD")}&endDate=${endDate.format("YYYY-MM-DD")}`, {
         headers: {
           Authorization: localStorage.getItem("token"),
         },
       })
       .then((res) => setLastUpdatedItems(res.data))
-  }, [])
+  }, [isAscending, number, startDate, endDate])
 
-  if (!(lastOrders && lastUpdatedItems)) return <div></div>
+  if (!(lastOrders && lastUpdatedItems)) return <GraphPlaceholder numberOfGraph={2} />
 
   return (
     <Box sx={{ display: "flex", gap: "1em", justifyContent: "start" }}>
@@ -38,6 +44,7 @@ const LastOrder = () => {
           borderRadius: "16px",
           border: `1px ${grey[400]} solid`,
           backgroundColor: "white",
+          flex :1
         }}
       >
         <Plot
@@ -45,17 +52,19 @@ const LastOrder = () => {
             {
               x: lastOrders["lastOrder"],
               y: lastOrders["vendor_name"],
-              type: "scatter",
+              type: "bar",
               mode: "markers",
-              marker: { color: "blue", size: 10 },
+              marker: { color: randomColor(["#EC7A08", "#F4B678", "#EF9234"], lastOrders["vendor_name"]),
+               size: 10 },
               name: "Last Order Date",
+              orientation: "h",
             },
           ]}
+          style={{ width: "100%", height: "100%"}}
           layout={{
             title: "Last Order Date",
             yaxis: { type: "category" },
             xaxis: { type: "date", autorange: true },
-            width: 500,
             height: 350,
             paper_bgcolor: "transparent",
           }}
@@ -66,23 +75,26 @@ const LastOrder = () => {
           borderRadius: "16px",
           border: `1px ${grey[400]} solid`,
           backgroundColor: "white",
+          flex :1
         }}
       >
         <Plot
           data={[
             {
               x: lastUpdatedItems["lastUpdatedItem"],
-              y: lastOrders["vendor_name"],
-              type: "scatter",
+              y: lastUpdatedItems["vendor_name"],
+              type: "bar",
               mode: "markers",
-              marker: { color: "red", size: 10 },
+              marker: { color: randomColor(["#06C", "#8BC1F7", "#519DE9"], lastUpdatedItems["vendor_name"]), 
+              size: 10 },
+              orientation : "h",
             },
           ]}
+          style={{ width: "100%", height: "100%"}}
           layout={{
             title: "Last Updated Item Date",
             yaxis: { type: "category" },
             xaxis: { type: "date", autorange: true },
-            width: 500,
             height: 350,
             paper_bgcolor: "transparent",
           }}

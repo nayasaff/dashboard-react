@@ -3,13 +3,13 @@ import React from "react"
 import { grey } from "@mui/material/colors"
 import { Stack } from "@mui/material"
 
+const cardWidth = {xl : 285, lg : 250, md : 220}
 
 const Tag = ({ title, count, icon }) => {
   return (
     <Card
       sx={{
-        minWidth: 275,
-        maxWidth: 275,
+        width : {xl : cardWidth.xl, lg : cardWidth.lg, md : cardWidth.md},
         borderRadius: "16px",
         border: `1px ${grey[400]} solid`,
         boxShadow: "none",

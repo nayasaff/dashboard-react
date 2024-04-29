@@ -5,7 +5,6 @@ import { useSelector } from "react-redux"
 import axios from "axios"
 import { grey } from "@mui/material/colors"
 import GraphPlaceholder from "../placeholder/GraphPlaceholder"
-import FadeIn from "react-fade-in/lib/FadeIn"
 
 const TimeTaken = () => {
   const [data, setData] = useState()
@@ -31,15 +30,15 @@ const TimeTaken = () => {
     fetchData()
   }, [number, isAscending, startDate, endDate])
 
-  if (!data) return <GraphPlaceholder />
+  if (!data) return <GraphPlaceholder numberOfGraph={3}/>
   return (
-    <FadeIn>
       <Box sx={{ display: "flex", gap: "1em" }}>
         <Box
           sx={{
             borderRadius: "16px",
             border: `1px ${grey[400]} solid`,
             backgroundColor: "white",
+            flex : 1
           }}
         >
           <Plot
@@ -50,14 +49,13 @@ const TimeTaken = () => {
                 type: "bar",
                 name: "Time Taken",
                 marker: {
-                  color: "DarkRed",
+                  color: ["#4CB140", "#7CC674", "#4CB140"],
                 },
               },
             ]}
+            style={{ width: "100%", height: "100%" }}
             layout={{
               title: "Maximum Response Time",
-              width: 400,
-              height: 340,
               yaxis: {
                 title: "Time (in minutes)",
               },
@@ -65,6 +63,7 @@ const TimeTaken = () => {
                 title: "Vendor Name",
               },
               paper_bgcolor: "transparent",
+              height : 360
             }}
           />
         </Box>
@@ -73,6 +72,7 @@ const TimeTaken = () => {
             borderRadius: "16px",
             border: `1px ${grey[400]} solid`,
             backgroundColor: "white",
+            flex : 1
           }}
         >
           <Plot
@@ -82,14 +82,13 @@ const TimeTaken = () => {
                 x: data["avg"]["vendor_name"],
                 type: "bar",
                 marker: {
-                  color: "purple",
+                  color: ["#5752D1", "#B2B0EA", "#8481DD"],
                 },
               },
             ]}
+            style={{ width: "100%", height: "100%" }}
             layout={{
               title: "Average Response Time",
-              width: 400,
-              height: 340,
               yaxis: {
                 title: "Time (in minutes)",
               },
@@ -97,6 +96,7 @@ const TimeTaken = () => {
                 title: "Vendor Name",
               },
               paper_bgcolor: "transparent",
+              height : 360
             }}
           />
         </Box>
@@ -105,6 +105,7 @@ const TimeTaken = () => {
             borderRadius: "16px",
             border: `1px ${grey[400]} solid`,
             backgroundColor: "white",
+            flex : 1
           }}
         >
           <Plot
@@ -114,14 +115,13 @@ const TimeTaken = () => {
                 x: data["min"]["vendor_name"],
                 type: "bar",
                 marker: {
-                  color: "",
+                  color: ["#C9190B", "#A30000", "#7D1007"],
                 },
               },
             ]}
+            style={{ width: "100%", height: "100%" }}
             layout={{
               title: "Minimum Response Time",
-              width: 400,
-              height: 340,
               yaxis: {
                 title: "Time (in minutes)",
               },
@@ -129,11 +129,11 @@ const TimeTaken = () => {
                 title: "Vendor Name",
               },
               paper_bgcolor: "transparent",
+              height : 360
             }}
           />
         </Box>
       </Box>
-    </FadeIn>
   )
 }
 

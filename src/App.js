@@ -10,6 +10,7 @@ import {
 import Login from "./pages/Login"
 import AppContainer from "./components/AppContainer"
 import './index.css'
+import ProtectedRoute from "./ProtectedRoute"
 
 //mui them
 const theme = createTheme({
@@ -44,7 +45,7 @@ function App() {
             }
           />           
           <Route path="/login" element={<Login />} />
-          <Route exact path="/*" element={<AppContainer/>}/> 
+          <Route exact path="/*" element={<ProtectedRoute><AppContainer/></ProtectedRoute> }/> 
         </Routes>
       </Router>
     </ThemeProvider>

@@ -25,7 +25,8 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
 
   const [username, setUsername] = useState(isEditable ? user.username : "")
   const [usernameError, setUsernameError] = useState(false)
-  const [password, setPassword] = useState(isEditable ? "*******" : "")
+  const [passwordError, setPasswordError] = useState(false)
+  const [password, setPassword] = useState("")
 
   const dispatch = useDispatch()
 
@@ -33,19 +34,27 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
   const handleChange = (newValue) => {
     setValue("")
     setSelectedVendors((prev) => {
-      if (prev.includes(newValue)) return prev
+      if (prev.some(item => item._id === newValue._id)) return prev
       return [...prev, {"_id" : newValue['_id'], "name" : newValue['name'] } ]
     })
   }
 
   const handleDelete = (value) => {
-    setSelectedVendors((prev) => prev.filter((val) => val !== value))
+    setSelectedVendors((prev) => prev.filter((val) => val._id !== value._id))
   }
 
   const createUser = async() => {
 
     if(!username){
         setUsernameError("Username is required")
+        return
+    }
+    if(!password){
+        setPasswordError("Password is required")
+        return
+    }
+    if(password.length < 6){
+      setPasswordError("Password must be atleast 6 characters long")
         return
     }
 
@@ -61,13 +70,26 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
         }
     }
     catch(err){
-        console.log(err)
+        if(err.response.username){
+            setUsernameError(err.response.username)
+        }
+        if(err.response.password){
+            setUsernameError(err.response.password)
+        }
     }
   }
 
   const editUser = async() => {
+
+    if(password !== "" && password.length < 6){
+      setPasswordError("Password must be atleast 6 characters long")
+      return
+  }
+
     try{
-        const response = await axios.patch(`http://localhost:5000/users/edit/${user._id}`, {username, vendors : selectedVendors}, {
+        const response = await axios.patch(`http://localhost:5000/users/edit/${user._id}`, {username, vendors : selectedVendors, 
+      password : password.length > 0 ? password : null
+      }, {
           headers: {
             Authorization: localStorage.getItem("token"),
           },
@@ -132,13 +154,15 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
               mb: "1rem",
             }}
           >
-            <Typography sx={{ width: "100px" }}>Password</Typography>
+            {<Typography sx={{ width: "100px" }}>Password</Typography>}
             <TextField
               fullWidth
-              label="Password"
+              label={isEditable ? "New Password" : "Password"}
               type="text"
               size="small"
               value={password}
+              error={passwordError}
+              helperText={passwordError}
               onChange={(e) => setPassword(e.target.value)}
             />
           </Box>

@@ -18,6 +18,7 @@ import { visuallyHidden } from "@mui/utils"
 import TableSortLabel from "@mui/material/TableSortLabel"
 import { useState } from "react"
 import { Link } from "react-router-dom"
+import TablePlaceholder from "../placeholder/TablePlaceholder"
 
 const columns = [
   { name: "Total Orders", value: "total_orders" },
@@ -47,31 +48,29 @@ function stableSort(array, order, orderBy) {
   })
 }
 
-const TableComponent = ({ insights, setInsights }) => {
+const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
   const [page, setPage] = useState(0)
 
   const [order, setOrder] = useState("desc")
   const [orderBy, setOrderBy] = useState("total_orders")
 
   const [searchValue, setSearchValue] = useState("")
+ 
 
   // const emptyRows =
   //   page === Math.ceil(insights.length / 10) - 1
   //     ? Math.max(0, (1 + page) * 10 - insights.length)
   //     : 0
 
+  const handleMenuItemSelected =(name, value, popupState)=>{
+    setFilteredValue({name, value})
+    popupState.close()
+  }
+
   const formateNumber = (number) => {
     return number.toFixed(2)
   }
 
-  const fomratTimeDelta = (timeDelta) => {
-    let timeSplit = timeDelta.split(" ")
-    let time = timeSplit[timeSplit.length - 1]
-
-    let timeWithoutNano = time.split(".")[0]
-
-    return timeWithoutNano
-  }
 
   const handleRequestSort = (property) => {
     const isAsc = orderBy === property && order === "asc"
@@ -94,17 +93,20 @@ const TableComponent = ({ insights, setInsights }) => {
     [filteredInsights, order, orderBy, page]
   )
 
-  if (!insights) return <div></div>
+
+  if (insights === undefined || insights === null) return <TablePlaceholder/>
 
   return (
     <Box
       sx={{
-        minWidth: 275,
+      
         borderRadius: "16px",
         border: `1px ${grey[400]} solid`,
         boxShadow: "none",
         backgroundColor: "white",
         padding: "1rem 1.5rem",
+        display: "flex",
+        flexDirection: "column",
       }}
     >
       <Typography variant="h4" sx={{ fontWeight: "bold" }} margin={0}>
@@ -128,7 +130,7 @@ const TableComponent = ({ insights, setInsights }) => {
           }}
         />
         {/********************************************FILTER************************************************************ */}
-        <PopupState variant="popover" popupId="demo-popup-menu">
+        <PopupState variant="popover" sx={{width : "100%"}}>
           {(popupState) => (
             <React.Fragment>
               <Button variant="outlined" {...bindTrigger(popupState)}>
@@ -139,16 +141,17 @@ const TableComponent = ({ insights, setInsights }) => {
                       textTransform: "capitalize",
                     }}
                   >
-                    Filter
+                    {filteredValue.name ? filteredValue.name : "Filter"}
                   </span>
                   <FilterList />
                 </Stack>
               </Button>
               <Menu {...bindMenu(popupState)}>
-                <MenuItem onClick={popupState.close}>On Demand</MenuItem>
-                <MenuItem onClick={popupState.close}>Instant</MenuItem>
-                <MenuItem onClick={popupState.close}>Same Day</MenuItem>
-                <MenuItem onClick={popupState.close}>Next Day</MenuItem>
+                <MenuItem onClick={()=>handleMenuItemSelected("", "", popupState)}>All</MenuItem>
+                <MenuItem onClick={()=>handleMenuItemSelected("On Demand", "onDemand", popupState)}>On Demand</MenuItem>
+                <MenuItem onClick={()=>handleMenuItemSelected("Instant", "instant" ,popupState)}>Instant</MenuItem>
+                <MenuItem onClick={()=>handleMenuItemSelected("Same Day", "sameDay" ,popupState)}>Same Day</MenuItem>
+                <MenuItem onClick={()=>handleMenuItemSelected("Next Day", "nextDay", popupState)}>Next Day</MenuItem>
               </Menu>
             </React.Fragment>
           )}
@@ -157,7 +160,7 @@ const TableComponent = ({ insights, setInsights }) => {
 
       {/********************************************TABLE************************************************************ */}
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Table aria-label="simple table">
           <TableHead sx={{ bgcolor: grey[300] }}>
             <TableRow>
               {/*************************TABLE COLUMNS************************************************ */}
@@ -171,6 +174,7 @@ const TableComponent = ({ insights, setInsights }) => {
                     active={orderBy === column.value}
                     direction={orderBy === column.value ? order : "asc"}
                     onClick={() => handleRequestSort(column.value)}
+                    sx={{whiteSpace : {lg : "nowrap"}, textAlign : "center"}}
                   >
                     {column.name}
                     {orderBy === column.value ? (
@@ -203,6 +207,7 @@ const TableComponent = ({ insights, setInsights }) => {
                     >
                       <Box
                         sx={{
+                          color: "black",
                           "&:hover": {
                             color: "blue",
                             textDecoration: "underline",

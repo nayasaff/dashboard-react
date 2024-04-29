@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import CancelledOrders from "../components/dashbaord/CancelledOrders"
+import IncompletedOrders from "../components/dashbaord/IncompletedOrders"
 import TimeTake from "../components/dashbaord/TimeTaken"
 import { Box, Stack } from "@mui/material"
 import Typography from "@mui/material/Typography"
@@ -13,12 +13,12 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker"
 import { setEndDate, setNumber, setStartDate } from "../redux/AppReducer"
 import Slider from "@mui/material/Slider"
 import { styled } from "@mui/material/styles"
-import Tag from "../components/Tag"
 import axios from "axios"
-import { People, ShoppingCart } from "@mui/icons-material"
 import TableComponent from "../components/dashbaord/TableComponent"
 import DeliveryTime from "../components/dashbaord/DeliveryTime"
 import LastOrder from "../components/dashbaord/LastOrder"
+import HeaderPlaceholder from "../components/placeholder/HeaderPlaceholder"
+import Empty from "../components/Empty"
 
 const Orders = () => {
   const isAscending = useSelector((state) => state.app.isAscending)
@@ -26,12 +26,14 @@ const Orders = () => {
   const state = useSelector((state) => state.app)
 
   const [totalOrders, setTotalOrders] = useState(0)
-  const [insights, setInsights] = useState([])
+  const [insights, setInsights] = useState()
+  const [noData, setNoData] = useState(false)
+  const [filteredValue, setFilteredValue] = useState({name : "", value : ""})
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/all_insights", {
+        const response = await axios.get(`http://localhost:5000/all_insights?deliveryDay=${filteredValue.value}`, {
           headers: {
             Authorization: localStorage.getItem("token"),
           },
@@ -42,19 +44,34 @@ const Orders = () => {
           setInsights(response.data.insights)
         }
       } catch (e) {
-        console.log(e)
+        if (
+          e.response.status === 400 &&
+          e.response.data.message.includes("No data found")
+        ) {
+          setNoData(true)
+        }
       }
     }
     fetchData()
-  }, [])
+  }, [filteredValue])
 
   const { number, startDate, endDate } = state
 
-
+  if (noData)
+    return (
+      <Empty/>
+    )
 
   return (
     <>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
+          {insights && (
+          <TableComponent insights={insights} 
+          filteredValue={filteredValue}
+          setFilteredValue={setFilteredValue}
+          />
+        )}
+        <Box m={3} />
+      {insights !== undefined ? <LocalizationProvider dateAdapter={AdapterDayjs}>
         <div
           style={{
             display: "flex",
@@ -101,6 +118,7 @@ const Orders = () => {
                 size="small"
                 value={isAscending}
                 onChange={(e) => dispatch(setIsAscending(e.target.value))}
+                sx={{bgcolor: "white"}}
               >
                 <MenuItem value={false}>Highest</MenuItem>
                 <MenuItem value={true}>Lowest</MenuItem>
@@ -112,6 +130,7 @@ const Orders = () => {
               value={startDate}
               slotProps={{ textField: { size: "small" } }}
               onChange={(newValue) => dispatch(setStartDate(newValue))}
+              sx={{bgcolor: "white"}}
             />
             {/*End date*/}
             <DatePicker
@@ -119,37 +138,24 @@ const Orders = () => {
               value={endDate} //get current date
               slotProps={{ textField: { size: "small" } }}
               onChange={(newValue) => dispatch(setEndDate(newValue))}
+              sx={{bgcolor: "white"}}
             />
           </div>
         </div>
-      </LocalizationProvider>
+      </LocalizationProvider> : 
+      <HeaderPlaceholder/>
+      }
       <Box m={2} />
       <Stack direction="column" spacing={2}>
-        {insights && <TableComponent insights={insights} setInsights={setInsights} />}
-
-        <Stack direction="row" spacing={2}>
-          <CancelledOrders />
-          {insights && totalOrders && <Box>
-            <Tag
-              title="Orders"
-              count={totalOrders}
-              icon={<ShoppingCart sx={{ fontSize: "3rem" }} />}
-            />
-            <Box m={2} />
-            <Tag
-              title="Vendors"
-              count={insights.length}
-              icon={<People sx={{ fontSize: "3.2rem" }} />}
-            />
-          </Box> }
-        </Stack>
+  
+        <IncompletedOrders
+          totalOrders={totalOrders}
+          insightsLength={insights && insights.length}
+        />
         <TimeTake />
-
         <DeliveryTime />
-
         <LastOrder />
-
-        <CancelledOrders />
+  
       </Stack>
     </>
   )

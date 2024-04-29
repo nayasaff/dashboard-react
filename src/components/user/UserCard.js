@@ -53,7 +53,7 @@ const UserCard = ({ user }) => {
             },
           }}
         >
-          {user.vendors.map((vendor, i) => (
+          {user.vendors.slice(0,3).map((vendor, i) => (
             <ListItem key={i} disablePadding>
               {vendor.name.en}
             </ListItem>

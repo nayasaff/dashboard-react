@@ -1,31 +1,47 @@
+import { Box, Stack } from "@mui/material"
 import React, { useEffect, useState } from "react"
-import { Box } from "@mui/material"
 import Plot from "react-plotly.js"
-import { grey } from "@mui/material/colors"
 import axios from "axios"
+import { useSelector } from "react-redux"
+import { grey } from "@mui/material/colors"
+import CancelledOrderPlaceholder from "../placeholder/TagPlaceholder"
+import { People, ShoppingCart } from "@mui/icons-material"
+import Tag from "../Tag"
 import { randomColor } from "../../utils/utils"
 
-const CancelledOrders = () => {
+
+const IncompletedOrders = ({ totalOrders, insightsLength }) => {
   const [data, setData] = useState()
+  const state = useSelector((state) => state.app)
+  const { number, startDate, endDate, isAscending } = state
 
   useEffect(() => {
     const fetchData = () => {
       axios
-        .get("http://localhost:5000/cancellationRate", {
-          headers: {
-            Authorization: localStorage.getItem("token"),
-          },
+        .get(
+          `http://localhost:5000/cancellationRate?isAscending=${isAscending}&number=${number}&startDate=${startDate.format(
+            "YYYY-MM-DD"
+          )}&endDate=${endDate.format("YYYY-MM-DD")}`,
+          {
+            headers: {
+              Authorization: localStorage.getItem("token"),
+            },
+          }
+        )
+        .then((res) => {
+          setData(res.data)
         })
-        .then((response) => setData(response.data))
         .catch((err) => console.log(err))
     }
     fetchData()
-  }, [])
+  }, [isAscending, number, startDate, endDate])
 
-  if (!data) return <div></div>
-
+  if (!(data))
+    return <CancelledOrderPlaceholder />
   return (
-    <Box
+
+      <Stack direction="row" spacing={2}>
+       <Box
       sx={{
         display: "flex",
         borderRadius: "16px",
@@ -50,7 +66,7 @@ const CancelledOrders = () => {
             y: data["percentage"]["cancelled_count"],
             type: "bar",
             marker: { color: "#EC7A08", textPosition: "top" },
-            name: "Incompleted Orders",
+            name: "Cancelled Orders",
           },
         ]}
         style={{ width: "100%", height: "100%" }}
@@ -79,13 +95,29 @@ const CancelledOrders = () => {
         ]}
         style={{ width: "100%", height: "100%" }}
         layout={{
-          title: "Total Price of Incompleted Orders",
+          title: "Subtotal of Cancelled Orders",
           paper_bgcolor: "transparent",
           height: 320,
         }}
       />
     </Box>
+      <Box sx={{flex : 1}}>
+        <Tag
+          title="Orders"
+          count={totalOrders}
+          icon={<ShoppingCart sx={{ fontSize: "3rem" }} />}
+        
+        />
+        <Box m={2} />
+        <Tag
+          title="Vendors"
+          count={insightsLength}
+          icon={<People sx={{ fontSize: "3.2rem" }} />}
+        />
+      </Box>
+      </Stack>
+  
   )
 }
 
-export default CancelledOrders
+export default IncompletedOrders

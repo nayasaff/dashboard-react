@@ -2,7 +2,7 @@ import { Box } from "@mui/material"
 import React from "react"
 import ContentLoader from "react-content-loader"
 
-export default function GraphPlaceholder() {
+export default function GraphPlaceholder({numberOfGraph}) {
   return (
     <Box
       sx={{
@@ -13,11 +13,16 @@ export default function GraphPlaceholder() {
     >
       <ContentLoader 
       width="100%"
-      height={320}>
+      height={300}>
         {/* First rect */}
-        <rect x="0" y="0" rx="5" ry="5" width="30%" height="320" />
-         <rect x="33%" y="0" rx="5" ry="5" width="30%" height="320" />
-        <rect x="66%" y="0" rx="5" ry="5" width="30%" height="320" /> *
+        {numberOfGraph === 3 ?<> <rect x="0" y="0" rx="5" ry="5" width="30%" height="300" />
+         <rect x="33%" y="0" rx="5" ry="5" width="30%" height="300" />
+        <rect x="66%" y="0" rx="5" ry="5" width="30%" height="300" /> 
+        </>
+      :<> <rect x="1%" y="0" rx="5" ry="5" width="46%" height="300" ></rect>
+      <rect x="54%" y="0" rx="5" ry="5" width="45%" height="300" ></rect>
+       </>
+      }
       </ContentLoader>
     </Box>
   )

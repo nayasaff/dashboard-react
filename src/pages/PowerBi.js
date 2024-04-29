@@ -1,39 +1,63 @@
-import { FC, useEffect, useState} from 'react';
-import { models } from 'powerbi-client';
-import { PowerBIEmbed } from 'powerbi-client-react';
-import { models } from 'powerbi-client';
-import { PowerBIEmbed } from 'powerbi-client-react';
+import { useEffect, useState } from "react"
+import { models } from "powerbi-client"
+import { PowerBIEmbed } from "powerbi-client-react"
+import axios from "axios"
 
-const PowerBiPOC = () => {
-  const [reportConfig, setReportConfig] = useState({
-    type: 'report',
-    embedUrl: undefined,
-    accessToken: undefined,
-    id: undefined,
-    tokenType: models.TokenType.Embed,
-    settings: {
-      panes: {
-        filters: {
-          expanded: false,
-          visible: true
-        }
-      },
-      background: models.BackgroundType.Transparent,
-    }
-  });
+const PowerBi = () => {
+ 
 
 
+  return (
+    <>
+  
+        <PowerBIEmbed
+          embedConfig={{
+            type: "report", // Supported types: report, dashboard, tile, visual, qna, paginated report and create
+            id: process.env.REACT_REPORT_ID ,
+            embedUrl: process.env.REACT_EMBEDED_URL,
+            accessToken: process.env.REACT_ACCESS_TOKEN,
+            tokenType: models.TokenType.Aad, // Use models.TokenType.Aad for SaaS embed
+            settings: {
+              panes: {
+                filters: {
+                  expanded: false,
+                  visible: false,
+                },
+              },
+              background: models.BackgroundType.Transparent,
+            },
+          }}
+          eventHandlers={
+            new Map([
+              [
+                "loaded",
+                function () {
+                  console.log("Report loaded")
+                },
+              ],
+              [
+                "rendered",
+                function () {
+                  console.log("Report rendered")
+                },
+              ],
+              [
+                "error",
+                function (event) {
+                  console.log(event.detail)
+                },
+              ],
+              ["visualClicked", () => console.log("visual clicked")],
+              ["pageChanged", (event) => console.log(event)],
+            ])
+          }
+          cssClassName={"test"}
+          getEmbeddedComponent={(embeddedReport) => {
+            window.report = embeddedReport
+          }}
+        />
 
-
-  return (<>
-    <div>
-      <PowerBIEmbed
-        embedConfig = {reportConfig}
-        cssClassName = 'power-bi-report-class'
-      />
-    </div>
-  </>)
+    </>
+  )
 }
-export default PowerBiPOC;
-
-
+export default PowerBi

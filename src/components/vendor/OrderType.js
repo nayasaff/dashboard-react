@@ -3,6 +3,7 @@ import { Stack, Box } from "@mui/material"
 import Plot from "react-plotly.js"
 import { grey } from "@mui/material/colors"
 import axios from "axios"
+import GraphPlaceholder from "../placeholder/GraphPlaceholder"
 
 const OrderType = ({ currentVendor }) => {
   const [countValues, setCountValues] = useState()
@@ -22,7 +23,7 @@ const OrderType = ({ currentVendor }) => {
     fetchData()
   }, [currentVendor])
 
-  if (!countValues) return <div></div>
+  if (!countValues) return <GraphPlaceholder numberOfGraph={3} />
   return (
     <Stack direction="row" spacing={2}>
       <Box
@@ -34,7 +35,6 @@ const OrderType = ({ currentVendor }) => {
         }}
       >
         <Plot
-          useResizeHandler={true}
           style={{ width: "100%", height: "100%" }}
           data={[
             {
@@ -42,9 +42,9 @@ const OrderType = ({ currentVendor }) => {
               labels: countValues["itemsType"],
               type: "pie",
               marker: {
-                colors: ["#377EB8", "#4DAF4A", "#FF7F00", "#E41A1C"],
+                colors: ["#519DE9", "#F4C145","#E25668", "#4CB140"],
               },
-              hole: 0.6,
+      
             },
           ]}
           layout={{
@@ -64,7 +64,7 @@ const OrderType = ({ currentVendor }) => {
         }}
       >
         <Plot
-          useResizeHandler={true}
+
           style={{ width: "100%", height: "100%" }}
           data={[
             {
@@ -72,12 +72,13 @@ const OrderType = ({ currentVendor }) => {
               labels: countValues["orderType"],
               type: "pie",
               marker: {
-                colors: ["#377EB8", "#4DAF4A", "#FF7F00", "#E41A1C"],
+                colors: ["#519DE9", "#F4C145","#E25668", "#4CB140"],
               },
+
             },
           ]}
           layout={{
-            title: `Type of Order`,
+            title: `Delivery Day`,
             paper_bgcolor: "transparent",
             legend: { x: 0.75, y: 1 },
           }}
@@ -92,7 +93,6 @@ const OrderType = ({ currentVendor }) => {
         }}
       >
         <Plot
-          useResizeHandler={true}
           style={{ width: "100%", height: "90%" }}
           data={[
             {
@@ -100,7 +100,7 @@ const OrderType = ({ currentVendor }) => {
               labels: countValues["orderStatus"],
               type: "pie",
               marker: {
-                colors: ["#E41A1C", "#377EB8", "#4DAF4A", "#FF7F00"],
+                colors: ["#519DE9", "#F4C145","#E25668", "#4CB140"],
               },
             },
           ]}

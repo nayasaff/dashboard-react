@@ -7,22 +7,29 @@ import Autocomplete from "@mui/material/Autocomplete"
 import TextField from "@mui/material/TextField"
 import Tag from "../components/Tag"
 import { ShoppingBasket, AddBox, CancelOutlined } from "@mui/icons-material"
-import {EditCalendar,Event,MoneyOff,RemoveShoppingCart,} from "@mui/icons-material"
+import {
+  EditCalendar,
+  Event,
+  MoneyOff,
+  RemoveShoppingCart,
+} from "@mui/icons-material"
 import { grey } from "@mui/material/colors"
 import { TimeStat } from "../components/vendor/TimeStat"
 import OrderType from "../components/vendor/OrderType"
 import OrderTaken from "../components/vendor/OrderTaken"
+import Empty from "../components/Empty"
+import VendorPlaceholder from "../components/placeholder/VendorPlaceholder"
+import HeaderPlaceholder from "../components/placeholder/HeaderPlaceholder"
 
 const Vendors = () => {
-
   const [userVendors, setUserVendors] = useState("")
   const [currentVendor, setCurrentVendor] = useState("")
   const [insights, setInsights] = useState("")
   const [data, setData] = useState()
+  const [noData, setNoData] = useState(false)
 
   const location = useLocation()
 
-  console.log(location.state)
 
   useEffect(() => {
     const fetchData = () => {
@@ -36,7 +43,14 @@ const Vendors = () => {
           setUserVendors(res.data)
           setCurrentVendor(location.state ? location.state : res.data[0])
         })
-        .catch((err) => console.log(err))
+        .catch((err) => {
+          if (
+            err.response.status === 400 &&
+            err.response.data.message.includes("No data found")
+          ) {
+            setNoData(true)
+          }
+        })
     }
 
     fetchData()
@@ -44,8 +58,7 @@ const Vendors = () => {
 
   useEffect(() => {
     const fetchData = () => {
-      if(!currentVendor._id)
-      return
+      if (!currentVendor._id) return
       axios
         .get(`http://localhost:5000/all_insights/${currentVendor._id}`, {
           headers: {
@@ -55,7 +68,7 @@ const Vendors = () => {
         .then((res) => setInsights(res.data))
         .catch((err) => console.log(err))
 
-        axios
+      axios
         .get(`http://localhost:5000/timeStats/${currentVendor._id}`, {
           headers: {
             Authorization: localStorage.getItem("token"),
@@ -69,37 +82,43 @@ const Vendors = () => {
   }, [currentVendor])
 
 
-    return (
-      <Stack direction="column" alignItems="" spacing={2}>
-        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-          <Typography variant="h4" gutterBottom>
-            Select vendor
-          </Typography>
-          <FormControl sx={{ minWidth: 120, width: "25%" }}>
-            <Autocomplete
-              fullWidth
-              options={userVendors}
-              onChange={(e, value) => setCurrentVendor(value)}
-              getOptionLabel={(option) => option["name"]["en"]}
-              disableClearable
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Vendors"
-                  size="small"
-                  fullWidth
-                  variant="outlined"
-                  clearIcon={null}
-                  value={currentVendor}
-                  defaultValue={currentVendor}
-                />
-              )}
-            />
-          </FormControl>
-        </div>
-        { insights && data && <Stack direction="row" spacing={2}>
-          <Stack direction="column" spacing={2}>
-            <Stack direction="row" spacing={2}>
+  if (noData)
+  return <Empty/>
+
+  if(!currentVendor) return <div></div>
+
+  return (
+    <Stack direction="column" alignItems="" spacing={2}>
+     { (insights && data) ?  <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+        <Typography variant="h4" gutterBottom>
+          Select vendor
+        </Typography>
+        <FormControl sx={{ minWidth: 120, width: "25%" }}>
+          <Autocomplete
+            fullWidth
+            options={userVendors}
+            onChange={(e, value) => setCurrentVendor(value)}
+            getOptionLabel={(option) => option["name"]["en"]}
+            disableClearable
+            defaultValue={currentVendor}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Vendors"
+                size="small"
+                fullWidth
+                variant="outlined"
+                clearIcon={null}
+              />
+            )}
+          />
+        </FormControl>
+      </div> : <HeaderPlaceholder/> }
+    
+      {(insights && data) ? 
+        <Stack direction="row" spacing={2}>
+          <Stack direction="column" spacing={2} sx={{flex : 3}}>
+            <Stack direction="row" spacing={3}>
               <Tag
                 title="Total Orders"
                 count={insights[0]["total_orders"]}
@@ -112,10 +131,9 @@ const Vendors = () => {
               />
               <Tag
                 title="Total Price Loss"
-                count={insights[0]["total_price"]}
+                count={insights[0]["total_price"].toFixed(2)}
                 icon={<MoneyOff sx={{ fontSize: "3rem" }} />}
               />
-
             </Stack>
             <Box
               sx={{
@@ -140,25 +158,25 @@ const Vendors = () => {
                     mode: "markers",
                     x: data["indexes"],
                     y: data["timeTaken"],
-                    marker: { color: "blue" },
+                    marker: { color: "#FF0306" },
                   },
                 ]}
+                style={{ width: "100%", height: "100%" }}
                 layout={{
                   title: `Hours taken for ${currentVendor.name.en} to accept order`,
-                  width: 850,
-                  height: 340,
                   paper_bgcolor: "transparent",
+                  height : 300
                 }}
               />
             </Box>
           </Stack>
-          <Stack direction="column" spacing={2}>
-          <Tag
+          <Stack direction="column" spacing={3} sx={{flex : 1}}>
+            <Tag
               title="Cancelled Orders"
               count={0}
               icon={<CancelOutlined sx={{ fontSize: "3rem" }} />}
             />
-     
+
             <Tag
               title="Last Order"
               count={insights[0]["last_order"]}
@@ -174,18 +192,18 @@ const Vendors = () => {
               count={0}
               icon={<AddBox sx={{ fontSize: "3rem" }} />}
             />
-          <Tag
+            <Tag
               title="Updated Items"
               count={0}
               icon={<MoneyOff sx={{ fontSize: "3rem" }} />}
             />
           </Stack>
-        </Stack> }
-
-       {data && <TimeStat data={data} />}
-        <OrderType currentVendor={currentVendor}/>
-      </Stack>
-    )
+        </Stack>
+        : <VendorPlaceholder/> }
+      {data && <TimeStat data={data} />}
+      <OrderType currentVendor={currentVendor} /> 
+    </Stack>
+  )
 }
 
 export default Vendors

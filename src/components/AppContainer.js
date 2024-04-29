@@ -14,6 +14,7 @@ import {
   ShoppingCart,
   SupervisorAccount,
   ContactPage,
+  Logout,
 } from "@mui/icons-material"
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
 import Orders from "../pages/Orders"
@@ -21,17 +22,15 @@ import ProtectedRoute from "../ProtectedRoute"
 import { Route } from "react-router-dom"
 import Vendors from "../pages/Vendors"
 import Admin from "../pages/Admin"
-import TableComponent from "../components/dashbaord/TableComponent"
 import Avatar from "@mui/material/Avatar"
+import PowerBi from "../pages/PowerBi"
+import { blue } from "@mui/material/colors"
+import { useNavigate } from "react-router-dom"
+import Error from "../components/Error"
 
-const drawerWidth = 240
+const drawerWidth = { xl: 240, lg: 220, md: 200 }
 
 const list = [
-  {
-    name : "Power BI", 
-    icon : <ContactPage />,
-    link : "/powerbi"
-  },
   {
     name: "Orders",
     icon: <ShoppingCart />,
@@ -43,8 +42,9 @@ const list = [
     link: "/vendors",
   },
   {
-    name: "Contact",
+    name: "Power BI",
     icon: <ContactPage />,
+    link: "/powerbi",
   },
   {
     name: "Configuration",
@@ -53,8 +53,14 @@ const list = [
   },
 ]
 
-const AppContainer = ({ children }) => {
+const AppContainer = () => {
   const location = useLocation()
+  const navigate = useNavigate()
+
+  const logout = ()=>{
+    localStorage.clear()
+    navigate("/login")
+  }
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -62,10 +68,10 @@ const AppContainer = ({ children }) => {
       {/* Drawer */}
       <Drawer
         sx={{
-          width: drawerWidth,
+          width: { md: drawerWidth.md, lg: drawerWidth.lg },
           flexShrink: 0,
           "& .MuiDrawer-paper": {
-            width: drawerWidth,
+            width: { md: drawerWidth.md, lg: drawerWidth.lg },
             boxSizing: "border-box",
             color: "white",
             backgroundColor: "#f44336",
@@ -81,7 +87,10 @@ const AppContainer = ({ children }) => {
           alignItems="center"
           spacing={1}
         >
-          <Avatar sx={{ bgcolor: "blue", color: "white" }} aria-label="recipe">
+          <Avatar
+            sx={{ bgcolor: blue[900], color: "white" }}
+            aria-label="recipe"
+          >
             {localStorage.getItem("username")[0].toUpperCase()}
           </Avatar>
           <Typography variant="p" sx={{ padding: "0", margin: "0" }}>
@@ -90,28 +99,44 @@ const AppContainer = ({ children }) => {
         </Stack>
         <Divider />
         <List>
-          {list.map((text, index) => (
+          {list.map((text, index) =>
             //Link to the respective page
-            <Link key={index} to={text.link}>
-              <ListItem
-                sx={{
-                  backgroundColor:
-                    location.pathname === text.link ? "#f21f10" : "",
-                }}
-                disablePadding
-              >
-                <ListItemButton>
-                  <ListItemIcon sx={{ color: "white" }}>
-                    {text.icon}
-                  </ListItemIcon>
-                  <ListItemText
-                    sx={{ color: "white", textDecoration: "none" }}
-                    primary={text.name}
-                  />
-                </ListItemButton>
-              </ListItem>
-            </Link>
-          ))}
+            text.name === "Configuration" &&
+            localStorage.getItem("role") !== "admin" ? (
+              <div></div>
+            ) : (
+              <Link key={index} to={text.link}>
+                <ListItem
+                  sx={{
+                    backgroundColor:
+                      location.pathname === text.link ? "#f21f10" : "",
+                  }}
+                  disablePadding
+                >
+                  <ListItemButton>
+                    <ListItemIcon sx={{ color: "white" }}>
+                      {text.icon}
+                    </ListItemIcon>
+                    <ListItemText
+                      sx={{ color: "white", textDecoration: "none" }}
+                      primary={text.name}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+            )
+          )}
+          <ListItem disablePadding> 
+            <ListItemButton onClick={()=> logout()}>
+              <ListItemIcon sx={{ color: "white" }}>
+                <Logout />
+              </ListItemIcon>
+              <ListItemText
+                sx={{ color: "white", textDecoration: "none" }}
+                primary="Logout"
+              />
+            </ListItemButton>
+          </ListItem>
         </List>
       </Drawer>
       {/*App Bar */}
@@ -128,30 +153,26 @@ const AppContainer = ({ children }) => {
           <Route
             path="orders"
             element={
-              <ProtectedRoute>
                 <Orders />
-              </ProtectedRoute>
             }
           />
           <Route
             path="vendors"
             element={
-              <ProtectedRoute adminRequired={true}>
                 <Vendors />
-              </ProtectedRoute>
             }
           />
-          {localStorage.getItem("role") === "admin" && (
-            <Route path="configuration" element={<Admin />} />
-          )}
+
           <Route
-            path="table"
+            path="configuration"
             element={
-              <ProtectedRoute>
-                <TableComponent />
+              <ProtectedRoute adminRequired={true}>
+                <Admin />
               </ProtectedRoute>
             }
           />
+          <Route path="powerbi" element={<PowerBi />} />
+          <Route path="*" element={<Error/>}/>
         </Routes>
       </Box>
     </Box>

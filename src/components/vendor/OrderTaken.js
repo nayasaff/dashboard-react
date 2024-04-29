@@ -11,12 +11,16 @@ const OrderTaken = ({currentVendor}) => {
         const fetchData = async()=>{
             if(!currentVendor._id )
             return
-
-            const response = await axios.get(`http://localhost:5000/orderTaken/${currentVendor._id}`, {
+          let response
+            try{
+           response = await axios.get(`http://localhost:5000/orderTaken/${currentVendor._id}`, {
                 headers : {
                     Authorization : localStorage.getItem("token")
                 }
             })
+          }catch(err){
+              console.log(err)
+          }
 
             if(response.status === 200){
                 setOrderTaken(response.data)
@@ -26,7 +30,7 @@ const OrderTaken = ({currentVendor}) => {
         fetchData()
     }, [])
 
-    if(!orderTaken) return <div>Loading...</div>
+    if(!orderTaken) return <div></div>
 
     return <Plot
     data={[
@@ -35,19 +39,19 @@ const OrderTaken = ({currentVendor}) => {
         y: orderTaken["orderTakenCount"],
         type: "scatter",
         mode: "lines+markers",
-        marker: { size: 5 },
-        line: { shape: "spline" },
+        marker: {color : "#1CD0BB", size: 5 },
+      
       },
     ]}
+    style={{ width: "100%", height: "100%" }}
     layout={{
-      title: "Order Taken",
+      title: "Orders per day",
       xaxis: { type: "date", autorange: true },
       yaxis: {
         range: [0, Math.max(...orderTaken["orderTakenCount"]) + 1],
       },
-      width: 850,
-      height: 340,
       paper_bgcolor: "transparent",
+      height : 300
     }}
   />
 }

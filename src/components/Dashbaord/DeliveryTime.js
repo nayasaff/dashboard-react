@@ -5,7 +5,8 @@ import axios from "axios"
 import Plot from "react-plotly.js"
 import { useSelector } from "react-redux"
 import GraphPlaceholder from "../placeholder/GraphPlaceholder"
-import FadeIn from "react-fade-in"
+import { randomColor } from "../../utils/utils"
+
 
 const DeliveryTime = () => {
   const [deliveryTime, setDeliveryTime] = useState()
@@ -29,18 +30,22 @@ const DeliveryTime = () => {
       .catch((err) => console.log(err))
   }, [isAscending, number, startDate, endDate])
 
-  if (!deliveryTime) return <GraphPlaceholder />
+
+
+
+  if (!deliveryTime) return <GraphPlaceholder numberOfGraph={3}/>
 
   return (
     <>
-    <FadeIn>
-      <Box sx={{ display: "flex", gap: "1em" }}>
+
+      <Box sx={{ display: "flex", gap: "1em"}}>
         {" "}
         <Box
           sx={{
             borderRadius: "16px",
             border: `1px ${grey[400]} solid`,
             backgroundColor: "white",
+            flex : 1
           }}
         >
           <Plot
@@ -51,14 +56,13 @@ const DeliveryTime = () => {
                 type: "bar",
                 name: "Time Taken",
                 marker: {
-                  color: "#e75480",
+                  color: randomColor(["#4CB140", "#7CC674"], deliveryTime["max"]["vendor_name"] ) ,
                 },
               },
             ]}
+            style={{ width: "100%", height: "100%" }}
             layout={{
               title: "Maximum Delivery Time",
-              width: 400,
-              height: 340,
               yaxis: {
                 title: "Time (in hours)",
               },
@@ -66,6 +70,7 @@ const DeliveryTime = () => {
                 title: "Vendor Name",
               },
               paper_bgcolor: "transparent",
+              height : 360
             }}
           />
         </Box>
@@ -74,6 +79,7 @@ const DeliveryTime = () => {
             borderRadius: "16px",
             border: `1px ${grey[400]} solid`,
             backgroundColor: "white",
+            flex :1 
           }}
         >
           <Plot
@@ -83,14 +89,13 @@ const DeliveryTime = () => {
                 x: deliveryTime["avg"]["vendor_name"],
                 type: "bar",
                 marker: {
-                  color: "purple",
+                  color: randomColor(["#5752D1", "#B2B0EA", "#8481DD"], deliveryTime["avg"]["vendor_name"] ),
                 },
               },
             ]}
+            style={{ width: "100%", height: "100%" }}
             layout={{
               title: "Average Delivery Time",
-              width: 400,
-              height: 340,
               yaxis: {
                 title: "Time (in hours)",
               },
@@ -98,6 +103,7 @@ const DeliveryTime = () => {
                 title: "Vendor Name",
               },
               paper_bgcolor: "transparent",
+              height : 360
             }}
           />
         </Box>
@@ -106,6 +112,7 @@ const DeliveryTime = () => {
             borderRadius: "16px",
             border: `1px ${grey[400]} solid`,
             backgroundColor: "white",
+            flex : 1
           }}
         >
           <Plot
@@ -116,14 +123,13 @@ const DeliveryTime = () => {
                 type: "bar",
                 name: "Time Taken",
                 marker: {
-                  color: "",
+                  color: randomColor(["#C9190B", "#A30000", "#7D1007"], deliveryTime["min"]["vendor_name"] ),
                 },
               },
             ]}
+            style={{ width: "100%", height: "100%" }}
             layout={{
               title: "Minimum Delivery Time",
-              width: 400,
-              height: 340,
               yaxis: {
                 title: "Time (in hours)",
               },
@@ -131,11 +137,12 @@ const DeliveryTime = () => {
                 title: "Vendor Name",
               },
               paper_bgcolor: "transparent",
+              height : 360
             }}
           />
         </Box>
       </Box>
-    </FadeIn>
+
     </>
   )
 }

@@ -7,6 +7,7 @@ import { TableHead, TableBody } from "@mui/material"
 import { TableRow, Paper } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import TableCell, { tableCellClasses } from "@mui/material/TableCell"
+import GraphPlaceholder from "../placeholder/GraphPlaceholder"
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -36,6 +37,9 @@ export const TimeStat = ({ data }) => {
     return avg
   }
 
+  if(!data)
+  return <GraphPlaceholder numberOfGraph={3}/>
+
   return (
     <Stack direction="row" spacing={2}>
       <Box
@@ -43,6 +47,7 @@ export const TimeStat = ({ data }) => {
           borderRadius: "16px",
           border: `1px ${grey[400]} solid`,
           backgroundColor: "white",
+          flex : 1
         }}
       >
         <Plot
@@ -51,17 +56,17 @@ export const TimeStat = ({ data }) => {
               y: data["deliveryTime"],
               name: "Delivery Time",
               type: "box",
-              marker: { color: "#a32cc4" },
+              marker: { color: "#F5B041" },
             },
           ]}
+          style={{ width: "100%", height: "100%" }}
           layout={{
             title: "Delivery Time",
-            width: 400,
-            height: 340,
             yaxis: {
               title: "Time in minutes",
             },
             paper_bgcolor: "transparent",
+            height : 340
           }}
         />
       </Box>
@@ -70,6 +75,7 @@ export const TimeStat = ({ data }) => {
           borderRadius: "16px",
           border: `1px ${grey[400]} solid`,
           backgroundColor: "white",
+          flex : 1
         }}
       >
         <Plot
@@ -78,17 +84,17 @@ export const TimeStat = ({ data }) => {
               y: data["timeTaken"],
               name: "Response Time",
               type: "box",
-              marker: { color: "#ff007f" },
+              marker: { color: "#27AE60" },
             },
           ]}
+          style={{ width: "100%", height: "100%" }}
           layout={{
             title: "Response Time",
-            width: 400,
-            height: 340,
             yaxis: {
               title: "Time in hours",
             },
             paper_bgcolor: "transparent",
+            height : 340
           }}
         />
       </Box>
@@ -100,24 +106,25 @@ export const TimeStat = ({ data }) => {
           borderRadius: "16px",
           border: `1px ${grey[400]} solid`,
           backgroundColor: "white",
-          padding: "1rem",
+          flex : 1
         }}
       >
-        <Typography variant="h6">Time Stats</Typography>
-        <TableContainer component={Paper} sx={{ width: 350, height: 210 }}>
+        <Box sx={{padding : "1rem"}}>
+        <Typography sx={{padding : "1rem"}} variant="h6">Delivery Time and Response Time</Typography>
+        <TableContainer component={Paper} sx={{width : "auto"}}>
           <Table aria-label="customized table">
             <TableHead>
               <TableRow>
                 <StyledTableCell></StyledTableCell>
                 <StyledTableCell align="center">Min</StyledTableCell>
-                <StyledTableCell align="center">Average</StyledTableCell>
+                <StyledTableCell align="center">Avg</StyledTableCell>
                 <StyledTableCell align="center">Max</StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               <StyledTableRow>
                 <StyledTableCell component="th" scope="row">
-                  Response Time (h)
+                  Response Time (min)
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   {Math.min(...data["timeTaken"]).toFixed(2)}
@@ -129,7 +136,7 @@ export const TimeStat = ({ data }) => {
               </StyledTableRow>
               <StyledTableRow>
                 <StyledTableCell component="th" scope="row">
-                  Delivery Time (m)
+                  Delivery Time (hours)
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   {Math.min(...data["deliveryTime"]).toFixed(2)}
@@ -142,6 +149,7 @@ export const TimeStat = ({ data }) => {
             </TableBody>
           </Table>
         </TableContainer>
+        </Box>
       </Box>
     </Stack>
   )
