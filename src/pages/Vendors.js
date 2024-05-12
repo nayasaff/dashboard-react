@@ -131,7 +131,7 @@ const Vendors = () => {
               />
               <Tag
                 title="Total Price Loss"
-                count={insights[0]["total_price"].toFixed(2)}
+                count={insights[0]["subtotal"]}
                 icon={<MoneyOff sx={{ fontSize: "3rem" }} />}
               />
             </Stack>

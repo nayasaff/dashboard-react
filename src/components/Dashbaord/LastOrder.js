@@ -6,6 +6,7 @@ import { grey } from "@mui/material/colors"
 import GraphPlaceholder from "../placeholder/GraphPlaceholder"
 import { randomColor } from "../../utils/utils"
 import { useSelector } from "react-redux"
+import { Grid } from "@mui/material"
 
 const LastOrder = () => {
   const [lastOrders, setLastOrders] = useState()
@@ -27,18 +28,20 @@ const LastOrder = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/lastItemUpdated?isAscending=${isAscending}&number=${number}&startDate=${startDate.format("YYYY-MM-DD")}&endDate=${endDate.format("YYYY-MM-DD")}`, {
+      .get(`http://localhost:5000/lastItemUpdated?isAscending=${isAscending}&number=${number}`, {
         headers: {
           Authorization: localStorage.getItem("token"),
         },
       })
       .then((res) => setLastUpdatedItems(res.data))
-  }, [isAscending, number, startDate, endDate])
+      .catch(err => console.log(err))
+  }, [isAscending, number])
 
   if (!(lastOrders && lastUpdatedItems)) return <GraphPlaceholder numberOfGraph={2} />
 
   return (
-    <Box sx={{ display: "flex", gap: "1em", justifyContent: "start" }}>
+    <Grid container spacing={2}>
+      <Grid item sm={12} md={6} lg={6} xl={6}>
       <Box
         sx={{
           borderRadius: "16px",
@@ -70,6 +73,8 @@ const LastOrder = () => {
           }}
         />
       </Box>
+      </Grid>
+      <Grid item sm={12} md={6} lg={6} xl={6}>
       <Box
         sx={{
           borderRadius: "16px",
@@ -100,7 +105,8 @@ const LastOrder = () => {
           }}
         />
       </Box>
-    </Box>
+      </Grid>
+    </Grid>
   )
 }
 

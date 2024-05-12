@@ -25,27 +25,27 @@ const columns = [
   { name: "Cancellation Rate", value: "cancellation_rate" },
   { name: "Total price loss", value: "total_price" },
   { name: "Last Order", value: "last_order" },
-  { name: "Avg Response Time", value: "average_time" },
+  { name: "Avg Response Time", value: "average_response_time" },
   { name: "Avg Delivery Time", value: "average_delivery_time" },
   { name: "Last Updated time", value: "upated_item" },
 ]
 
 function stableSort(array, order, orderBy) {
   return array.sort((a, b) => {
-    if (order === "asc") {
-      if (a[orderBy] > b[orderBy]) {
-        return 1
-      } else {
-        return -1
-      }
+    const orderFactor = order === "asc" ? 1 : -1;
+    const valueA = typeof a[orderBy] === "string" ? a[orderBy].localeCompare(b[orderBy]) : a[orderBy];
+    const valueB = typeof b[orderBy] === "string" ? b[orderBy].localeCompare(a[orderBy]) : b[orderBy];
+
+    // Handle case sensitivity using localeCompare
+    if (valueA > valueB) {
+      return orderFactor;
+    } else if (valueA < valueB) {
+      return -orderFactor;
     } else {
-      if (a[orderBy] < b[orderBy]) {
-        return 1
-      } else {
-        return -1
-      }
+      // If values are equal, use original array order for stability
+      return array.indexOf(a) - array.indexOf(b);
     }
-  })
+  });
 }
 
 const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
@@ -68,6 +68,8 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
   }
 
   const formateNumber = (number) => {
+    if(number === undefined || number === null) return number
+    if (typeof number === "string") return number
     return number.toFixed(2)
   }
 
@@ -105,7 +107,10 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
         boxShadow: "none",
         backgroundColor: "white",
         padding: "1rem 1.5rem",
-        display: "flex",
+        display: {
+          sm : "none", 
+          md : 'flex'
+        },
         flexDirection: "column",
       }}
     >
@@ -169,12 +174,19 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
                 <TableCell
                   key={columnIndex}
                   sortDirection={orderBy === column.name ? order : false}
+                  sx={{
+                    display : {
+                      sm : column.value === "average_delivery_time" || column.value === "average_response_time" ? "none" : "table-cell",
+                      lg : "table-cell",
+                      xl : "table-cell"
+                    }
+                  }}
                 >
                   <TableSortLabel
                     active={orderBy === column.value}
                     direction={orderBy === column.value ? order : "asc"}
                     onClick={() => handleRequestSort(column.value)}
-                    sx={{whiteSpace : {lg : "nowrap"}, textAlign : "center"}}
+                    sx={{ textAlign : "center"}}
                   >
                     {column.name}
                     {orderBy === column.value ? (
@@ -222,16 +234,28 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
                 </TableCell>
                 <TableCell align="center">{insight.total_orders}</TableCell>
                 <TableCell align="center">
-                  {formateNumber(insight.cancellation_rate)}
+                  {formateNumber(insight.cancellation_rate)}%
                 </TableCell>
                 <TableCell align="center">
-                  {formateNumber(insight.total_price)}
+                  {formateNumber(insight.subtotal)}
                 </TableCell>
                 <TableCell align="center">{insight.last_order}</TableCell>
-                <TableCell align="center">
+                <TableCell sx={{
+                  display : {
+                    sm : "none",
+                    md : "table-cell",
+                  }
+                }} align="center">
                   {formateNumber(insight.average_response_time)}
                 </TableCell>
-                <TableCell align="center">
+                <TableCell
+                sx={{
+                  display : {
+                    sm : "none",
+                    md : "table-cell",
+                  }
+                }}
+                align="center">
                   {insight.average_delivery_time}
                 </TableCell>
                 <TableCell align="center">{insight.upated_item}</TableCell>

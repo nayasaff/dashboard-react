@@ -8,34 +8,37 @@ import {
   Typography,
   Stack,
   Button as MuiButton,
-  Autocomplete
+  Autocomplete,
 } from "@mui/material"
 import Chip from "@mui/material/Chip"
 import axios from "axios"
 import { addUser, updateUser } from "../../redux/UserReducer"
 import { useDispatch, useSelector } from "react-redux"
-
+import { MenuItem, Select } from "@mui/material"
 
 const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
   const [value, setValue] = useState(null)
-  const [selectedVendors, setSelectedVendors] = useState(isEditable ? user.vendors : [])
+  const [selectedVendors, setSelectedVendors] = useState(
+    isEditable ? user.vendors : []
+  )
 
   const state = useSelector((state) => state.users)
-  const {vendors} = state
+  const { vendors } = state
 
   const [username, setUsername] = useState(isEditable ? user.username : "")
   const [usernameError, setUsernameError] = useState(false)
   const [passwordError, setPasswordError] = useState(false)
   const [password, setPassword] = useState("")
 
-  const dispatch = useDispatch()
+  const [role, setRole] = useState(isEditable ? user.role : "")
 
+  const dispatch = useDispatch()
 
   const handleChange = (newValue) => {
     setValue("")
     setSelectedVendors((prev) => {
-      if (prev.some(item => item._id === newValue._id)) return prev
-      return [...prev, {"_id" : newValue['_id'], "name" : newValue['name'] } ]
+      if (prev.some((item) => item._id === newValue._id)) return prev
+      return [...prev, { _id: newValue["_id"], name: newValue["name"] }]
     })
   }
 
@@ -43,70 +46,77 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
     setSelectedVendors((prev) => prev.filter((val) => val._id !== value._id))
   }
 
-  const createUser = async() => {
-
-    if(!username){
-        setUsernameError("Username is required")
-        return
+  const createUser = async () => {
+    if (!username) {
+      setUsernameError("Username is required")
+      return
     }
-    if(!password){
-        setPasswordError("Password is required")
-        return
+    if (!password) {
+      setPasswordError("Password is required")
+      return
     }
-    if(password.length < 6){
-      setPasswordError("Password must be atleast 6 characters long")
-        return
-    }
-
-    try{
-        const response = await axios.post("http://localhost:5000/users/create", {username, password, vendors : selectedVendors}, {
-          headers: {
-            Authorization: localStorage.getItem("token"),
-          },
-        })
-        if(response.status === 200){
-          setOpenModal(false)
-          dispatch(addUser(response.data))
-        }
-    }
-    catch(err){
-        if(err.response.username){
-            setUsernameError(err.response.username)
-        }
-        if(err.response.password){
-            setUsernameError(err.response.password)
-        }
-    }
-  }
-
-  const editUser = async() => {
-
-    if(password !== "" && password.length < 6){
+    if (password.length < 6) {
       setPasswordError("Password must be atleast 6 characters long")
       return
-  }
+    }
 
-    try{
-        const response = await axios.patch(`http://localhost:5000/users/edit/${user._id}`, {username, vendors : selectedVendors, 
-      password : password.length > 0 ? password : null
-      }, {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/users/create",
+        { username, password, role ,vendors: selectedVendors },
+        {
           headers: {
             Authorization: localStorage.getItem("token"),
           },
-        })
-        if(response.status === 200){
-          setOpenModal(false)
-          dispatch(updateUser(response.data))
         }
+      )
+      if (response.status === 200) {
+        setOpenModal(false)
+        dispatch(addUser(response.data))
+      }
+    } catch (err) {
+      if (err.response.username) {
+        setUsernameError(err.response.username)
+      }
+      if (err.response.password) {
+        setUsernameError(err.response.password)
+      }
     }
-    catch(err){
-        console.log(err)
+  }
+
+  const editUser = async () => {
+    if (password !== "" && password.length < 6) {
+      setPasswordError("Password must be atleast 6 characters long")
+      return
+    }
+
+    try {
+      const response = await axios.patch(
+        `http://localhost:5000/users/edit/${user._id}`,
+        {
+          username,
+          vendors: selectedVendors,
+          password: password.length > 0 ? password : null,
+          role
+        },
+        {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        }
+      )
+      if (response.status === 200) {
+        setOpenModal(false)
+        dispatch(updateUser(response.data))
+      }
+    } catch (err) {
+      console.log(err)
     }
   }
 
 
-  if(!vendors)
-  return <div></div>
+
+  if (!vendors) return <div></div>
 
   return (
     <Modal
@@ -126,6 +136,8 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
           >
             {isEditable ? "Edit User" : "Create User"}
           </h2>
+
+          {/******************************************USERNAME******************************** */}
           <Box
             sx={{
               display: "flex",
@@ -146,6 +158,8 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
               onChange={(e) => setUsername(e.target.value)}
             />
           </Box>
+
+          {/******************************************PASSWORD******************************** */}
           <Box
             sx={{
               display: "flex",
@@ -166,17 +180,45 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </Box>
+
+          {/******************************************ROLE******************************** */}
+          {localStorage.getItem("role") === "superadmin" && (
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                mb: "1rem",
+              }}
+            >
+              <Typography sx={{ width: "100px" }}>Role</Typography>
+              <Select
+                size="small"
+                fullWidth
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+                displayEmpty
+                inputProps={{ "aria-label": "Without label" }}
+              >
+                <MenuItem value="superadmin">Super admin</MenuItem>
+                <MenuItem value="admin">Admin</MenuItem>
+                <MenuItem value="member">Member</MenuItem>
+              </Select>
+            </Box>
+          )}
+
+          {/******************************************SELECTED VEDNOR******************************** */}
           <Stack
             direction="row"
-            sx={{flexWrap : 'wrap'}}
+            sx={{ flexWrap: "wrap" }}
             spacing={1}
             style={{ marginBottom: "0.25rem", marginLeft: "85px" }}
           >
             {selectedVendors.length > 0 &&
               selectedVendors.map((selectedValue) => (
                 <Chip
-                style={{marginTop : '0.25rem'}}
-                key={selectedValue._id}
+                  style={{ marginTop: "0.25rem" }}
+                  key={selectedValue._id}
                   label={selectedValue.name.en}
                   onDelete={() => handleDelete(selectedValue)}
                   color="primary"
@@ -184,6 +226,7 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
                 />
               ))}
           </Stack>
+          {/*************************************************CHOOSE VENDOR TEXTFIELD******************************************************** */}
           <Box
             sx={{
               display: "flex",
@@ -193,11 +236,11 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
             }}
           >
             <Typography sx={{ width: "100px" }}>Vendors</Typography>
-             <Autocomplete
+            <Autocomplete
               fullWidth
               onChange={(event, newValue) => handleChange(newValue)}
               options={vendors}
-              getOptionLabel={(option) => option['name']['en']}
+              getOptionLabel={(option) => option["name"]["en"]}
               disableClearable
               renderInput={(params) => (
                 <TextField
@@ -210,9 +253,10 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
                   value={value}
                 />
               )}
-            /> 
+            />
           </Box>
-          <Stack direction="row" justifyContent="end" spacing={1} >
+          {/*************************************************BUTTON************************************************** */}
+          <Stack direction="row" justifyContent="end" spacing={1}>
             <MuiButton
               variant="outlined"
               size="small"
@@ -225,7 +269,7 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
               variant="contained"
               size="small"
               sx={{ bgcolor: blue[700] }}
-                onClick={()=> isEditable ? editUser() : createUser()}
+              onClick={() => (isEditable ? editUser() : createUser())}
             >
               {isEditable ? "Edit" : "Create"}
             </MuiButton>
@@ -324,7 +368,5 @@ const ModalContent = styled("div")(
     }
   `
 )
-
-
 
 export default UserModal

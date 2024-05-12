@@ -8,15 +8,8 @@ import ListItemButton from "@mui/material/ListItemButton"
 import ListItemIcon from "@mui/material/ListItemIcon"
 import ListItemText from "@mui/material/ListItemText"
 import Divider from "@mui/material/Divider"
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
-import {
-  Settings,
-  ShoppingCart,
-  SupervisorAccount,
-  ContactPage,
-  Logout,
-} from "@mui/icons-material"
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
+import { TableChartOutlined, Settings, ShoppingCart } from "@mui/icons-material"
+import { SupervisorAccount, Logout } from "@mui/icons-material"
 import Orders from "../pages/Orders"
 import ProtectedRoute from "../ProtectedRoute"
 import { Route } from "react-router-dom"
@@ -27,141 +20,150 @@ import PowerBi from "../pages/PowerBi"
 import { blue } from "@mui/material/colors"
 import { useNavigate } from "react-router-dom"
 import Error from "../components/Error"
+import { IconButton, Toolbar, AppBar } from "@mui/material"
+import MenuIcon from "@mui/icons-material/Menu"
+import TableComponent from "./dashbaord/TableComponent"
 
-const drawerWidth = { xl: 240, lg: 220, md: 200 }
+const drawerWidth = { xl: 240, lg: 100, md: 100 }
 
-const list = [
-  {
-    name: "Orders",
-    icon: <ShoppingCart />,
-    link: "/orders",
-  },
-  {
-    name: "Vendors",
-    icon: <SupervisorAccount />,
-    link: "/vendors",
-  },
-  {
-    name: "Power BI",
-    icon: <ContactPage />,
-    link: "/powerbi",
-  },
-  {
-    name: "Configuration",
-    icon: <Settings />,
-    link: "/configuration",
-  },
-]
+const AppContainer = (props) => {
+  const { window } = props
+  const [mobileOpen, setMobileOpen] = React.useState(false)
+  const [isClosing, setIsClosing] = React.useState(false)
+  const [isHovered, setIsHovered] = React.useState(false)
 
-const AppContainer = () => {
-  const location = useLocation()
-  const navigate = useNavigate()
-
-  const logout = ()=>{
-    localStorage.clear()
-    navigate("/login")
+  const handleDrawerClose = () => {
+    setIsClosing(true)
+    setMobileOpen(false)
   }
+
+  const handleDrawerTransitionEnd = () => {
+    setIsClosing(false)
+  }
+
+  const handleDrawerToggle = () => {
+    if (!isClosing) {
+      setMobileOpen(!mobileOpen)
+    }
+  }
+
+  const container =
+    window !== undefined ? () => window().document.body : undefined
 
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      {/* Drawer */}
-      <Drawer
+      <AppBar
         sx={{
-          width: { md: drawerWidth.md, lg: drawerWidth.lg },
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width: { md: drawerWidth.md, lg: drawerWidth.lg },
-            boxSizing: "border-box",
-            color: "white",
-            backgroundColor: "#f44336",
+          display: { md: "none" },
+          width: {
+            sm: `calc(100% - ${drawerWidth}px)`,
+            lg: `calc(100% - ${drawerWidth.lg}px)`,
+            xl: `calc(100% - ${drawerWidth.xl}px)`,
+            md: `calc(100% - ${drawerWidth.md}px)`,
           },
-          display: { xs: "none", sm: "none", md: "block" },
+          ml: {
+            lg: `${drawerWidth.lg}px`,
+            xl: `${drawerWidth.xl}px`,
+            md: `${drawerWidth.md}px`,
+          },
         }}
-        variant="permanent"
-        anchor="left"
       >
-        <Stack
-          sx={{ padding: "0.7rem" }}
-          direction="row"
-          alignItems="center"
-          spacing={1}
-        >
-          <Avatar
-            sx={{ bgcolor: blue[900], color: "white" }}
-            aria-label="recipe"
+        <Toolbar>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2, display: { sm: "block", md: "none" } }}
           >
-            {localStorage.getItem("username")[0].toUpperCase()}
-          </Avatar>
-          <Typography variant="p" sx={{ padding: "0", margin: "0" }}>
-            {localStorage.getItem("username")}
-          </Typography>
-        </Stack>
-        <Divider />
-        <List>
-          {list.map((text, index) =>
-            //Link to the respective page
-            text.name === "Configuration" &&
-            localStorage.getItem("role") !== "admin" ? (
-              <div></div>
-            ) : (
-              <Link key={index} to={text.link}>
-                <ListItem
-                  sx={{
-                    backgroundColor:
-                      location.pathname === text.link ? "#f21f10" : "",
-                  }}
-                  disablePadding
-                >
-                  <ListItemButton>
-                    <ListItemIcon sx={{ color: "white" }}>
-                      {text.icon}
-                    </ListItemIcon>
-                    <ListItemText
-                      sx={{ color: "white", textDecoration: "none" }}
-                      primary={text.name}
-                    />
-                  </ListItemButton>
-                </ListItem>
-              </Link>
-            )
-          )}
-          <ListItem disablePadding> 
-            <ListItemButton onClick={()=> logout()}>
-              <ListItemIcon sx={{ color: "white" }}>
-                <Logout />
-              </ListItemIcon>
-              <ListItemText
-                sx={{ color: "white", textDecoration: "none" }}
-                primary="Logout"
-              />
-            </ListItemButton>
-          </ListItem>
-        </List>
-      </Drawer>
-      {/*App Bar */}
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        {" "}
-        {/* This is for date picker */}
-      </LocalizationProvider>
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" noWrap component="div"></Typography>
+        </Toolbar>
+      </AppBar>
+      <Box
+        component="nav"
+        sx={{
+          width: {
+            lg: drawerWidth.lg,
+            xl: drawerWidth.xl,
+            md: drawerWidth.md,
+          },
+          flexShrink: { sm: 0 },
+        }}
+        aria-label="mailbox folders"
+      >
+        {/**********************************************RESPONSIVE DRAWER FOR MOBILES************************************************ */}
+        <Drawer
+          variant="temporary"
+          container={container}
+          open={mobileOpen}
+          onTransitionEnd={handleDrawerTransitionEnd}
+          onClose={handleDrawerClose}
+          ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
+          }}
+          sx={{
+            display: { sm: "block", md: "none" },
+            "& .MuiDrawer-paper": {
+              boxSizing: "border-box",
+              backgroundColor: "#f44336",
+              color: "white",
+            },
+          }}
+        >
+          <DrawerApp />
+        </Drawer>
+        {/**********************************************PERMANENT DRAWER************************************************ */}
+        <Drawer
+          variant="permanent"
+          sx={{
+            display: { sm: "none", md: "block" },
+            "& .MuiDrawer-paper": {
+              boxSizing: "border-box",
+              width: {
+                lg: isHovered ? drawerWidth.xl : drawerWidth.lg,
+                xl: drawerWidth.xl,
+                md: isHovered ? drawerWidth.xl : drawerWidth.md,
+              },
+              backgroundColor: "#f44336",
+              color: "white",
+            },
+          }}
+          open
+          onMouseEnter={() => setIsHovered(true)} // Show drawer on mouse enter
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          <DrawerApp isHovered={isHovered} />
+        </Drawer>
+      </Box>
       <Box
         component="main"
-        sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
+        sx={{
+          flexGrow: 1,
+          p: 3,
+          width: {
+            lg: `calc(100% - ${drawerWidth.lg}px)`,
+            xl: `calc(100% - ${drawerWidth.xl})`,
+            md: `${drawerWidth.md}px`,
+          },
+        }}
       >
         {/********************ROUTES********************** */}
+        <Toolbar
+          sx={{
+            display: {
+              sm: "block",
+              md: "none",
+              lg: "none",
+              xl: "none",
+            },
+          }}
+        />
         <Routes>
-          <Route
-            path="orders"
-            element={
-                <Orders />
-            }
-          />
-          <Route
-            path="vendors"
-            element={
-                <Vendors />
-            }
-          />
+          <Route path="orders" element={<Orders />} />
+          <Route path="vendors" element={<Vendors />} />
 
           <Route
             path="configuration"
@@ -172,10 +174,194 @@ const AppContainer = () => {
             }
           />
           <Route path="powerbi" element={<PowerBi />} />
-          <Route path="*" element={<Error/>}/>
+          <Route path="table" element={<TableComponent />} />
+          <Route path="*" element={<Error />} />
         </Routes>
       </Box>
     </Box>
+  )
+}
+
+const list = [
+  {
+    name: "Orders",
+    icon: (
+      <ShoppingCart sx={{ fontSize: { xl: "24px", lg: "27px", md: "27px" } }} />
+    ),
+    link: "/orders",
+  },
+  {
+    name: "Vendors",
+    icon: (
+      <SupervisorAccount
+        sx={{ fontSize: { xl: "24px", lg: "27px", md: "27px" } }}
+      />
+    ),
+    link: "/vendors",
+  },
+  {
+    name: "Table",
+    icon: (
+      <TableChartOutlined
+        sx={{ fontSize: { xl: "24px", lg: "27px", md: "27px" } }}
+      />
+    ),
+    link: "/table",
+  },
+]
+
+const DrawerApp = ({ isHovered }) => {
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  const logout = () => {
+    localStorage.clear()
+    navigate("/login")
+  }
+
+  return (
+    <>
+      <Stack
+        sx={{ padding: "0.7rem" }}
+        direction="row"
+        alignItems="center"
+        spacing={1}
+      >
+        <Avatar sx={{ bgcolor: blue[900], color: "white" }} aria-label="recipe">
+          {localStorage.getItem("username")[0].toUpperCase()}
+        </Avatar>
+        <Typography
+          variant="p"
+          sx={{
+            padding: "0",
+            margin: "0",
+            display: {
+              lg: isHovered ? "block" : "none",
+              xl: "block",
+              md: isHovered ? "block" : "none",
+            },
+          }}
+        >
+          {localStorage.getItem("username")}
+        </Typography>
+      </Stack>
+      <Divider />
+      <List>
+        {list.map((text, index) => (
+          <Link key={index} to={text.link}>
+            <ListItem
+              sx={{
+                backgroundColor:
+                  location.pathname === text.link ? "#f21f10" : "",
+              }}
+              disablePadding
+            >
+              <ListItemButton
+                sx={{
+                  justifyContent: {
+                    xl: "flex-start",
+                    lg: "center",
+                    md: "center",
+                  },
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    color: "white",
+                    padding: { xl: 0, lg: "0.4rem 0", md: "0.4rem 0" },
+                  }}
+                >
+                  {text.icon}
+                </ListItemIcon>
+                <ListItemText
+                  sx={{
+                    color: "white",
+                    textDecoration: "none",
+                    display: {
+                      md: isHovered ? "block" : "none",
+                      lg: isHovered ? "block" : "none",
+                      xl: "block",
+                    },
+                  }}
+                  primary={text.name}
+                />
+              </ListItemButton>
+            </ListItem>
+          </Link>
+        ))}
+        {localStorage.getItem("role").includes("admin") ? (
+          <Link to="/configuration">
+            <ListItem disablePadding>
+              <ListItemButton
+                sx={{
+                  justifyContent: {
+                    xl: "flex-start",
+                    lg: "center",
+                    md: "center",
+                  },
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    color: "white",
+                    padding: { xl: 0, lg: "0.4rem 0", md: "0.4rem 0" },
+                  }}
+                >
+                  <Settings
+                    sx={{ fontSize: { xl: "24px", lg: "27px", md: "27px" } }}
+                  />
+                </ListItemIcon>
+                <ListItemText
+                  sx={{
+                    color: "white",
+                    textDecoration: "none",
+                    display: {
+                      md: isHovered ? "block" : "none",
+                      lg: isHovered ? "block" : "none",
+                      xl: "block",
+                    },
+                  }}
+                  primary="Configuration"
+                />
+              </ListItemButton>
+            </ListItem>
+          </Link>
+        ) : (
+          <div></div>
+        )}
+        <ListItem disablePadding>
+          <ListItemButton
+            sx={{
+              justifyContent: { xl: "flex-start", lg: "center", md: "center" },
+            }}
+            onClick={() => logout()}
+          >
+            <ListItemIcon
+              sx={{
+                color: "white",
+                padding: { xl: 0, lg: "0.4rem 0", md: "0.4rem 0" },
+              }}
+            >
+              <Logout
+                sx={{ fontSize: { xl: "24px", lg: "27px", md: "27px" } }}
+              />
+            </ListItemIcon>
+            <ListItemText
+              sx={{
+                color: "white",
+                textDecoration: "none",
+                display: {
+                  md: isHovered ? "block" : "none",
+                  lg: isHovered ? "block" : "none",
+                  xl: "block",
+                },
+              }}
+              primary="Logout"
+            />
+          </ListItemButton>
+        </ListItem>
+      </List>
+    </>
   )
 }
 

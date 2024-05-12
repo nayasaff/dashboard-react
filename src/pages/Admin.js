@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react"
 import { Box, Grid, Stack, Typography } from "@mui/material"
 import { Button } from "@mui/material"
-import { AddCircle } from "@mui/icons-material"
 import UserCard from "../components/user/UserCard"
 import axios from "axios"
 import UserModal from "../components/user/UserModal"
 import { useDispatch, useSelector } from "react-redux"
 import { setUsers, setVendors } from "../redux/UserReducer"
 import { PersonAddAlt1 } from "@mui/icons-material"
-import { blue, indigo } from "@mui/material/colors"
+import { blue } from "@mui/material/colors"
 
 const Admin = () => {
   const state = useSelector(state => state.users)

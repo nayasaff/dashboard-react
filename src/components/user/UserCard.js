@@ -5,12 +5,13 @@ import CardHeader from "@mui/material/CardHeader"
 import CardContent from "@mui/material/CardContent"
 import CardActions from "@mui/material/CardActions"
 import Avatar from "@mui/material/Avatar"
-import { Button, Collapse, List, ListItem, Typography } from "@mui/material"
+import { Button, Chip, Collapse, List, ListItem, Stack, Typography } from "@mui/material"
 import { Delete, Edit } from "@mui/icons-material"
 import { ExpandMore as ExpandMoreIcon } from "@mui/icons-material"
 import ExpandMore from "@mui/material/IconButton"
 import UserModal from "./UserModal"
 import DeleteModal from "./DeleteModal"
+import Box from "@mui/material/Box"
 
 const UserCard = ({ user }) => {
   const [expanded, setExpanded] = useState(false)
@@ -23,9 +24,14 @@ const UserCard = ({ user }) => {
     })}, ${date.getFullYear()}`
   }
 
+  const formateRole = (role) => {
+    return role.charAt(0).toUpperCase() + role.slice(1)
+  }
+
 
   return (
     <Card sx={{ maxWidth: 345 }}>
+      <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-between">
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
@@ -35,6 +41,10 @@ const UserCard = ({ user }) => {
         title={user.username}
         subheader={formatDate(new Date(user.createdAt))}
       />
+      <Box sx={{paddingRight : "1rem" }}>
+      <Chip label={formateRole(user.role)} sx={{bgcolor :"#D1E9FF", color : "#2B8BE6", fontWeight : "550"}}/>
+      </Box>
+      </Stack>
       <CardContent>
         <Typography
           sx={{ fontWeight: "600" }}

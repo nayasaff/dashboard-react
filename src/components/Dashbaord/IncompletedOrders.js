@@ -9,7 +9,6 @@ import { People, ShoppingCart } from "@mui/icons-material"
 import Tag from "../Tag"
 import { randomColor } from "../../utils/utils"
 
-
 const IncompletedOrders = ({ totalOrders, insightsLength }) => {
   const [data, setData] = useState()
   const state = useSelector((state) => state.app)
@@ -36,77 +35,79 @@ const IncompletedOrders = ({ totalOrders, insightsLength }) => {
     fetchData()
   }, [isAscending, number, startDate, endDate])
 
-  if (!(data))
-    return <CancelledOrderPlaceholder />
+  if (!data) return <CancelledOrderPlaceholder />
   return (
-
-      <Stack direction="row" spacing={2}>
-       <Box
-      sx={{
-        display: "flex",
-        borderRadius: "16px",
-        backgroundColor: "white",
-        width: "auto",
-        border: `1px ${grey[400]} solid`,
-        flex: 3,
-      }}
-    >
-      {/* Stacked Bar chart for cancelled orers and total price */}
-      <Plot
-        data={[
-          {
-            x: data["percentage"]["vendor_name"],
-            y: data["percentage"]["total_count"],
-            type: "bar",
-            marker: { color: "#004B95", textPosition: "top" },
-            name: "Total Orders",
+    <Stack sx={{flexDirection : {xl : "row", lg : "column-reverse", md : "column-reverse" }, gap : "1rem" }} spacing={2}>
+      <Box
+        sx={{
+          display: {
+            xl: "flex",
+            lg: "flex",
+            md: "flex",
+            sm: "block",
           },
-          {
-            x: data["percentage"]["vendor_name"],
-            y: data["percentage"]["cancelled_count"],
-            type: "bar",
-            marker: { color: "#EC7A08", textPosition: "top" },
-            name: "Cancelled Orders",
-          },
-        ]}
-        style={{ width: "100%", height: "100%" }}
-        layout={{
-          title: "Incompleted Orders",
-          legend: { x: 0.6, y: 1.3 },
-          paper_bgcolor: "transparent",
-          height: 320,
+          borderRadius: "16px",
+          backgroundColor: "white",
+          width: "auto",
+          border: `1px ${grey[400]} solid`,
+          flex: 3.5,
         }}
-      />
-
-      <Plot
-        data={[
-          {
-            x: data["subtotal"]["vendor_name"],
-            y: data["subtotal"]["subtotal"],
-            type: "bar",
-            marker: {
-              color: randomColor(
-                ["#F0AB00", "#F6D173", "#F4C145"],
-                data["subtotal"]["vendor_name"]
-              ),
+      >
+        {/* Stacked Bar chart for cancelled orers and total price */}
+        <Plot
+          data={[
+            {
+              x: data["percentage"]["vendor_name"],
+              y: data["percentage"]["total_count"],
+              type: "bar",
+              marker: { color: "#004B95", textPosition: "top" },
+              name: "Total Orders",
             },
-            name: "Total Price",
-          },
-        ]}
-        style={{ width: "100%", height: "100%" }}
-        layout={{
-          title: "Subtotal of Cancelled Orders",
-          paper_bgcolor: "transparent",
-          height: 320,
-        }}
-      />
-    </Box>
-      <Box sx={{flex : 1}}>
+            {
+              x: data["percentage"]["vendor_name"],
+              y: data["percentage"]["cancelled_count"],
+              type: "bar",
+              marker: { color: "#EC7A08", textPosition: "top" },
+              name: "Cancelled Orders",
+            },
+          ]}
+          style={{ width: "100%", height: "100%" }}
+          layout={{
+            title: "Incompleted Orders",
+            legend: { x: 0.6, y: 1.3 },
+            paper_bgcolor: "transparent",
+            height: 320,
+          }}
+        />
+
+        <Plot
+          data={[
+            {
+              x: data["subtotal"]["vendor_name"],
+              y: data["subtotal"]["subtotal"],
+              type: "bar",
+              marker: {
+                color: randomColor(
+                  ["#F0AB00", "#F6D173", "#F4C145"],
+                  data["subtotal"]["vendor_name"]
+                ),
+              },
+              name: "Total Price",
+            },
+          ]}
+          style={{ width: "100%", height: "100%" }}
+          layout={{
+            title: "Subtotal of Cancelled Orders",
+            paper_bgcolor: "transparent",
+            height: 320,
+          }}
+        />
+      </Box>
+      <Box sx={{ flex: 1, display: "flex", flexDirection: {xl : "column" , lg : "row"} }}>
         <Tag
           title="Orders"
           count={totalOrders}
           icon={<ShoppingCart sx={{ fontSize: "3rem" }} />}
-        
         />
         <Box m={2} />
         <Tag
@@ -115,8 +116,7 @@ const IncompletedOrders = ({ totalOrders, insightsLength }) => {
           icon={<People sx={{ fontSize: "3.2rem" }} />}
         />
       </Box>
-      </Stack>
-  
+    </Stack>
   )
 }
 

@@ -25,6 +25,14 @@ const theme = createTheme({
       default: "#f6f8fa"
     }
   },
+  breakpoints : {
+    values : {
+      sm :0,
+      md :769,
+      lg : 1024,
+      xl : 1216
+    }
+  }
 })
 
 function App() {

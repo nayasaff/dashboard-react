@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import IncompletedOrders from "../components/dashbaord/IncompletedOrders"
-import TimeTake from "../components/dashbaord/TimeTaken"
+import TimeTaken from "../components/dashbaord/TimeTaken"
 import { Box, Stack } from "@mui/material"
 import Typography from "@mui/material/Typography"
 import InputLabel from "@mui/material/InputLabel"
@@ -19,6 +19,7 @@ import DeliveryTime from "../components/dashbaord/DeliveryTime"
 import LastOrder from "../components/dashbaord/LastOrder"
 import HeaderPlaceholder from "../components/placeholder/HeaderPlaceholder"
 import Empty from "../components/Empty"
+import { Grid } from "@mui/material"
 
 const Orders = () => {
   const isAscending = useSelector((state) => state.app.isAscending)
@@ -28,22 +29,26 @@ const Orders = () => {
   const [totalOrders, setTotalOrders] = useState(0)
   const [insights, setInsights] = useState()
   const [noData, setNoData] = useState(false)
-  const [filteredValue, setFilteredValue] = useState({name : "", value : ""})
+  const [filteredValue, setFilteredValue] = useState({ name: "", value: "" })
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/all_insights?deliveryDay=${filteredValue.value}`, {
-          headers: {
-            Authorization: localStorage.getItem("token"),
-          },
-        })
+        const response = await axios.get(
+          `http://localhost:5000/all_insights?deliveryDay=${filteredValue.value}`,
+          {
+            headers: {
+              Authorization: localStorage.getItem("token"),
+            },
+          }
+        )
 
         if (response.status === 200) {
           setTotalOrders(response.data.totalOrders)
           setInsights(response.data.insights)
         }
       } catch (e) {
+        console.log(e)
         if (
           e.response.status === 400 &&
           e.response.data.message.includes("No data found")
@@ -57,105 +62,114 @@ const Orders = () => {
 
   const { number, startDate, endDate } = state
 
-  if (noData)
-    return (
-      <Empty/>
-    )
+
+  if (noData) return <Empty />
 
   return (
     <>
-          {insights && (
-          <TableComponent insights={insights} 
+      {insights && (
+        <TableComponent
+          insights={insights}
           filteredValue={filteredValue}
           setFilteredValue={setFilteredValue}
-          />
-        )}
-        <Box m={3} />
-      {insights !== undefined ? <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: "1rem",
-          }}
-        >
-          <div style={{ display: "flex", gap: "1rem" }}>
-            <Typography variant="h5">Dashboard</Typography>
+        />
+      )}
+      <Box marginTop={3} />
+      {insights !== undefined ? (
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: {
+                sm : "start",
+                md : "start",
+                lg : "center"
+              },
+              justifyContent: "space-between",
+              gap: "1rem",
+              flexDirection: {
+                sm : "column",
+                md : "column",
+                lg : "row"
+              }
+            }}
+          >
+            <div style={{ display: "flex", gap: "1rem" }}>
+              <Typography variant="h5">Dashboard</Typography>
 
-            <div style={{ display: "flex", alignItems: "center", gap: "2rem" }}>
               <div
-                style={{
-                  width: "15rem",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.5rem",
-                  marginTop: "0.2rem",
-                }}
+                style={{ display: "flex", alignItems: "center", gap: "2rem" }}
               >
-                {/*Minimum is one*/}
-                <span>1</span>{" "}
-                <PrettoSlider
-                  aria-label="pretto slider"
-                  min={1}
-                  max={25}
-                  value={number}
-                  onChange={(e) => dispatch(setNumber(e.target.value))}
-                  valueLabelDisplay="on"
-                />
-                {/*Maximum is 25*/}
-                <span>25</span>
+                <div
+                  style={{
+                    width: "15rem",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                    marginTop: "0.2rem",
+                  }}
+                >
+                  {/*Minimum is one*/}
+                  <span>1</span>{" "}
+                  <PrettoSlider
+                    aria-label="pretto slider"
+                    min={1}
+                    max={25}
+                    value={number}
+                    onChange={(e) => dispatch(setNumber(e.target.value))}
+                    valueLabelDisplay="on"
+                  />
+                  {/*Maximum is 25*/}
+                  <span>25</span>
+                </div>
               </div>
             </div>
-          </div>
-          <div style={{ display: "flex", gap: "1rem" }}>
-            <FormControl sx={{ minWidth: 120 }} size="small">
-              <InputLabel id="demo-select-small-label">Sort by</InputLabel>
-              <Select
-                labelId="demo-select-small-label"
-                id="demo-select-small"
-                label="Sort By"
-                size="small"
-                value={isAscending}
-                onChange={(e) => dispatch(setIsAscending(e.target.value))}
-                sx={{bgcolor: "white"}}
-              >
-                <MenuItem value={false}>Highest</MenuItem>
-                <MenuItem value={true}>Lowest</MenuItem>
-              </Select>
-            </FormControl>
-            {/*Start date*/}
-            <DatePicker
-              label="Start Date"
-              value={startDate}
-              slotProps={{ textField: { size: "small" } }}
-              onChange={(newValue) => dispatch(setStartDate(newValue))}
-              sx={{bgcolor: "white"}}
-            />
-            {/*End date*/}
-            <DatePicker
-              label="End Date"
-              value={endDate} //get current date
-              slotProps={{ textField: { size: "small" } }}
-              onChange={(newValue) => dispatch(setEndDate(newValue))}
-              sx={{bgcolor: "white"}}
-            />
-          </div>
-        </div>
-      </LocalizationProvider> : 
-      <HeaderPlaceholder/>
-      }
-      <Box m={2} />
-      <Stack direction="column" spacing={2}>
-  
-        <IncompletedOrders
+            <div style={{ display: "flex", gap: "1rem" }}>
+              <FormControl sx={{ minWidth: 120 }} size="small">
+                <InputLabel id="demo-select-small-label">Sort by</InputLabel>
+                <Select
+                  labelId="demo-select-small-label"
+                  id="demo-select-small"
+                  label="Sort By"
+                  size="small"
+                  value={isAscending}
+                  onChange={(e) => dispatch(setIsAscending(e.target.value))}
+                  sx={{ bgcolor: "white" }}
+                >
+                  <MenuItem value={false}>Highest</MenuItem>
+                  <MenuItem value={true}>Lowest</MenuItem>
+                </Select>
+              </FormControl>
+              {/*Start date*/}
+              <DatePicker
+                label="Start Date"
+                value={startDate}
+                slotProps={{ textField: { size: "small" } }}
+                onChange={(newValue) => dispatch(setStartDate(newValue))}
+                sx={{ bgcolor: "white" }}
+              />
+              {/*End date*/}
+              <DatePicker
+                label="End Date"
+                value={endDate} //get current date
+                slotProps={{ textField: { size: "small" } }}
+                onChange={(newValue) => dispatch(setEndDate(newValue))}
+                sx={{ bgcolor: "white" }}
+              />
+            </div>
+          </Box>
+        </LocalizationProvider>
+      ) : (
+        <HeaderPlaceholder />
+      )}
+      <Box marginTop={2} />
+      <Stack direction="column" sx={{gap : "0.5rem"}}>
+       <IncompletedOrders
           totalOrders={totalOrders}
           insightsLength={insights && insights.length}
-        />
-        <TimeTake />
-        <DeliveryTime />
+        /> *
+        <TimeTaken />
         <LastOrder />
-  
       </Stack>
     </>
   )
