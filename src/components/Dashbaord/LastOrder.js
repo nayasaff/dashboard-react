@@ -66,7 +66,7 @@ const LastOrder = () => {
           style={{ width: "100%", height: "100%"}}
           layout={{
             title: "Last Order Date",
-            yaxis: { type: "category" },
+            yaxis: { type: "category"},
             xaxis: { type: "date", autorange: true },
             height: 350,
             paper_bgcolor: "transparent",

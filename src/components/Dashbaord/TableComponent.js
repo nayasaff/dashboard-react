@@ -17,7 +17,7 @@ import TextField from "@mui/material/TextField"
 import { visuallyHidden } from "@mui/utils"
 import TableSortLabel from "@mui/material/TableSortLabel"
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import TablePlaceholder from "../placeholder/TablePlaceholder"
 
 const columns = [
@@ -27,7 +27,11 @@ const columns = [
   { name: "Last Order", value: "last_order" },
   { name: "Avg Response Time", value: "average_response_time" },
   { name: "Avg Delivery Time", value: "average_delivery_time" },
+  {name : "Total Items", value : "total_items" },
   { name: "Last Updated time", value: "upated_item" },
+  // {name : "Stock Update", value : "stock_update"},
+  // {name : "Stock Update Count", value : "stock_update_count"}
+  
 ]
 
 function stableSort(array, order, orderBy) {
@@ -53,14 +57,17 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
 
   const [order, setOrder] = useState("desc")
   const [orderBy, setOrderBy] = useState("total_orders")
+  const location = useLocation()
+
+  const pagesNumber = location.pathname === "/table" ? 10 : 5
 
   const [searchValue, setSearchValue] = useState("")
  
 
-  // const emptyRows =
-  //   page === Math.ceil(insights.length / 10) - 1
-  //     ? Math.max(0, (1 + page) * 10 - insights.length)
-  //     : 0
+  const emptyRows =
+    page === Math.ceil(insights.length / pagesNumber) - 1
+      ? Math.max(0, (1 + page) * pagesNumber - insights.length)
+      : 0
 
   const handleMenuItemSelected =(name, value, popupState)=>{
     setFilteredValue({name, value})
@@ -89,10 +96,10 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
   const visibleRows = React.useMemo(
     () =>
       stableSort(filteredInsights, order, orderBy).slice(
-        page * 10,
-        page * 10 + 10
+        page * pagesNumber,
+        page * pagesNumber + pagesNumber
       ),
-    [filteredInsights, order, orderBy, page]
+    [filteredInsights, order, orderBy, page, pagesNumber]
   )
 
 
@@ -164,7 +171,7 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
       </Stack>
 
       {/********************************************TABLE************************************************************ */}
-      <TableContainer component={Paper}>
+      <TableContainer sx={{overflowX : 'scroll'}} component={Paper}>
         <Table aria-label="simple table">
           <TableHead sx={{ bgcolor: grey[300] }}>
             <TableRow>
@@ -177,9 +184,10 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
                   sx={{
                     display : {
                       sm : column.value === "average_delivery_time" || column.value === "average_response_time" ? "none" : "table-cell",
+                      md : "table-cell",
                       lg : "table-cell",
                       xl : "table-cell"
-                    }
+                    },
                   }}
                 >
                   <TableSortLabel
@@ -199,6 +207,43 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
                   </TableSortLabel>
                 </TableCell>
               ))}
+                   <TableCell sortDirection={orderBy === "Stock Update (last 2 weeks)" ? order : false}>
+        <TableSortLabel
+          active={orderBy === "stock_update"}
+          direction={orderBy === "stock_update" ? order : "asc"}
+          onClick={() => handleRequestSort("stock_update")}
+          sx={{ textAlign: "center" }}
+        >
+             <div>
+                    <Typography variant="body2">Stock Update Count</Typography>
+          <Typography variant="caption" sx={{whiteSpace : "nowrap"}}>Last 2 weeks</Typography>
+          </div>
+          {orderBy === "stock_update" ? (
+            <Box component="span" sx={visuallyHidden}>
+              {order === "desc" ? "sorted descending" : "sorted ascending"}
+            </Box>
+          ) : null}
+        </TableSortLabel>
+      </TableCell>
+
+      <TableCell sortDirection={orderBy === "Stock Update Count (last 2 weeks)" ? order : false}>
+        <TableSortLabel
+          active={orderBy === "stock_update_count"}
+          direction={orderBy === "stock_update_count" ? order : "asc"}
+          onClick={() => handleRequestSort("stock_update_count")}
+          sx={{ textAlign: "center" }}
+        >
+          <div>
+                    <Typography variant="body2">Stock Update Count</Typography>
+          <Typography variant="caption" sx={{whiteSpace : "nowrap"}}>Last 2 weeks</Typography>
+          </div>
+          {orderBy === "stock_update_count" ? (
+            <Box component="span" sx={visuallyHidden}>
+              {order === "desc" ? "sorted descending" : "sorted ascending"}
+            </Box>
+          ) : null}
+        </TableSortLabel>
+      </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -239,7 +284,7 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
                 <TableCell align="center">
                   {formateNumber(insight.subtotal)}
                 </TableCell>
-                <TableCell align="center">{insight.last_order}</TableCell>
+                <TableCell align="center">{insight.last_order} days ago</TableCell>
                 <TableCell sx={{
                   display : {
                     sm : "none",
@@ -258,11 +303,19 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
                 align="center">
                   {insight.average_delivery_time}
                 </TableCell>
+                <TableCell align="center">{insight.total_items}</TableCell>
                 <TableCell align="center">{insight.upated_item}</TableCell>
+                <TableCell align="center">{insight.stock_update}</TableCell>
+                <TableCell align="center">{insight.stock_update_count}</TableCell>
               </TableRow>
             ))}
 
             {/********************************************EMPTY ROWS FOR LAST PAGE************************************************************ */}
+            {emptyRows > 0 && (
+              <TableRow style={{ height: 53 * emptyRows }}>
+                <TableCell colSpan={6} />
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </TableContainer>
@@ -272,7 +325,7 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
         sx={{ display: "flex", justifyContent: "center", marginTop: "1rem" }}
       >
         <Pagination
-          count={Math.ceil(insights.length / 10)}
+          count={Math.ceil(insights.length / pagesNumber)}
           onChange={(e, value) => setPage(value - 1)}
           size="large"
         />

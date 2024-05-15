@@ -86,6 +86,7 @@ const TimeTaken = () => {
               },
               xaxis: {
                 title: "Vendor Name",
+                tickangle: 45,
               },
               paper_bgcolor: "transparent",
               height: 360,
@@ -124,6 +125,7 @@ const TimeTaken = () => {
               },
               xaxis: {
                 title: "Vendor Name",
+                tickangle: 45,
               },
               paper_bgcolor: "transparent",
               height: 360,
@@ -162,6 +164,7 @@ const TimeTaken = () => {
               },
               xaxis: {
                 title: "Vendor Name",
+                tickangle: 45,
               },
               paper_bgcolor: "transparent",
               height: 360,
@@ -202,6 +205,7 @@ const TimeTaken = () => {
               },
               xaxis: {
                 title: "Vendor Name",
+                tickangle: 45,
               },
               paper_bgcolor: "transparent",
               height: 360,
@@ -240,6 +244,7 @@ const TimeTaken = () => {
               },
               xaxis: {
                 title: "Vendor Name",
+                tickangle: 45,
               },
               paper_bgcolor: "transparent",
               height: 360,
@@ -279,6 +284,7 @@ const TimeTaken = () => {
               },
               xaxis: {
                 title: "Vendor Name",
+                tickangle: 45,
               },
               paper_bgcolor: "transparent",
               height: 360,

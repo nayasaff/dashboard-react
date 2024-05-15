@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Stack, Box } from "@mui/material"
+import { Stack, Box, Grid } from "@mui/material"
 import Plot from "react-plotly.js"
 import { grey } from "@mui/material/colors"
 import axios from "axios"
@@ -25,7 +25,8 @@ const OrderType = ({ currentVendor }) => {
 
   if (!countValues) return <GraphPlaceholder numberOfGraph={3} />
   return (
-    <Stack direction="row" spacing={2}>
+    <Grid container spacing={2}>
+      <Grid item sm={12} md={6} lg={6} xl={4}>
       <Box
         sx={{
           borderRadius: "16px",
@@ -54,7 +55,8 @@ const OrderType = ({ currentVendor }) => {
           }}
         />
       </Box>
-
+      </Grid>
+      <Grid item sm={12} md={6} lg={6} xl={4}>
       <Box
         sx={{
           borderRadius: "16px",
@@ -84,6 +86,8 @@ const OrderType = ({ currentVendor }) => {
           }}
         />
       </Box>
+      </Grid>
+      <Grid item sm={12} md={6} lg={6} xl={4}>
       <Box
         sx={{
           flex: 1,
@@ -111,7 +115,8 @@ const OrderType = ({ currentVendor }) => {
           }}
         />
       </Box>
-    </Stack>
+      </Grid>
+    </Grid>
   )
 }
 

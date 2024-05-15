@@ -15,16 +15,18 @@ import Slider from "@mui/material/Slider"
 import { styled } from "@mui/material/styles"
 import axios from "axios"
 import TableComponent from "../components/dashbaord/TableComponent"
-import DeliveryTime from "../components/dashbaord/DeliveryTime"
 import LastOrder from "../components/dashbaord/LastOrder"
 import HeaderPlaceholder from "../components/placeholder/HeaderPlaceholder"
 import Empty from "../components/Empty"
-import { Grid } from "@mui/material"
+import { useLocation } from "react-router-dom"
+import StockLog from "../components/dashbaord/StockLog"
+
 
 const Orders = () => {
   const isAscending = useSelector((state) => state.app.isAscending)
   const dispatch = useDispatch()
   const state = useSelector((state) => state.app)
+  const location = useLocation()
 
   const [totalOrders, setTotalOrders] = useState(0)
   const [insights, setInsights] = useState()
@@ -49,7 +51,7 @@ const Orders = () => {
         }
       } catch (e) {
         console.log(e)
-        if (
+        if (e.response &&
           e.response.status === 400 &&
           e.response.data.message.includes("No data found")
         ) {
@@ -59,6 +61,8 @@ const Orders = () => {
     }
     fetchData()
   }, [filteredValue])
+
+  console.log(location.pathname)
 
   const { number, startDate, endDate } = state
 
@@ -74,6 +78,7 @@ const Orders = () => {
           setFilteredValue={setFilteredValue}
         />
       )}
+      {location.pathname !== "/table" && <React.Fragment>
       <Box marginTop={3} />
       {insights !== undefined ? (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -167,10 +172,12 @@ const Orders = () => {
        <IncompletedOrders
           totalOrders={totalOrders}
           insightsLength={insights && insights.length}
-        /> *
+        />
         <TimeTaken />
         <LastOrder />
+        <StockLog/>
       </Stack>
+    </React.Fragment> }
     </>
   )
 }

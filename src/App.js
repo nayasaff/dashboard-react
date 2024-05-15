@@ -30,7 +30,7 @@ const theme = createTheme({
       sm :0,
       md :769,
       lg : 1024,
-      xl : 1216
+      xl : 1350
     }
   }
 })

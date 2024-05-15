@@ -9,20 +9,20 @@ import ListItemIcon from "@mui/material/ListItemIcon"
 import ListItemText from "@mui/material/ListItemText"
 import Divider from "@mui/material/Divider"
 import { TableChartOutlined, Settings, ShoppingCart } from "@mui/icons-material"
-import { SupervisorAccount, Logout } from "@mui/icons-material"
+import { SupervisorAccount, Logout, Memory } from "@mui/icons-material"
 import Orders from "../pages/Orders"
 import ProtectedRoute from "../ProtectedRoute"
 import { Route } from "react-router-dom"
 import Vendors from "../pages/Vendors"
 import Admin from "../pages/Admin"
 import Avatar from "@mui/material/Avatar"
-import PowerBi from "../pages/PowerBi"
 import { blue } from "@mui/material/colors"
 import { useNavigate } from "react-router-dom"
 import Error from "../components/Error"
 import { IconButton, Toolbar, AppBar } from "@mui/material"
 import MenuIcon from "@mui/icons-material/Menu"
-import TableComponent from "./dashbaord/TableComponent"
+import axios from "axios"
+import SuccessSnackbar from "./snackbar/SuccessSnackbar"
 
 const drawerWidth = { xl: 240, lg: 100, md: 100 }
 
@@ -55,6 +55,7 @@ const AppContainer = (props) => {
       <CssBaseline />
       <AppBar
         sx={{
+          backgroundColor: "#f44336",
           display: { md: "none" },
           width: {
             sm: `calc(100% - ${drawerWidth}px)`,
@@ -110,6 +111,7 @@ const AppContainer = (props) => {
               boxSizing: "border-box",
               backgroundColor: "#f44336",
               color: "white",
+              width : "40%"
             },
           }}
         >
@@ -162,8 +164,8 @@ const AppContainer = (props) => {
           }}
         />
         <Routes>
-          <Route path="orders" element={<Orders />} />
-          <Route path="vendors" element={<Vendors />} />
+          <Route path="orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
+          <Route path="vendors" element={<ProtectedRoute><Vendors /></ProtectedRoute>} />
 
           <Route
             path="configuration"
@@ -173,9 +175,8 @@ const AppContainer = (props) => {
               </ProtectedRoute>
             }
           />
-          <Route path="powerbi" element={<PowerBi />} />
-          <Route path="table" element={<TableComponent />} />
-          <Route path="*" element={<Error />} />
+          <Route path="table" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
+          <Route path="*" element={<ProtectedRoute><Error /></ProtectedRoute>} />
         </Routes>
       </Box>
     </Box>
@@ -213,10 +214,30 @@ const list = [
 const DrawerApp = ({ isHovered }) => {
   const location = useLocation()
   const navigate = useNavigate()
+  const [openSnackbar, setOpenSnackbar] = React.useState({
+    message: "",
+    open: false,
+  })
 
   const logout = () => {
     localStorage.clear()
     navigate("/login")
+  }
+
+  const clearCache = async () => {
+    try {
+      const response = await axios.delete("http://localhost:5000/clearCache", {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      })
+
+      if (response.status === 200) {
+        setOpenSnackbar({ message: "Cache Cleared Successfully", open: true })
+      }
+    } catch (err) {
+      setOpenSnackbar({ message: "Error in clearing cache", open: true })
+    }
   }
 
   return (
@@ -329,6 +350,45 @@ const DrawerApp = ({ isHovered }) => {
         ) : (
           <div></div>
         )}
+        {localStorage.getItem("role") === "superadmin" ? (
+          <ListItem disablePadding>
+            <ListItemButton
+              sx={{
+                justifyContent: {
+                  xl: "flex-start",
+                  lg: "center",
+                  md: "center",
+                },
+              }}
+              onClick={() => clearCache()}
+            >
+              <ListItemIcon
+                sx={{
+                  color: "white",
+                  padding: { xl: 0, lg: "0.4rem 0", md: "0.4rem 0" },
+                }}
+              >
+                <Memory
+                  sx={{ fontSize: { xl: "24px", lg: "27px", md: "27px" } }}
+                />
+              </ListItemIcon>
+              <ListItemText
+                sx={{
+                  color: "white",
+                  textDecoration: "none",
+                  display: {
+                    md: isHovered ? "block" : "none",
+                    lg: isHovered ? "block" : "none",
+                    xl: "block",
+                  },
+                }}
+                primary="Clear Cache"
+              />
+            </ListItemButton>
+          </ListItem>
+        ) : (
+          <div></div>
+        )}
         <ListItem disablePadding>
           <ListItemButton
             sx={{
@@ -361,6 +421,11 @@ const DrawerApp = ({ isHovered }) => {
           </ListItemButton>
         </ListItem>
       </List>
+      <SuccessSnackbar
+        message={openSnackbar.message}
+        open={openSnackbar.open}
+        setOpen={setOpenSnackbar}
+      />
     </>
   )
 }
