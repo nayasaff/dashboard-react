@@ -10,13 +10,12 @@ import { PersonAddAlt1 } from "@mui/icons-material"
 import { blue } from "@mui/material/colors"
 
 const Admin = () => {
-  const state = useSelector(state => state.users)
-  const {users} = state
+  const state = useSelector((state) => state.users)
+  const { users } = state
 
   const [openModal, setOpenModal] = useState(false)
 
   const dispatch = useDispatch()
-
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -34,8 +33,7 @@ const Admin = () => {
     fetchUsers()
   }, [])
 
-
-  useEffect(()=>{
+  useEffect(() => {
     try {
       axios
         .get("http://localhost:5000/users/vendors", {
@@ -48,41 +46,78 @@ const Admin = () => {
     } catch (error) {}
   }, [])
 
-  if(!users) return <div>Loading...</div>
+  if (!users) return <div>Loading...</div>
 
   return (
     <>
-    <Stack direction="row" spacing={3}>
-    <Typography variant="h4" sx={{ margin: "1rem 2rem", fontWeight : '550' }}>Authorised Users</Typography>
-    <Button
-      component="label"
-      role={undefined}
-      variant="contained"
-      tabIndex={-1}
-      endIcon={<PersonAddAlt1 />}
-      sx={{bgcolor : blue[700]}}
-      onClick={() => setOpenModal(true)}
-    >
-      Add User
-    </Button>
-    </Stack>
-      <Box sx={{ margin: "1rem 2rem", display : 'flex', alignItems : 'center'}}>
+      <Stack direction="row" spacing={3}>
+        <Typography
+          variant="h4"
+          sx={{ margin: "1rem 2rem", fontWeight: "550" }}
+        >
+          Authorised Users
+        </Typography>
+        <Button
+          component="label"
+          role={undefined}
+          variant="contained"
+          tabIndex={-1}
+          endIcon={<PersonAddAlt1 />}
+          sx={{
+            bgcolor: blue[700],
+            fontSize: {
+              sm: "12px",
+            },
+            whiteSpace: "nowrap",
+            maxHeight : {
+              sm: "35px"
+            }
+          }}
+          onClick={() => setOpenModal(true)}
+        >
+          Add User
+        </Button>
+      </Stack>
+      <Box
+        sx={{
+          margin: {
+            xl: "1rem 2rem",
+            lg: "1rem 2rem",
+            md: "0.7rem 1rem",
+            sm: "0.5rem 0.5rem",
+          },
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
         {users ? (
           <>
-          <Grid container spacing={3}>
-            {users.map((user) => (
-              <Grid key={user._id} item xs={12} sm={6} md={4}>
-                <UserCard user={user} />
-              </Grid>
-            ))}
-          </Grid>
-
+            <Grid container spacing={3}>
+              {users.map((user) => (
+                <Grid
+                  sx={{ alignSelf: "center" }}
+                  key={user._id}
+                  item
+                  sm={12}
+                  md={6}
+                  lg={4}
+                >
+                  <UserCard user={user} />
+                </Grid>
+              ))}
+            </Grid>
           </>
         ) : (
           <div>Loading...</div>
         )}
       </Box>
-      {openModal && <UserModal setUsers={setUsers} openModal={openModal} setOpenModal={setOpenModal}/>}
+      {openModal && (
+        <UserModal
+          setUsers={setUsers}
+          openModal={openModal}
+          setOpenModal={setOpenModal}
+        />
+      )}
     </>
   )
 }

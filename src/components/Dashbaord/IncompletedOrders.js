@@ -1,43 +1,21 @@
 import { Box, Stack } from "@mui/material"
-import React, { useEffect, useState } from "react"
+import React from "react"
 import Plot from "react-plotly.js"
-import axios from "axios"
 import { useSelector } from "react-redux"
 import { grey } from "@mui/material/colors"
-import CancelledOrderPlaceholder from "../placeholder/TagPlaceholder"
+import TagPlaceholder from "../placeholder/TagPlaceholder"
 import { People, ShoppingCart } from "@mui/icons-material"
 import Tag from "../Tag"
-import { randomColor } from "../../utils/utils"
+import { randomColor, sliceArray } from "../../utils/utils"
 
-const IncompletedOrders = ({ totalOrders, insightsLength }) => {
-  const [data, setData] = useState()
+const IncompletedOrders = ({ totalOrders, insightsLength, cancelledOrders }) => {
+
   const state = useSelector((state) => state.app)
-  const { number, startDate, endDate, isAscending } = state
+  const { number} = state
 
-  useEffect(() => {
-    const fetchData = () => {
-      axios
-        .get(
-          `http://localhost:5000/cancellationRate?isAscending=${isAscending}&number=${number}&startDate=${startDate.format(
-            "YYYY-MM-DD"
-          )}&endDate=${endDate.format("YYYY-MM-DD")}`,
-          {
-            headers: {
-              Authorization: localStorage.getItem("token"),
-            },
-          }
-        )
-        .then((res) => {
-          setData(res.data)
-        })
-        .catch((err) => console.log(err))
-    }
-    fetchData()
-  }, [isAscending, number, startDate, endDate])
-
-  if (!data) return <CancelledOrderPlaceholder />
+  if (!cancelledOrders) return <TagPlaceholder />
   return (
-    <Stack sx={{flexDirection : {xl : "row", lg : "column-reverse", md : "column-reverse" }, gap : "1rem" }} spacing={2}>
+    <Stack sx={{flexDirection : {xl : "row", lg : "column-reverse", md : "column-reverse", sm : "column-reverse" }, gap : "1rem" }} spacing={2}>
       <Box
         sx={{
           display: {
@@ -57,15 +35,15 @@ const IncompletedOrders = ({ totalOrders, insightsLength }) => {
         <Plot
           data={[
             {
-              x: data["percentage"]["vendor_name"],
-              y: data["percentage"]["total_count"],
+              x: sliceArray(cancelledOrders["percentage"]["vendor_name"], number),
+              y: sliceArray(cancelledOrders["percentage"]["total_count"], number),
               type: "bar",
               marker: { color: "#004B95", textPosition: "top" },
               name: "Total Orders",
             },
             {
-              x: data["percentage"]["vendor_name"],
-              y: data["percentage"]["cancelled_count"],
+              x: sliceArray(cancelledOrders["percentage"]["vendor_name"], number),
+              y: sliceArray(cancelledOrders["percentage"]["cancelled_count"], number),
               type: "bar",
               marker: { color: "#EC7A08", textPosition: "top" },
               name: "Cancelled Orders",
@@ -83,13 +61,13 @@ const IncompletedOrders = ({ totalOrders, insightsLength }) => {
         <Plot
           data={[
             {
-              x: data["subtotal"]["vendor_name"],
-              y: data["subtotal"]["subtotal"],
+              x: sliceArray(cancelledOrders["subtotal"]["vendor_name"], number),
+              y: sliceArray(cancelledOrders["subtotal"]["subtotal"], number),
               type: "bar",
               marker: {
                 color: randomColor(
                   ["#F0AB00", "#F6D173", "#F4C145"],
-                  data["subtotal"]["vendor_name"]
+                  cancelledOrders["subtotal"]["vendor_name"]
                 ),
               },
               name: "Total Price",

@@ -30,7 +30,12 @@ const UserCard = ({ user }) => {
 
 
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card sx={{ maxWidth: 345, alignSelf : {
+      sm : "center",
+      md : "flex-start",
+      lg : "flex-start",
+      xl : "flex-start"
+    } }}>
       <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-between">
       <CardHeader
         avatar={

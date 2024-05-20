@@ -1,52 +1,16 @@
-import React, { useEffect, useState } from "react"
+import React from "react"
 import { Box, Grid } from "@mui/material"
 import Plot from "react-plotly.js"
 import { useSelector } from "react-redux"
-import axios from "axios"
 import { grey } from "@mui/material/colors"
 import GraphPlaceholder from "../placeholder/GraphPlaceholder"
-import { randomColor } from "../../utils/utils"
+import { randomColor, sliceArray } from "../../utils/utils"
 
-const TimeTaken = () => {
-  const [responseTime, setResponseTime] = useState()
-  const [deliveryTime, setDeliveryTime] = useState()
+const TimeTaken = ({responseTime, deliveryTime}) => {
+
   const state = useSelector((state) => state.app)
-  const { number, startDate, endDate, isAscending } = state
+  const { number }  = state
 
-  useEffect(() => {
-    const fetchData = () => {
-      axios
-        .get(
-          `http://localhost:5000/timeTaken?isAscending=${isAscending}&number=${number}&startDate=${startDate.format(
-            "YYYY-MM-DD"
-          )}&endDate=${endDate.format("YYYY-MM-DD")}`,
-          {
-            headers: {
-              Authorization: localStorage.getItem("token"),
-            },
-          }
-        )
-        .then((res) => setResponseTime(res.data))
-        .catch((err) => console.log(err))
-    }
-    fetchData()
-  }, [number, isAscending, startDate, endDate])
-
-  useEffect(() => {
-    axios
-      .get(
-        `http://localhost:5000/deliveryTime?isAscending=${isAscending}&number=${number}&startDate=${startDate.format(
-          "YYYY-MM-DD"
-        )}&endDate=${endDate.format("YYYY-MM-DD")}`,
-        {
-          headers: {
-            Authorization: localStorage.getItem("token"),
-          },
-        }
-      )
-      .then((res) => setDeliveryTime(res.data))
-      .catch((err) => console.log(err))
-  }, [isAscending, number, startDate, endDate])
 
   if (!(responseTime && deliveryTime)) return <>
     <GraphPlaceholder numberOfGraph={3} />
@@ -54,6 +18,7 @@ const TimeTaken = () => {
   </>
   return (
     <Grid container spacing={2}>
+      {responseTime ? <>
       <Grid item sm={12} md={6} lg={6} xl={4}>
         <Box
           sx={{
@@ -66,8 +31,8 @@ const TimeTaken = () => {
           <Plot
             data={[
               {
-                y: responseTime["max"]["maxTime"],
-                x: responseTime["max"]["vendor_name"],
+                y: sliceArray(responseTime["max"]["maxTime"], number),
+                x: sliceArray(responseTime["max"]["vendor_name"], number),
                 type: "bar",
                 name: "Time Taken",
                 marker: {
@@ -94,6 +59,7 @@ const TimeTaken = () => {
           />
         </Box>
       </Grid>
+      
       <Grid item sm={12} md={6} lg={6} xl={4}>
         <Box
           sx={{
@@ -106,8 +72,8 @@ const TimeTaken = () => {
           <Plot
             data={[
               {
-                y: responseTime["avg"]["averageTime"],
-                x: responseTime["avg"]["vendor_name"],
+                y: sliceArray(responseTime["avg"]["averageTime"], number),
+                x: sliceArray(responseTime["avg"]["vendor_name"], number),
                 type: "bar",
                 marker: {
                   color: randomColor(
@@ -133,6 +99,7 @@ const TimeTaken = () => {
           />
         </Box>
       </Grid>
+      
       <Grid item sm={12} md={6} lg={6} xl={4}>
         <Box
           sx={{
@@ -145,8 +112,8 @@ const TimeTaken = () => {
           <Plot
             data={[
               {
-                y: responseTime["min"]["minTime"],
-                x: responseTime["min"]["vendor_name"],
+                y: sliceArray(responseTime["min"]["minTime"], number),
+                x: sliceArray(responseTime["min"]["vendor_name"], number),
                 type: "bar",
                 marker: {
                   color: randomColor(
@@ -172,6 +139,8 @@ const TimeTaken = () => {
           />
         </Box>
       </Grid>
+      </> : <GraphPlaceholder numberOfGraph={3} />}
+      {deliveryTime ? <>
       <Grid item sm={12} md={6} lg={6} xl={4}>
         {" "}
         <Box
@@ -185,8 +154,8 @@ const TimeTaken = () => {
           <Plot
             data={[
               {
-                y: deliveryTime["max"]["maxTime"],
-                x: deliveryTime["max"]["vendor_name"],
+                y: sliceArray(deliveryTime["max"]["maxTime"], number),
+                x: sliceArray(deliveryTime["max"]["vendor_name"], number),
                 type: "bar",
                 name: "Time Taken",
                 marker: {
@@ -225,8 +194,8 @@ const TimeTaken = () => {
           <Plot
             data={[
               {
-                y: deliveryTime["avg"]["averageTime"],
-                x: deliveryTime["avg"]["vendor_name"],
+                y: sliceArray(deliveryTime["avg"]["averageTime"], number),
+                x: sliceArray(deliveryTime["avg"]["vendor_name"], number),
                 type: "bar",
                 marker: {
                   color: randomColor(
@@ -264,8 +233,8 @@ const TimeTaken = () => {
           <Plot
             data={[
               {
-                y: deliveryTime["min"]["minTime"],
-                x: deliveryTime["min"]["vendor_name"],
+                y: sliceArray(deliveryTime["min"]["minTime"], number),
+                x: sliceArray(deliveryTime["min"]["vendor_name"], number),
                 type: "bar",
                 name: "Time Taken",
                 marker: {
@@ -284,7 +253,7 @@ const TimeTaken = () => {
               },
               xaxis: {
                 title: "Vendor Name",
-                tickangle: 45,
+                tickangle: 45
               },
               paper_bgcolor: "transparent",
               height: 360,
@@ -292,8 +261,14 @@ const TimeTaken = () => {
           />
         </Box>
       </Grid>
+      </> : <GraphPlaceholder numberOfGraph={3} />}
     </Grid>
   )
 }
 
 export default TimeTaken
+
+//["#872174", "#C85A9F", "#A61982"]
+
+//C0DFA9
+//00A652

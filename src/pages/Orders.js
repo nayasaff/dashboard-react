@@ -21,17 +21,24 @@ import Empty from "../components/Empty"
 import { useLocation } from "react-router-dom"
 import StockLog from "../components/dashbaord/StockLog"
 
-
 const Orders = () => {
-  const isAscending = useSelector((state) => state.app.isAscending)
   const dispatch = useDispatch()
   const state = useSelector((state) => state.app)
+  const { number, startDate, endDate, isAscending } = state
   const location = useLocation()
 
   const [totalOrders, setTotalOrders] = useState(0)
   const [insights, setInsights] = useState()
   const [noData, setNoData] = useState(false)
   const [filteredValue, setFilteredValue] = useState({ name: "", value: "" })
+
+  const [cancelledOrders, setCancelledOrders] = useState()
+  const [lastOrders, setLastOrders] = useState()
+  const [responseTime, setResponseTime] = useState()
+  const [deliveryTime, setDeliveryTime] = useState()
+  const [lastUpdatedItems, setLastUpdatedItems] = useState()
+  const [stockLogCount, setStockLogCount] = useState()
+  const [stockLog, setStockLog] = useState()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,7 +58,8 @@ const Orders = () => {
         }
       } catch (e) {
         console.log(e)
-        if (e.response &&
+        if (
+          e.response &&
           e.response.status === 400 &&
           e.response.data.message.includes("No data found")
         ) {
@@ -62,10 +70,101 @@ const Orders = () => {
     fetchData()
   }, [filteredValue])
 
-  console.log(location.pathname)
+  useEffect(() => {
+    const fetchData = async () => {
 
-  const { number, startDate, endDate } = state
+      try {
+        const cancelledOrdersResponse = await axios.get(
+          `http://localhost:5000/cancellationRate?isAscending=${isAscending}&startDate=${startDate.format(
+            "YYYY-MM-DD"
+          )}&endDate=${endDate.format("YYYY-MM-DD")}`,
+          {
+            headers: {
+              Authorization: localStorage.getItem("token"),
+            },
+          }
+        )
+        setCancelledOrders(cancelledOrdersResponse.data)
 
+        const responseTimeResponse = await axios.get(
+          `http://localhost:5000/timeTaken?isAscending=${isAscending}&startDate=${startDate.format(
+            "YYYY-MM-DD"
+          )}&endDate=${endDate.format("YYYY-MM-DD")}`,
+          {
+            headers: {
+              Authorization: localStorage.getItem("token"),
+            },
+          }
+        )
+        setResponseTime(responseTimeResponse.data)
+
+        const deliveryTimeResponse = await axios.get(
+          `http://localhost:5000/deliveryTime?isAscending=${isAscending}&startDate=${startDate.format(
+            "YYYY-MM-DD"
+          )}&endDate=${endDate.format("YYYY-MM-DD")}`,
+          {
+            headers: {
+              Authorization: localStorage.getItem("token"),
+            },
+          }
+        )
+        setDeliveryTime(deliveryTimeResponse.data)
+
+        const lastOrdersResponse = await axios.get(
+          `http://localhost:5000/lastOrder?isAscending=${isAscending}&startDate=${startDate.format(
+            "YYYY-MM-DD"
+          )}&endDate=${endDate.format("YYYY-MM-DD")}`,
+          {
+            headers: {
+              Authorization: localStorage.getItem("token"),
+            },
+          }
+        )
+        setLastOrders(lastOrdersResponse.data)
+      } catch (e) {
+        console.log(e)
+      }
+    }
+
+    fetchData()
+  }, [isAscending, startDate, endDate])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const lastItemUpdatedResponse = await axios.get(
+          `http://localhost:5000/lastItemUpdated?isAscending=${isAscending}`,
+          {
+            headers: {
+              Authorization: localStorage.getItem("token"),
+            },
+          }
+        )
+        setLastUpdatedItems(lastItemUpdatedResponse.data)
+
+        const stockLogCountResponse = await axios.get(
+          `http://localhost:5000/stockLogCount?isAscending=${isAscending}`,
+          {
+            headers: {
+              Authorization: localStorage.getItem("token"),
+            },
+          }
+        )
+        setStockLogCount(stockLogCountResponse.data)
+
+        const stockLogResponse = await axios.get(
+          `http://localhost:5000/stockLog?isAscending=${isAscending}`,
+          {
+            headers: {
+              Authorization: localStorage.getItem("token"),
+            },
+          }
+        )
+        setStockLog(stockLogResponse.data)
+      } catch (e) {}
+    }
+    fetchData()
+  }, [isAscending])
 
   if (noData) return <Empty />
 
@@ -78,106 +177,121 @@ const Orders = () => {
           setFilteredValue={setFilteredValue}
         />
       )}
-      {location.pathname !== "/table" && <React.Fragment>
-      <Box marginTop={3} />
-      {insights !== undefined ? (
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: {
-                sm : "start",
-                md : "start",
-                lg : "center"
-              },
-              justifyContent: "space-between",
-              gap: "1rem",
-              flexDirection: {
-                sm : "column",
-                md : "column",
-                lg : "row"
-              }
-            }}
-          >
-            <div style={{ display: "flex", gap: "1rem" }}>
-              <Typography variant="h5">Dashboard</Typography>
-
-              <div
-                style={{ display: "flex", alignItems: "center", gap: "2rem" }}
+      {location.pathname !== "/table" && (
+        <React.Fragment>
+          <Box marginTop={3} />
+          {insights !== undefined ? (
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: {
+                    sm: "start",
+                    md: "start",
+                    lg: "center",
+                  },
+                  justifyContent: "space-between",
+                  gap: "1rem",
+                  flexDirection: {
+                    sm: "column",
+                    md: "column",
+                    lg: "row",
+                  },
+                }}
               >
-                <div
-                  style={{
-                    width: "15rem",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                    marginTop: "0.2rem",
-                  }}
-                >
-                  {/*Minimum is one*/}
-                  <span>1</span>{" "}
-                  <PrettoSlider
-                    aria-label="pretto slider"
-                    min={1}
-                    max={25}
-                    value={number}
-                    onChange={(e) => dispatch(setNumber(e.target.value))}
-                    valueLabelDisplay="on"
-                  />
-                  {/*Maximum is 25*/}
-                  <span>25</span>
+                <div style={{ display: "flex", gap: "1rem" }}>
+                  <Typography variant="h5">Dashboard</Typography>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "2rem",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "15rem",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.5rem",
+                        marginTop: "0.2rem",
+                      }}
+                    >
+                      {/*Minimum is one*/}
+                      <span>1</span>{" "}
+                      <PrettoSlider
+                        aria-label="pretto slider"
+                        min={1}
+                        max={25}
+                        value={number}
+                        onChange={(e) => dispatch(setNumber(e.target.value))}
+                        valueLabelDisplay="on"
+                      />
+                      {/*Maximum is 25*/}
+                      <span>25</span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div style={{ display: "flex", gap: "1rem" }}>
-              <FormControl sx={{ minWidth: 120 }} size="small">
-                <InputLabel id="demo-select-small-label">Sort by</InputLabel>
-                <Select
-                  labelId="demo-select-small-label"
-                  id="demo-select-small"
-                  label="Sort By"
-                  size="small"
-                  value={isAscending}
-                  onChange={(e) => dispatch(setIsAscending(e.target.value))}
-                  sx={{ bgcolor: "white" }}
-                >
-                  <MenuItem value={false}>Highest</MenuItem>
-                  <MenuItem value={true}>Lowest</MenuItem>
-                </Select>
-              </FormControl>
-              {/*Start date*/}
-              <DatePicker
-                label="Start Date"
-                value={startDate}
-                slotProps={{ textField: { size: "small" } }}
-                onChange={(newValue) => dispatch(setStartDate(newValue))}
-                sx={{ bgcolor: "white" }}
-              />
-              {/*End date*/}
-              <DatePicker
-                label="End Date"
-                value={endDate} //get current date
-                slotProps={{ textField: { size: "small" } }}
-                onChange={(newValue) => dispatch(setEndDate(newValue))}
-                sx={{ bgcolor: "white" }}
-              />
-            </div>
-          </Box>
-        </LocalizationProvider>
-      ) : (
-        <HeaderPlaceholder />
+                <div style={{ display: "flex", gap: "1rem" }}>
+                  <FormControl sx={{ minWidth: 120 }} size="small">
+                    <InputLabel id="demo-select-small-label">
+                      Sort by
+                    </InputLabel>
+                    <Select
+                      labelId="demo-select-small-label"
+                      id="demo-select-small"
+                      label="Sort By"
+                      size="small"
+                      value={isAscending}
+                      onChange={(e) => dispatch(setIsAscending(e.target.value))}
+                      sx={{ bgcolor: "white" }}
+                    >
+                      <MenuItem value={false}>Highest</MenuItem>
+                      <MenuItem value={true}>Lowest</MenuItem>
+                    </Select>
+                  </FormControl>
+                  {/*Start date*/}
+                  <DatePicker
+                    label="Start Date"
+                    value={startDate}
+                    slotProps={{ textField: { size: "small" } }}
+                    onChange={(newValue) => dispatch(setStartDate(newValue))}
+                    sx={{ bgcolor: "white" }}
+                  />
+                  {/*End date*/}
+                  <DatePicker
+                    label="End Date"
+                    value={endDate} //get current date
+                    slotProps={{ textField: { size: "small" } }}
+                    onChange={(newValue) => dispatch(setEndDate(newValue))}
+                    sx={{ bgcolor: "white" }}
+                  />
+                </div>
+              </Box>
+            </LocalizationProvider>
+          ) : (
+            <HeaderPlaceholder />
+          )}
+          <Box marginTop={2} />
+          <Stack direction="column" sx={{ gap: "0.5rem" }}>
+            <IncompletedOrders
+              totalOrders={totalOrders}
+              insightsLength={insights && insights.length}
+              cancelledOrders={cancelledOrders}
+            />
+            <TimeTaken
+              responseTime={responseTime}
+              deliveryTime={deliveryTime}
+            />
+            <LastOrder
+              lastOrders={lastOrders}
+              lastUpdatedItems={lastUpdatedItems}
+            />
+            <StockLog stockLog={stockLog} stockLogCount={stockLogCount} />
+          </Stack>
+        </React.Fragment>
       )}
-      <Box marginTop={2} />
-      <Stack direction="column" sx={{gap : "0.5rem"}}>
-       <IncompletedOrders
-          totalOrders={totalOrders}
-          insightsLength={insights && insights.length}
-        />
-        <TimeTaken />
-        <LastOrder />
-        <StockLog/>
-      </Stack>
-    </React.Fragment> }
     </>
   )
 }

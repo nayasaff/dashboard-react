@@ -1,41 +1,17 @@
-import axios from "axios"
-import React, { useEffect, useState } from "react"
+import React from "react"
 import Plot from "react-plotly.js"
 import { Box } from "@mui/material"
 import { grey } from "@mui/material/colors"
 import GraphPlaceholder from "../placeholder/GraphPlaceholder"
-import { randomColor } from "../../utils/utils"
+import { randomColor, sliceArray } from "../../utils/utils"
 import { useSelector } from "react-redux"
 import { Grid } from "@mui/material"
 
-const LastOrder = () => {
-  const [lastOrders, setLastOrders] = useState()
-  const [lastUpdatedItems, setLastUpdatedItems] = useState()
+const LastOrder = ({lastOrders, lastUpdatedItems}) => {
+
   const state = useSelector((state) => state.app)
 
-  const { number, startDate, endDate, isAscending } = state
-
-  useEffect(() => {
-    axios
-      .get(`http://localhost:5000/lastOrder?isAscending=${isAscending}&number=${number}&startDate=${startDate.format("YYYY-MM-DD")}&endDate=${endDate.format("YYYY-MM-DD")}`, {
-        headers: {
-          Authorization: localStorage.getItem("token"),
-        },
-      })
-      .then((res) => setLastOrders(res.data))
-      .catch((err) => console.log(err))
-  }, [isAscending, number, startDate, endDate])
-
-  useEffect(() => {
-    axios
-      .get(`http://localhost:5000/lastItemUpdated?isAscending=${isAscending}&number=${number}`, {
-        headers: {
-          Authorization: localStorage.getItem("token"),
-        },
-      })
-      .then((res) => setLastUpdatedItems(res.data))
-      .catch(err => console.log(err))
-  }, [isAscending, number])
+  const { number } = state
 
   if (!(lastOrders && lastUpdatedItems)) return <GraphPlaceholder numberOfGraph={2} />
 
@@ -53,8 +29,8 @@ const LastOrder = () => {
         <Plot
           data={[
             {
-              x: lastOrders["lastOrder"],
-              y: lastOrders["vendor_name"],
+              x: sliceArray(lastOrders["lastOrder"], number),
+              y: sliceArray(lastOrders["vendor_name"], number),
               type: "bar",
               mode: "markers",
               marker: { color: randomColor(["#EC7A08", "#F4B678", "#EF9234"], lastOrders["vendor_name"]),
@@ -86,8 +62,8 @@ const LastOrder = () => {
         <Plot
           data={[
             {
-              x: lastUpdatedItems["lastUpdatedItem"],
-              y: lastUpdatedItems["vendor_name"],
+              x: sliceArray(lastUpdatedItems["lastUpdatedItem"], number),
+              y: sliceArray(lastUpdatedItems["vendor_name"], number),
               type: "bar",
               mode: "markers",
               marker: { color: randomColor(["#06C", "#8BC1F7", "#519DE9"], lastUpdatedItems["vendor_name"]), 

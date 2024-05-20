@@ -75,6 +75,7 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
   }
 
   const formateNumber = (number) => {
+
     if(number === undefined || number === null) return number
     if (typeof number === "string") return number
     return number.toFixed(2)
@@ -171,7 +172,7 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
       </Stack>
 
       {/********************************************TABLE************************************************************ */}
-      <TableContainer sx={{overflowX : 'scroll'}} component={Paper}>
+      <TableContainer sx={{overflowX : 'auto'}} component={Paper}>
         <Table aria-label="simple table">
           <TableHead sx={{ bgcolor: grey[300] }}>
             <TableRow>

@@ -1,49 +1,17 @@
-import axios from "axios"
-import React, { useEffect, useState } from "react"
+import React from "react"
 import Plot from "react-plotly.js"
 import { useSelector } from "react-redux"
-import { randomColor } from "../../utils/utils"
+import { randomColor, sliceArray } from "../../utils/utils"
 import { Grid, Box } from "@mui/material"
 import { grey } from "@mui/material/colors"
 import GraphPlaceholder from "../placeholder/GraphPlaceholder"
 
-const StockLog = () => {
-  const [stockLogCount, setStockLogCount] = useState()
-  const [stockLog, setStockLog] = useState()
+const StockLog = ({ stockLog, stockLogCount }) => {
   const state = useSelector((state) => state.app)
-  const { number, isAscending } = state
+  const { number } = state
 
-  useEffect(() => {
-    const fetchData = () => {
-      axios
-        .get(
-          `http://localhost:5000/stockLogCount?isAscending=${isAscending}&number=${number}`,
-          {
-            headers: {
-              Authorization: localStorage.getItem("token"),
-            },
-          }
-        )
-        .then((res) => setStockLogCount(res.data))
-        .catch((err) => console.log(err))
-
-      axios
-        .get(
-          `http://localhost:5000/stockLog?isAscending=${isAscending}&number=${number}`,
-          {
-            headers: {
-              Authorization: localStorage.getItem("token"),
-            },
-          }
-        )
-        .then((res) => setStockLog(res.data))
-        .catch((err) => console.log(err))
-    }
-
-    fetchData()
-  }, [isAscending, number])
-
-  if (!(stockLogCount && stockLog)) return <GraphPlaceholder numberOfGraph={2} />
+  if (!(stockLogCount && stockLog))
+    return <GraphPlaceholder numberOfGraph={2} />
 
   return (
     <Grid container spacing={2}>
@@ -59,12 +27,18 @@ const StockLog = () => {
           <Plot
             data={[
               {
-                y: stockLogCount.map((value) => value["total"]),
-                x: stockLogCount.map((value) => value["_id"]["vendor_name"]),
+                y: sliceArray(
+                  stockLogCount.map((value) => value["total"]),
+                  number
+                ),
+                x: sliceArray(
+                  stockLogCount.map((value) => value["_id"]["vendor_name"]),
+                  number
+                ),
                 type: "bar",
                 marker: {
                   color: randomColor(
-                    ["#EC7A08", "#F4B678", "#EF9234"],
+                    ["#9B4A80", "#C280B4", "#9F487D"],
                     stockLogCount
                   ),
                 },
@@ -73,7 +47,23 @@ const StockLog = () => {
             ]}
             style={{ width: "100%", height: "100%" }}
             layout={{
-              title: "Last Order Date",
+              title: {
+                text: "Number of Times Stock Got Updated",
+                font: {
+                  size: 15,
+                },
+              },
+              annotations: [{
+                text: "Last 2 weeks",
+                x: 0.5, // Position horizontally (0 to 1)
+                y: 1, // Position vertically (0 to 1, top to bottom)
+                xref: 'paper', // Reference to plot paper
+                yref: 'paper', // Reference to plot paper
+                showarrow: false, // Hide the annotation arrow
+                font: {
+                  size: 14,
+                },
+              }],
               xaxis: {
                 type: "category",
               },
@@ -82,8 +72,8 @@ const StockLog = () => {
             }}
           />
         </Box>
-        </Grid>
-        <Grid item sm={12} md={6} lg={6} xl={6}>
+      </Grid>
+      <Grid item sm={12} md={6} lg={6} xl={6}>
         <Box
           sx={{
             borderRadius: "16px",
@@ -95,23 +85,45 @@ const StockLog = () => {
           <Plot
             data={[
               {
-                y: Object.keys(stockLog).map((value) => 100),
-                x: stockLog["vendor_name"],
+                y: sliceArray(
+                  Object.keys(stockLog).map((value) => 100),
+                  number
+                ),
+                x: sliceArray(stockLog["vendor_name"], number),
                 type: "bar",
-                marker: { color: "#004B95", textPosition: "top" },
+                marker: { color: "#C0DFA9", textPosition: "top" },
                 name: "",
               },
               {
-                x: stockLog["vendor_name"],
-                y: stockLog["percentage_updated_items"],
+                x: sliceArray(stockLog["vendor_name"], number),
+                y: sliceArray(stockLog["percentage_updated_items"], number),
                 type: "bar",
-                marker: { color: "#EC7A08", textPosition: "top" },
+                marker: {
+                  color: "#00A652",
+                  textPosition: "top",
+                },
                 name: "% of updated items",
               },
             ]}
             style={{ width: "100%", height: "100%" }}
             layout={{
-              title: "Percentage of Updated Items in the Stock (last 2 weeks)",
+              title: {
+                text: "Percentage of Updated Items in the Stock",
+                font: {
+                  size: 15,
+                },
+              },
+              annotations: [{
+                text: "Last 2 weeks",
+                x: 0.5, // Position horizontally (0 to 1)
+                y: 1, // Position vertically (0 to 1, top to bottom)
+                xref: 'paper', // Reference to plot paper
+                yref: 'paper', // Reference to plot paper
+                showarrow: false, // Hide the annotation arrow
+                font: {
+                  size: 14,
+                },
+              }],
               xaxis: {
                 type: "category",
               },
@@ -120,8 +132,7 @@ const StockLog = () => {
             }}
           />
         </Box>
-        </Grid>
-      
+      </Grid>
     </Grid>
   )
 }

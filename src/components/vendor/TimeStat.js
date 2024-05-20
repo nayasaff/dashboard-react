@@ -29,7 +29,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }))
 
-export const TimeStat = ({ data }) => {
+export const TimeStat = ({ timeStats }) => {
   const calculateAverage = (times) => {
     const sum = times.reduce((a, b) => a + b, 0)
     const avg = sum / times.length || 0
@@ -37,10 +37,10 @@ export const TimeStat = ({ data }) => {
     return avg
   }
 
-  if (!data) return <GraphPlaceholder numberOfGraph={3} />
+  if (!timeStats) return <Grid item sm={12} md={12}><GraphPlaceholder numberOfGraph={3} /></Grid>
 
   return (
-    <Grid container spacing={2}>
+    <>
       <Grid item sm={12} md={6} lg={6} xl={4}>
         <Box
           sx={{
@@ -53,7 +53,7 @@ export const TimeStat = ({ data }) => {
           <Plot
             data={[
               {
-                y: data["deliveryTime"],
+                y: timeStats["deliveryTime"],
                 name: "Delivery Time",
                 type: "box",
                 marker: { color: "#F5B041" },
@@ -83,7 +83,7 @@ export const TimeStat = ({ data }) => {
           <Plot
             data={[
               {
-                y: data["timeTaken"],
+                y: timeStats["timeTaken"],
                 name: "Response Time",
                 type: "box",
                 marker: { color: "#27AE60" },
@@ -134,18 +134,18 @@ export const TimeStat = ({ data }) => {
                       Response Time (min)
                     </StyledTableCell>
                     <StyledTableCell align="center">
-                      {data["timeTaken"].length
-                        ? Math.min(...data["timeTaken"]).toFixed(2)
+                      {timeStats["timeTaken"].length
+                        ? Math.min(...timeStats["timeTaken"]).toFixed(2)
                         : "N/A"}
                     </StyledTableCell>
                     <StyledTableCell align="center">
-                      {data["timeTaken"].length
-                        ? calculateAverage(data["timeTaken"]).toFixed(2)
+                      {timeStats["timeTaken"].length
+                        ? calculateAverage(timeStats["timeTaken"]).toFixed(2)
                         : "N/A"}
                     </StyledTableCell>
                     <StyledTableCell align="center">
-                      {data["timeTaken"].length
-                        ? Math.max(...data["timeTaken"]).toFixed(2)
+                      {timeStats["timeTaken"].length
+                        ? Math.max(...timeStats["timeTaken"]).toFixed(2)
                         : "N/A"}
                     </StyledTableCell>
                   </StyledTableRow>
@@ -154,18 +154,18 @@ export const TimeStat = ({ data }) => {
                       Delivery Time (hours)
                     </StyledTableCell>
                     <StyledTableCell align="center">
-                      {data["deliveryTime"].length
-                        ? Math.min(...data["deliveryTime"]).toFixed(2)
+                      {timeStats["deliveryTime"].length
+                        ? Math.min(...timeStats["deliveryTime"]).toFixed(2)
                         : "N/A"}
                     </StyledTableCell>
                     <StyledTableCell align="center">
-                      {data["deliveryTime"].length
-                        ? calculateAverage(data["deliveryTime"]).toFixed(2)
+                      {timeStats["deliveryTime"].length
+                        ? calculateAverage(timeStats["deliveryTime"]).toFixed(2)
                         : "N/A"}
                     </StyledTableCell>
                     <StyledTableCell align="center">
-                      {data["deliveryTime"].length
-                        ? Math.max(...data["deliveryTime"]).toFixed(2)
+                      {timeStats["deliveryTime"].length
+                        ? Math.max(...timeStats["deliveryTime"]).toFixed(2)
                         : "N/A"}
                     </StyledTableCell>
                   </StyledTableRow>
@@ -175,6 +175,6 @@ export const TimeStat = ({ data }) => {
           </Box>
         </Box>
       </Grid>
-    </Grid>
+      </>
   )
 }

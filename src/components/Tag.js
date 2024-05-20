@@ -3,17 +3,17 @@ import React from "react"
 import { grey } from "@mui/material/colors"
 import { Stack } from "@mui/material"
 
-const cardWidth = {xl : 225, lg : 220, md : 220}
+
 
 const Tag = ({ title, count, icon, subtitle }) => {
   return (
     <Card
       sx={{
-        width : {xl : cardWidth.xl, lg : cardWidth.lg, md : cardWidth.md},
         borderRadius: "16px",
         border: `1px ${grey[400]} solid`,
         boxShadow: "none",
-        flex : 1
+        width: "100%",
+        height: "100%",
       }}
     >
       <CardContent>
@@ -28,12 +28,18 @@ const Tag = ({ title, count, icon, subtitle }) => {
               sx={{ fontWeight: "520" }}
               align="center"
             >
-              {count}
+              {count} <span style={{ fontSize: "14px" }}>{subtitle}</span>
             </Typography>
-            <Typography variant="h6" color="text.secondary" sx={{whiteSpace : "nowrap", padding : "0", margin : "0"}} gutterBottom>
+            <Typography variant="h6" color="text.secondary" sx={{whiteSpace : "nowrap", padding : "0", margin : "0",
+              fontSize : {
+                xl : "1.25rem" ,
+               lg : title.length > 20 && "1rem" ,
+               md : "1.25rem",
+               sm : title.length > 20 && "1rem" ,
+              }
+            }} gutterBottom>
               {title}
             </Typography>
-            {subtitle && <Typography variant="body1" color="text.secondary" sx={{whiteSpace : "nowrap", padding : "0", margin : "0"}} gutterBottom>{subtitle}</Typography>}
           </Box>
           {icon}
         </Stack>

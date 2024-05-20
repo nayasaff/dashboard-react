@@ -111,7 +111,7 @@ const AppContainer = (props) => {
               boxSizing: "border-box",
               backgroundColor: "#f44336",
               color: "white",
-              width : "40%"
+              width : "45%"
             },
           }}
         >
@@ -131,6 +131,7 @@ const AppContainer = (props) => {
               },
               backgroundColor: "#f44336",
               color: "white",
+              overflowY : "visible"
             },
           }}
           open
@@ -226,15 +227,14 @@ const DrawerApp = ({ isHovered }) => {
 
   const clearCache = async () => {
     try {
-      const response = await axios.delete("http://localhost:5000/clearCache", {
+       axios.delete("http://localhost:5000/clearCache", {
         headers: {
           Authorization: localStorage.getItem("token"),
         },
       })
 
-      if (response.status === 200) {
-        setOpenSnackbar({ message: "Cache Cleared Successfully", open: true })
-      }
+        setOpenSnackbar({ message: "The cache is being updated. This process might take 5 mins", open: true })
+      
     } catch (err) {
       setOpenSnackbar({ message: "Error in clearing cache", open: true })
     }
@@ -382,7 +382,7 @@ const DrawerApp = ({ isHovered }) => {
                     xl: "block",
                   },
                 }}
-                primary="Clear Cache"
+                primary="Update Cache"
               />
             </ListItemButton>
           </ListItem>

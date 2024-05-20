@@ -192,4 +192,4 @@ const TableComponentCell = ({ orderBy, handleRequestSort, order }) => {
   )
 }
 
-export default TableComponentCell
+
