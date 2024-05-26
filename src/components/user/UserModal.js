@@ -15,6 +15,7 @@ import axios from "axios"
 import { addUser, updateUser } from "../../redux/UserReducer"
 import { useDispatch, useSelector } from "react-redux"
 import { MenuItem, Select } from "@mui/material"
+import AppSnackbar from "../snackbar/AppSnackbar"
 
 const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
   const [value, setValue] = useState(null)
@@ -29,8 +30,10 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
   const [usernameError, setUsernameError] = useState(false)
   const [passwordError, setPasswordError] = useState(false)
   const [password, setPassword] = useState("")
+  const [openSnackbar, setOpenSnackbar] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
 
-  const [role, setRole] = useState(isEditable ? user.role : "")
+  const [role, setRole] = useState(isEditable ? user.role : "member")
 
   const dispatch = useDispatch()
 
@@ -75,11 +78,15 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
         dispatch(addUser(response.data))
       }
     } catch (err) {
-      if (err.response.username) {
+      if (err.response && err.response.username) {
         setUsernameError(err.response.username)
       }
-      if (err.response.password) {
+      if (err.response && err.response.password) {
         setUsernameError(err.response.password)
+      }
+      if(err.response && err.response.status === 403){
+        setOpenSnackbar(true)
+        setErrorMessage(err.response.data.message)
       }
     }
   }
@@ -110,7 +117,10 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
         dispatch(updateUser(response.data))
       }
     } catch (err) {
-      console.log(err)
+      if(err.response && err.response.status === 403){
+        setOpenSnackbar(true)
+        setErrorMessage(err.response.data.message)
+      }
     }
   }
 
@@ -119,6 +129,7 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
   if (!vendors) return <div></div>
 
   return (
+    <>
     <Modal
       aria-labelledby="transition-modal-title"
       aria-describedby="transition-modal-description"
@@ -277,7 +288,10 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
         </ModalContent>
       </Fade>
     </Modal>
+    <AppSnackbar message={errorMessage} open={openSnackbar} setOpen={setOpenSnackbar} color="#d32f2f" />
+    </>
   )
+
 }
 
 const Backdrop = React.forwardRef(function Backdrop({ open, ...other }, ref) {

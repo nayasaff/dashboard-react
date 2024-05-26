@@ -22,7 +22,7 @@ import Error from "../components/Error"
 import { IconButton, Toolbar, AppBar } from "@mui/material"
 import MenuIcon from "@mui/icons-material/Menu"
 import axios from "axios"
-import SuccessSnackbar from "./snackbar/SuccessSnackbar"
+import AppSnackbar from "./snackbar/AppSnackbar"
 
 const drawerWidth = { xl: 240, lg: 100, md: 100 }
 
@@ -111,7 +111,7 @@ const AppContainer = (props) => {
               boxSizing: "border-box",
               backgroundColor: "#f44336",
               color: "white",
-              width : "45%"
+              width: "45%",
             },
           }}
         >
@@ -131,7 +131,7 @@ const AppContainer = (props) => {
               },
               backgroundColor: "#f44336",
               color: "white",
-              overflowY : "visible"
+              overflowY: "visible",
             },
           }}
           open
@@ -165,8 +165,22 @@ const AppContainer = (props) => {
           }}
         />
         <Routes>
-          <Route path="orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
-          <Route path="vendors" element={<ProtectedRoute><Vendors /></ProtectedRoute>} />
+          <Route
+            path="orders"
+            element={
+              <ProtectedRoute>
+                <Orders />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="vendors"
+            element={
+              <ProtectedRoute>
+                <Vendors />
+              </ProtectedRoute>
+            }
+          />
 
           <Route
             path="configuration"
@@ -176,8 +190,22 @@ const AppContainer = (props) => {
               </ProtectedRoute>
             }
           />
-          <Route path="table" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
-          <Route path="*" element={<ProtectedRoute><Error /></ProtectedRoute>} />
+          <Route
+            path="table"
+            element={
+              <ProtectedRoute>
+                <Orders />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="*"
+            element={
+              <ProtectedRoute>
+                <Error />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </Box>
     </Box>
@@ -200,16 +228,7 @@ const list = [
       />
     ),
     link: "/vendors",
-  },
-  {
-    name: "Table",
-    icon: (
-      <TableChartOutlined
-        sx={{ fontSize: { xl: "24px", lg: "27px", md: "27px" } }}
-      />
-    ),
-    link: "/table",
-  },
+  }
 ]
 
 const DrawerApp = ({ isHovered }) => {
@@ -227,14 +246,16 @@ const DrawerApp = ({ isHovered }) => {
 
   const clearCache = async () => {
     try {
-       axios.delete("http://localhost:5000/clearCache", {
+      axios.delete("http://localhost:5000/clearCache", {
         headers: {
           Authorization: localStorage.getItem("token"),
         },
       })
 
-        setOpenSnackbar({ message: "The cache is being updated. This process might take 5 mins", open: true })
-      
+      setOpenSnackbar({
+        message: "The cache is being updated. This process might take 5 mins",
+        open: true,
+      })
     } catch (err) {
       setOpenSnackbar({ message: "Error in clearing cache", open: true })
     }
@@ -310,6 +331,51 @@ const DrawerApp = ({ isHovered }) => {
             </ListItem>
           </Link>
         ))}
+        <Link to="/table">
+          <ListItem sx={{
+            display: {
+              xl : "none",
+              lg : "none",
+              md : "none",
+              sm : "block"
+            }
+          }} disablePadding>
+            <ListItemButton
+              sx={{
+                justifyContent: {
+                  xl: "flex-start",
+                  lg: "center",
+                  md: "center",
+                },
+                backgroundColor:
+                  location.pathname === "/configuration" ? "#f21f10" : "",
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  color: "white",
+                  padding: { xl: 0, lg: "0.4rem 0", md: "0.4rem 0" },
+                }}
+              >
+                <TableChartOutlined
+                  sx={{ fontSize: { xl: "24px", lg: "27px", md: "27px" } }}
+                />
+              </ListItemIcon>
+              <ListItemText
+                sx={{
+                  color: "white",
+                  textDecoration: "none",
+                  display: {
+                    md: isHovered ? "block" : "none",
+                    lg: isHovered ? "block" : "none",
+                    xl: "block",
+                  },
+                }}
+                primary="Table"
+              />
+            </ListItemButton>
+          </ListItem>
+        </Link>
         {localStorage.getItem("role").includes("admin") ? (
           <Link to="/configuration">
             <ListItem disablePadding>
@@ -320,6 +386,8 @@ const DrawerApp = ({ isHovered }) => {
                     lg: "center",
                     md: "center",
                   },
+                  backgroundColor:
+                    location.pathname === "/configuration" ? "#f21f10" : "",
                 }}
               >
                 <ListItemIcon
@@ -421,10 +489,11 @@ const DrawerApp = ({ isHovered }) => {
           </ListItemButton>
         </ListItem>
       </List>
-      <SuccessSnackbar
+      <AppSnackbar
         message={openSnackbar.message}
         open={openSnackbar.open}
         setOpen={setOpenSnackbar}
+        color="#2e7d32"
       />
     </>
   )

@@ -1,12 +1,12 @@
 import React from "react"
 import Snackbar from "@mui/material/Snackbar"
-import { Box, Button } from "@mui/material"
+import { Box } from "@mui/material"
 import { IconButton } from "@mui/material"
 import CloseIcon from "@mui/icons-material/Close"
 import SnackbarContent from '@mui/material/SnackbarContent';
 
 
-const SuccessSnackbar = ({ message, open, setOpen }) => {
+const AppSnackbar = ({ message, open, setOpen, color }) => {
 
 
   const handleClose = () => {
@@ -38,7 +38,7 @@ const SuccessSnackbar = ({ message, open, setOpen }) => {
           message={message}
           action={action}
           sx={{
-            backgroundColor: "#2e7d32",
+            backgroundColor: color,
             color: "white",
             borderRadius: "8px",
           }}
@@ -48,4 +48,4 @@ const SuccessSnackbar = ({ message, open, setOpen }) => {
   )
 }
 
-export default SuccessSnackbar
+export default AppSnackbar

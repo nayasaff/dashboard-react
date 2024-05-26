@@ -12,10 +12,10 @@ const TimeTaken = ({responseTime, deliveryTime}) => {
   const { number }  = state
 
 
-  if (!(responseTime && deliveryTime)) return <>
-    <GraphPlaceholder numberOfGraph={3} />
-    <GraphPlaceholder numberOfGraph={3} />
-  </>
+  // if (!(responseTime && deliveryTime)) return <>
+  //   <GraphPlaceholder numberOfGraph={3} />
+  //   <GraphPlaceholder numberOfGraph={3} />
+  // </>
   return (
     <Grid container spacing={2}>
       {responseTime ? <>
@@ -52,9 +52,10 @@ const TimeTaken = ({responseTime, deliveryTime}) => {
               xaxis: {
                 title: "Vendor Name",
                 tickangle: 45,
+                automargin : 'height'
               },
               paper_bgcolor: "transparent",
-              height: 360,
+              height: 360
             }}
           />
         </Box>
@@ -92,9 +93,10 @@ const TimeTaken = ({responseTime, deliveryTime}) => {
               xaxis: {
                 title: "Vendor Name",
                 tickangle: 45,
+                automargin : 'height'
               },
               paper_bgcolor: "transparent",
-              height: 360,
+              height: 360
             }}
           />
         </Box>
@@ -132,6 +134,7 @@ const TimeTaken = ({responseTime, deliveryTime}) => {
               xaxis: {
                 title: "Vendor Name",
                 tickangle: 45,
+                automargin : 'height'
               },
               paper_bgcolor: "transparent",
               height: 360,
@@ -139,7 +142,7 @@ const TimeTaken = ({responseTime, deliveryTime}) => {
           />
         </Box>
       </Grid>
-      </> : <GraphPlaceholder numberOfGraph={3} />}
+      </> : <Grid item xl={12} lg={12} md ={12} sm={12}><GraphPlaceholder numberOfGraph={3} /> </Grid>}
       {deliveryTime ? <>
       <Grid item sm={12} md={6} lg={6} xl={4}>
         {" "}
@@ -175,9 +178,10 @@ const TimeTaken = ({responseTime, deliveryTime}) => {
               xaxis: {
                 title: "Vendor Name",
                 tickangle: 45,
+                automargin : 'height'
               },
               paper_bgcolor: "transparent",
-              height: 360,
+              height: 360
             }}
           />
         </Box>
@@ -214,9 +218,10 @@ const TimeTaken = ({responseTime, deliveryTime}) => {
               xaxis: {
                 title: "Vendor Name",
                 tickangle: 45,
+                automargin : 'height'
               },
               paper_bgcolor: "transparent",
-              height: 360,
+              height: 360
             }}
           />
         </Box>
@@ -253,15 +258,16 @@ const TimeTaken = ({responseTime, deliveryTime}) => {
               },
               xaxis: {
                 title: "Vendor Name",
-                tickangle: 45
+                tickangle: 45,
+                automargin : 'height'
               },
               paper_bgcolor: "transparent",
-              height: 360,
+              height: 360
             }}
           />
         </Box>
       </Grid>
-      </> : <GraphPlaceholder numberOfGraph={3} />}
+      </> : <Grid item xl={12} lg={12} md ={12} sm={12}><GraphPlaceholder numberOfGraph={3} /> </Grid>}
     </Grid>
   )
 }

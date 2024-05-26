@@ -63,13 +63,13 @@ const Login = () => {
     if(username && password){
         setUsernameError(false)
         setPasswordError(false)
+        setShowError(false)
         try{
            const response = await axios.post("http://localhost:5000/auth/login", {username, password})
            console.log(response)
            if(response.status === 200){
             //if response is success then save token in local storage
             localStorage.setItem('token', response.data.token)
-            localStorage.setItem('role', response.data.role)
             localStorage.setItem('username', response.data.username)
             navigate("/orders") //navigate to homepage
            }

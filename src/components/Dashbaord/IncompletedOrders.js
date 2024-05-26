@@ -1,5 +1,5 @@
 import { Box, Stack } from "@mui/material"
-import React from "react"
+import React, { useEffect, useState } from "react"
 import Plot from "react-plotly.js"
 import { useSelector } from "react-redux"
 import { grey } from "@mui/material/colors"
@@ -7,11 +7,24 @@ import TagPlaceholder from "../placeholder/TagPlaceholder"
 import { People, ShoppingCart } from "@mui/icons-material"
 import Tag from "../Tag"
 import { randomColor, sliceArray } from "../../utils/utils"
+import axios from "axios"
 
-const IncompletedOrders = ({ totalOrders, insightsLength, cancelledOrders }) => {
+const IncompletedOrders = ({ insightsLength, cancelledOrders }) => {
 
   const state = useSelector((state) => state.app)
   const { number} = state
+  const [totalOrders, setTotalOrders] = useState(0)
+
+  useEffect(() => {
+    const fetchData = () => {
+      axios.get("http://localhost:5000/totalOrders", {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        }
+      }).then(res => setTotalOrders(res.data))
+    }
+    fetchData()
+  },[])
 
   if (!cancelledOrders) return <TagPlaceholder />
   return (
@@ -55,6 +68,9 @@ const IncompletedOrders = ({ totalOrders, insightsLength, cancelledOrders }) => 
             legend: { x: 0.6, y: 1.3 },
             paper_bgcolor: "transparent",
             height: 320,
+            xaxis : {
+              automargin : "height"
+            }
           }}
         />
 
@@ -78,6 +94,9 @@ const IncompletedOrders = ({ totalOrders, insightsLength, cancelledOrders }) => 
             title: "Subtotal of Cancelled Orders",
             paper_bgcolor: "transparent",
             height: 320,
+            xaxis : {
+              automargin : "height"
+            }
           }}
         />
       </Box>

@@ -27,29 +27,34 @@ const columns = [
   { name: "Last Order", value: "last_order" },
   { name: "Avg Response Time", value: "average_response_time" },
   { name: "Avg Delivery Time", value: "average_delivery_time" },
-  {name : "Total Items", value : "total_items" },
-  { name: "Last Updated time", value: "upated_item" },
+  { name: "Total Items", value: "total_items" },
+  { name: "Last Updated Item", value: "upated_item" },
   // {name : "Stock Update", value : "stock_update"},
   // {name : "Stock Update Count", value : "stock_update_count"}
-  
 ]
 
 function stableSort(array, order, orderBy) {
   return array.sort((a, b) => {
-    const orderFactor = order === "asc" ? 1 : -1;
-    const valueA = typeof a[orderBy] === "string" ? a[orderBy].localeCompare(b[orderBy]) : a[orderBy];
-    const valueB = typeof b[orderBy] === "string" ? b[orderBy].localeCompare(a[orderBy]) : b[orderBy];
+    const orderFactor = order === "asc" ? 1 : -1
+    const valueA =
+      typeof a[orderBy] === "string"
+        ? a[orderBy].localeCompare(b[orderBy])
+        : a[orderBy]
+    const valueB =
+      typeof b[orderBy] === "string"
+        ? b[orderBy].localeCompare(a[orderBy])
+        : b[orderBy]
 
     // Handle case sensitivity using localeCompare
     if (valueA > valueB) {
-      return orderFactor;
+      return orderFactor
     } else if (valueA < valueB) {
-      return -orderFactor;
+      return -orderFactor
     } else {
       // If values are equal, use original array order for stability
-      return array.indexOf(a) - array.indexOf(b);
+      return array.indexOf(a) - array.indexOf(b)
     }
-  });
+  })
 }
 
 const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
@@ -62,25 +67,22 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
   const pagesNumber = location.pathname === "/table" ? 10 : 5
 
   const [searchValue, setSearchValue] = useState("")
- 
 
   const emptyRows =
     page === Math.ceil(insights.length / pagesNumber) - 1
       ? Math.max(0, (1 + page) * pagesNumber - insights.length)
       : 0
 
-  const handleMenuItemSelected =(name, value, popupState)=>{
-    setFilteredValue({name, value})
+  const handleMenuItemSelected = (name, value, popupState) => {
+    setFilteredValue({ name, value })
     popupState.close()
   }
 
   const formateNumber = (number) => {
-
-    if(number === undefined || number === null) return number
+    if (number === undefined || number === null) return number
     if (typeof number === "string") return number
     return number.toFixed(2)
   }
-
 
   const handleRequestSort = (property) => {
     const isAsc = orderBy === property && order === "asc"
@@ -103,21 +105,19 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
     [filteredInsights, order, orderBy, page, pagesNumber]
   )
 
-
-  if (insights === undefined || insights === null) return <TablePlaceholder/>
+  if (insights === undefined || insights === null) return <TablePlaceholder />
 
   return (
     <Box
       sx={{
-      
         borderRadius: "16px",
         border: `1px ${grey[400]} solid`,
         boxShadow: "none",
         backgroundColor: "white",
         padding: "1rem 1.5rem",
         display: {
-          sm : "none", 
-          md : 'flex'
+          sm: "none",
+          md: "flex",
         },
         flexDirection: "column",
       }}
@@ -143,7 +143,7 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
           }}
         />
         {/********************************************FILTER************************************************************ */}
-        <PopupState variant="popover" sx={{width : "100%"}}>
+        <PopupState variant="popover" sx={{ width: "100%" }}>
           {(popupState) => (
             <React.Fragment>
               <Button variant="outlined" {...bindTrigger(popupState)}>
@@ -160,11 +160,39 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
                 </Stack>
               </Button>
               <Menu {...bindMenu(popupState)}>
-                <MenuItem onClick={()=>handleMenuItemSelected("", "", popupState)}>All</MenuItem>
-                <MenuItem onClick={()=>handleMenuItemSelected("On Demand", "onDemand", popupState)}>On Demand</MenuItem>
-                <MenuItem onClick={()=>handleMenuItemSelected("Instant", "instant" ,popupState)}>Instant</MenuItem>
-                <MenuItem onClick={()=>handleMenuItemSelected("Same Day", "sameDay" ,popupState)}>Same Day</MenuItem>
-                <MenuItem onClick={()=>handleMenuItemSelected("Next Day", "nextDay", popupState)}>Next Day</MenuItem>
+                <MenuItem
+                  onClick={() => handleMenuItemSelected("", "", popupState)}
+                >
+                  All
+                </MenuItem>
+                <MenuItem
+                  onClick={() =>
+                    handleMenuItemSelected("On Demand", "onDemand", popupState)
+                  }
+                >
+                  On Demand
+                </MenuItem>
+                <MenuItem
+                  onClick={() =>
+                    handleMenuItemSelected("Instant", "instant", popupState)
+                  }
+                >
+                  Instant
+                </MenuItem>
+                <MenuItem
+                  onClick={() =>
+                    handleMenuItemSelected("Same Day", "sameDay", popupState)
+                  }
+                >
+                  Same Day
+                </MenuItem>
+                <MenuItem
+                  onClick={() =>
+                    handleMenuItemSelected("Next Day", "nextDay", popupState)
+                  }
+                >
+                  Next Day
+                </MenuItem>
               </Menu>
             </React.Fragment>
           )}
@@ -172,7 +200,7 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
       </Stack>
 
       {/********************************************TABLE************************************************************ */}
-      <TableContainer sx={{overflowX : 'auto'}} component={Paper}>
+      <TableContainer sx={{ overflowX: "auto", maxWidth : '1180px' }} component={Paper}>
         <Table aria-label="simple table">
           <TableHead sx={{ bgcolor: grey[300] }}>
             <TableRow>
@@ -183,11 +211,15 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
                   key={columnIndex}
                   sortDirection={orderBy === column.name ? order : false}
                   sx={{
-                    display : {
-                      sm : column.value === "average_delivery_time" || column.value === "average_response_time" ? "none" : "table-cell",
-                      md : "table-cell",
-                      lg : "table-cell",
-                      xl : "table-cell"
+                    display: {
+                      sm:
+                        column.value === "average_delivery_time" ||
+                        column.value === "average_response_time"
+                          ? "none"
+                          : "table-cell",
+                      md: "table-cell",
+                      lg: "table-cell",
+                      xl: "table-cell",
                     },
                   }}
                 >
@@ -195,7 +227,7 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
                     active={orderBy === column.value}
                     direction={orderBy === column.value ? order : "asc"}
                     onClick={() => handleRequestSort(column.value)}
-                    sx={{ textAlign : "center"}}
+                    sx={{ textAlign: "center" }}
                   >
                     {column.name}
                     {orderBy === column.value ? (
@@ -208,43 +240,61 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
                   </TableSortLabel>
                 </TableCell>
               ))}
-                   <TableCell sortDirection={orderBy === "Stock Update (last 2 weeks)" ? order : false}>
-        <TableSortLabel
-          active={orderBy === "stock_update"}
-          direction={orderBy === "stock_update" ? order : "asc"}
-          onClick={() => handleRequestSort("stock_update")}
-          sx={{ textAlign: "center" }}
-        >
-             <div>
+              <TableCell
+                sortDirection={
+                  orderBy === "Stock Update (last 2 weeks)" ? order : false
+                }
+              >
+                <TableSortLabel
+                  active={orderBy === "stock_update"}
+                  direction={orderBy === "stock_update" ? order : "asc"}
+                  onClick={() => handleRequestSort("stock_update")}
+                  sx={{ textAlign: "center" }}
+                >
+                  <Box>
                     <Typography variant="body2">Stock Update Count</Typography>
-          <Typography variant="caption" sx={{whiteSpace : "nowrap"}}>Last 2 weeks</Typography>
-          </div>
-          {orderBy === "stock_update" ? (
-            <Box component="span" sx={visuallyHidden}>
-              {order === "desc" ? "sorted descending" : "sorted ascending"}
-            </Box>
-          ) : null}
-        </TableSortLabel>
-      </TableCell>
+                    <Typography variant="caption" sx={{ whiteSpace: "nowrap" }}>
+                      Last 2 weeks
+                    </Typography>
+                  </Box>
+                  {orderBy === "stock_update" ? (
+                    <Box component="span" sx={visuallyHidden}>
+                      {order === "desc"
+                        ? "sorted descending"
+                        : "sorted ascending"}
+                    </Box>
+                  ) : null}
+                </TableSortLabel>
+              </TableCell>
 
-      <TableCell sortDirection={orderBy === "Stock Update Count (last 2 weeks)" ? order : false}>
-        <TableSortLabel
-          active={orderBy === "stock_update_count"}
-          direction={orderBy === "stock_update_count" ? order : "asc"}
-          onClick={() => handleRequestSort("stock_update_count")}
-          sx={{ textAlign: "center" }}
-        >
-          <div>
+              <TableCell
+                sortDirection={
+                  orderBy === "Stock Update Count (last 2 weeks)"
+                    ? order
+                    : false
+                }
+              >
+                <TableSortLabel
+                  active={orderBy === "stock_update_count"}
+                  direction={orderBy === "stock_update_count" ? order : "asc"}
+                  onClick={() => handleRequestSort("stock_update_count")}
+                  sx={{ textAlign: "center" }}
+                >
+                  <Box>
                     <Typography variant="body2">Stock Update Count</Typography>
-          <Typography variant="caption" sx={{whiteSpace : "nowrap"}}>Last 2 weeks</Typography>
-          </div>
-          {orderBy === "stock_update_count" ? (
-            <Box component="span" sx={visuallyHidden}>
-              {order === "desc" ? "sorted descending" : "sorted ascending"}
-            </Box>
-          ) : null}
-        </TableSortLabel>
-      </TableCell>
+                    <Typography variant="caption" sx={{ whiteSpace: "nowrap" }}>
+                      Last 2 weeks
+                    </Typography>
+                  </Box>
+                  {orderBy === "stock_update_count" ? (
+                    <Box component="span" sx={visuallyHidden}>
+                      {order === "desc"
+                        ? "sorted descending"
+                        : "sorted ascending"}
+                    </Box>
+                  ) : null}
+                </TableSortLabel>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -285,29 +335,37 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
                 <TableCell align="center">
                   {formateNumber(insight.subtotal)}
                 </TableCell>
-                <TableCell align="center">{insight.last_order} days ago</TableCell>
-                <TableCell sx={{
-                  display : {
-                    sm : "none",
-                    md : "table-cell",
-                  }
-                }} align="center">
+                <TableCell align="center">
+                  {insight.last_order} days ago
+                </TableCell>
+                <TableCell
+                  sx={{
+                    display: {
+                      sm: "none",
+                      md: "table-cell",
+                    },
+                  }}
+                  align="center"
+                >
                   {formateNumber(insight.average_response_time)}
                 </TableCell>
                 <TableCell
-                sx={{
-                  display : {
-                    sm : "none",
-                    md : "table-cell",
-                  }
-                }}
-                align="center">
+                  sx={{
+                    display: {
+                      sm: "none",
+                      md: "table-cell",
+                    },
+                  }}
+                  align="center"
+                >
                   {insight.average_delivery_time}
                 </TableCell>
                 <TableCell align="center">{insight.total_items}</TableCell>
                 <TableCell align="center">{insight.upated_item}</TableCell>
                 <TableCell align="center">{insight.stock_update}</TableCell>
-                <TableCell align="center">{insight.stock_update_count}</TableCell>
+                <TableCell align="center">
+                  {insight.stock_update_count}
+                </TableCell>
               </TableRow>
             ))}
 

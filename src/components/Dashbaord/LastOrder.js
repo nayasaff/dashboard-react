@@ -29,7 +29,7 @@ const LastOrder = ({lastOrders, lastUpdatedItems}) => {
         <Plot
           data={[
             {
-              x: sliceArray(lastOrders["lastOrder"], number),
+              x: sliceArray(lastOrders["last_order"], number),
               y: sliceArray(lastOrders["vendor_name"], number),
               type: "bar",
               mode: "markers",
@@ -42,7 +42,7 @@ const LastOrder = ({lastOrders, lastUpdatedItems}) => {
           style={{ width: "100%", height: "100%"}}
           layout={{
             title: "Last Order Date",
-            yaxis: { type: "category"},
+            yaxis: { type: "category", automargin : "width"},
             xaxis: { type: "date", autorange: true },
             height: 350,
             paper_bgcolor: "transparent",
@@ -62,7 +62,7 @@ const LastOrder = ({lastOrders, lastUpdatedItems}) => {
         <Plot
           data={[
             {
-              x: sliceArray(lastUpdatedItems["lastUpdatedItem"], number),
+              x: sliceArray(lastUpdatedItems["upated_item"], number),
               y: sliceArray(lastUpdatedItems["vendor_name"], number),
               type: "bar",
               mode: "markers",
@@ -74,7 +74,7 @@ const LastOrder = ({lastOrders, lastUpdatedItems}) => {
           style={{ width: "100%", height: "100%"}}
           layout={{
             title: "Last Updated Item Date",
-            yaxis: { type: "category" },
+            yaxis: { type: "category" ,  automargin : "width"},
             xaxis: { type: "date", autorange: true },
             height: 350,
             paper_bgcolor: "transparent",

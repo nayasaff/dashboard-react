@@ -23,7 +23,7 @@ const theme = createTheme({
     },
     background : {
       default: "#f6f8fa"
-    }
+    },
   },
   breakpoints : {
     values : {
@@ -35,7 +35,10 @@ const theme = createTheme({
   }
 })
 
+
+
 function App() {
+
   return (
     //theme provider for mui
     <ThemeProvider theme={theme}>

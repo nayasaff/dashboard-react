@@ -27,7 +27,7 @@ const Orders = () => {
   const { number, startDate, endDate, isAscending } = state
   const location = useLocation()
 
-  const [totalOrders, setTotalOrders] = useState(0)
+
   const [insights, setInsights] = useState()
   const [noData, setNoData] = useState(false)
   const [filteredValue, setFilteredValue] = useState({ name: "", value: "" })
@@ -53,8 +53,7 @@ const Orders = () => {
         )
 
         if (response.status === 200) {
-          setTotalOrders(response.data.totalOrders)
-          setInsights(response.data.insights)
+          setInsights(response.data)
         }
       } catch (e) {
         console.log(e)
@@ -84,6 +83,10 @@ const Orders = () => {
             },
           }
         )
+        if(cancelledOrdersResponse.status !== 200){
+          setNoData(true)
+          return
+        }
         setCancelledOrders(cancelledOrdersResponse.data)
 
         const responseTimeResponse = await axios.get(
@@ -110,17 +113,6 @@ const Orders = () => {
         )
         setDeliveryTime(deliveryTimeResponse.data)
 
-        const lastOrdersResponse = await axios.get(
-          `http://localhost:5000/lastOrder?isAscending=${isAscending}&startDate=${startDate.format(
-            "YYYY-MM-DD"
-          )}&endDate=${endDate.format("YYYY-MM-DD")}`,
-          {
-            headers: {
-              Authorization: localStorage.getItem("token"),
-            },
-          }
-        )
-        setLastOrders(lastOrdersResponse.data)
       } catch (e) {
         console.log(e)
       }
@@ -142,6 +134,16 @@ const Orders = () => {
         )
         setLastUpdatedItems(lastItemUpdatedResponse.data)
 
+        const lastOrdersResponse = await axios.get(
+          `http://localhost:5000/lastOrder?isAscending=${isAscending}`,
+          {
+            headers: {
+              Authorization: localStorage.getItem("token"),
+            },
+          }
+        )
+        setLastOrders(lastOrdersResponse.data)
+
         const stockLogCountResponse = await axios.get(
           `http://localhost:5000/stockLogCount?isAscending=${isAscending}`,
           {
@@ -161,13 +163,15 @@ const Orders = () => {
           }
         )
         setStockLog(stockLogResponse.data)
+
+        
       } catch (e) {}
     }
     fetchData()
   }, [isAscending])
 
   if (noData) return <Empty />
-
+  //if(!insights) return <div></div>
   return (
     <>
       {insights && (
@@ -274,9 +278,8 @@ const Orders = () => {
             <HeaderPlaceholder />
           )}
           <Box marginTop={2} />
-          <Stack direction="column" sx={{ gap: "0.5rem" }}>
+          <Stack direction="column" sx={{ gap: "1rem" }}>
             <IncompletedOrders
-              totalOrders={totalOrders}
               insightsLength={insights && insights.length}
               cancelledOrders={cancelledOrders}
             />

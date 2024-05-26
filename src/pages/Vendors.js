@@ -1,6 +1,6 @@
 import axios from "axios"
 import React, { useEffect, useState } from "react"
-import { FormControl, Typography, Stack, Box } from "@mui/material"
+import { FormControl, Typography, Stack } from "@mui/material"
 import { useLocation } from "react-router-dom"
 import Autocomplete from "@mui/material/Autocomplete"
 import TextField from "@mui/material/TextField"
@@ -165,7 +165,7 @@ const Vendors = () => {
             <Grid item xl={3} lg={3} md={6} sm={6}>
             <Tag
               title="Cancelled Orders"
-              count={formateDecimal(insights[0]["cancellation_rate"])}
+              count={formateDecimal(insights[0]["cancellation_rate"], true)}
               icon={<RemoveShoppingCart sx={{ fontSize: "3rem" }} />}
             />
             </Grid>

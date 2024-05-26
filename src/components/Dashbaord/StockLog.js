@@ -27,19 +27,13 @@ const StockLog = ({ stockLog, stockLogCount }) => {
           <Plot
             data={[
               {
-                y: sliceArray(
-                  stockLogCount.map((value) => value["total"]),
-                  number
-                ),
-                x: sliceArray(
-                  stockLogCount.map((value) => value["_id"]["vendor_name"]),
-                  number
-                ),
+                y: sliceArray(stockLogCount["stock_update_count"] , number),
+                x: sliceArray(stockLogCount["vendor_name"],number),
                 type: "bar",
                 marker: {
                   color: randomColor(
                     ["#9B4A80", "#C280B4", "#9F487D"],
-                    stockLogCount
+                    stockLogCount["vendor_name"]
                   ),
                 },
                 name: "Times stock updated in last 2 weeks",
@@ -66,6 +60,7 @@ const StockLog = ({ stockLog, stockLogCount }) => {
               }],
               xaxis: {
                 type: "category",
+                automargin: "width"
               },
               height: 350,
               paper_bgcolor: "transparent",
@@ -126,6 +121,7 @@ const StockLog = ({ stockLog, stockLogCount }) => {
               }],
               xaxis: {
                 type: "category",
+                automargin: "width"
               },
               height: 350,
               paper_bgcolor: "transparent",
