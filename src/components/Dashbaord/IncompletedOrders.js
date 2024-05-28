@@ -17,7 +17,7 @@ const IncompletedOrders = ({ insightsLength, cancelledOrders }) => {
 
   useEffect(() => {
     const fetchData = () => {
-      axios.get("http://localhost:5000/totalOrders", {
+      axios.get("http://localhost:5000/orders/totalOrders", {
         headers: {
           Authorization: localStorage.getItem("token"),
         }

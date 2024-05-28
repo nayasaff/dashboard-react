@@ -44,7 +44,7 @@ const Orders = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/all_insights?deliveryDay=${filteredValue.value}`,
+          `http://localhost:5000/orders/all_insights?deliveryDay=${filteredValue.value}`,
           {
             headers: {
               Authorization: localStorage.getItem("token"),
@@ -74,7 +74,7 @@ const Orders = () => {
 
       try {
         const cancelledOrdersResponse = await axios.get(
-          `http://localhost:5000/cancellationRate?isAscending=${isAscending}&startDate=${startDate.format(
+          `http://localhost:5000/orders/cancellationRate?isAscending=${isAscending}&startDate=${startDate.format(
             "YYYY-MM-DD"
           )}&endDate=${endDate.format("YYYY-MM-DD")}`,
           {
@@ -90,7 +90,7 @@ const Orders = () => {
         setCancelledOrders(cancelledOrdersResponse.data)
 
         const responseTimeResponse = await axios.get(
-          `http://localhost:5000/timeTaken?isAscending=${isAscending}&startDate=${startDate.format(
+          `http://localhost:5000/orders/timeTaken?isAscending=${isAscending}&startDate=${startDate.format(
             "YYYY-MM-DD"
           )}&endDate=${endDate.format("YYYY-MM-DD")}`,
           {
@@ -102,7 +102,7 @@ const Orders = () => {
         setResponseTime(responseTimeResponse.data)
 
         const deliveryTimeResponse = await axios.get(
-          `http://localhost:5000/deliveryTime?isAscending=${isAscending}&startDate=${startDate.format(
+          `http://localhost:5000/orders/deliveryTime?isAscending=${isAscending}&startDate=${startDate.format(
             "YYYY-MM-DD"
           )}&endDate=${endDate.format("YYYY-MM-DD")}`,
           {
@@ -114,7 +114,7 @@ const Orders = () => {
         setDeliveryTime(deliveryTimeResponse.data)
 
       } catch (e) {
-        console.log(e)
+        setNoData(true)
       }
     }
 
@@ -125,7 +125,7 @@ const Orders = () => {
     const fetchData = async () => {
       try {
         const lastItemUpdatedResponse = await axios.get(
-          `http://localhost:5000/lastItemUpdated?isAscending=${isAscending}`,
+          `http://localhost:5000/items/lastItemUpdated?isAscending=${isAscending}`,
           {
             headers: {
               Authorization: localStorage.getItem("token"),
@@ -135,7 +135,7 @@ const Orders = () => {
         setLastUpdatedItems(lastItemUpdatedResponse.data)
 
         const lastOrdersResponse = await axios.get(
-          `http://localhost:5000/lastOrder?isAscending=${isAscending}`,
+          `http://localhost:5000/orders/lastOrder?isAscending=${isAscending}`,
           {
             headers: {
               Authorization: localStorage.getItem("token"),
@@ -145,7 +145,7 @@ const Orders = () => {
         setLastOrders(lastOrdersResponse.data)
 
         const stockLogCountResponse = await axios.get(
-          `http://localhost:5000/stockLogCount?isAscending=${isAscending}`,
+          `http://localhost:5000/items/stockLogCount?isAscending=${isAscending}`,
           {
             headers: {
               Authorization: localStorage.getItem("token"),
@@ -155,7 +155,7 @@ const Orders = () => {
         setStockLogCount(stockLogCountResponse.data)
 
         const stockLogResponse = await axios.get(
-          `http://localhost:5000/stockLog?isAscending=${isAscending}`,
+          `http://localhost:5000/items/stockLog?isAscending=${isAscending}`,
           {
             headers: {
               Authorization: localStorage.getItem("token"),

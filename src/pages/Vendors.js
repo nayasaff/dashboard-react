@@ -63,7 +63,7 @@ const Vendors = () => {
     const fetchData = async() => {
       if (!currentVendor._id) return
       try{
-        const allInsightsResponse = await axios.get(`http://localhost:5000/all_insights/${currentVendor._id}`, {
+        const allInsightsResponse = await axios.get(`http://localhost:5000/items/all_insights/${currentVendor._id}`, {
           headers: {
             Authorization: localStorage.getItem("token"),
           },
@@ -71,7 +71,7 @@ const Vendors = () => {
         setInsights(allInsightsResponse.data)
 
         const timeStatsResponse = await axios
-        .get(`http://localhost:5000/timeStats/${currentVendor._id}`, {
+        .get(`http://localhost:5000/orders/timeStats/${currentVendor._id}`, {
           headers: {
             Authorization: localStorage.getItem("token"),
           },
@@ -79,7 +79,7 @@ const Vendors = () => {
         setTimeStats(timeStatsResponse.data)
 
         const orderTakenResponse = await axios.get(
-          `http://localhost:5000/orderTaken/${currentVendor._id}`,
+          `http://localhost:5000/orders/orderTaken/${currentVendor._id}`,
           {
             headers: {
               Authorization: localStorage.getItem("token"),
@@ -89,7 +89,7 @@ const Vendors = () => {
         setOrderTaken(orderTakenResponse.data)
         
         const orderTypeResponse = await axios
-        .get(`http://localhost:5000/countValues/${currentVendor._id}`, {
+        .get(`http://localhost:5000/items/countValues/${currentVendor._id}`, {
           headers: {
             Authorization: localStorage.getItem("token"),
           },

@@ -71,6 +71,7 @@ const Login = () => {
             //if response is success then save token in local storage
             localStorage.setItem('token', response.data.token)
             localStorage.setItem('username', response.data.username)
+            localStorage.setItem('role', response.data.role)
             navigate("/orders") //navigate to homepage
            }
         }
