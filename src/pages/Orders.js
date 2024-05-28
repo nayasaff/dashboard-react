@@ -171,7 +171,7 @@ const Orders = () => {
   }, [isAscending])
 
   if (noData) return <Empty />
-  //if(!insights) return <div></div>
+  if(!insights) return <div></div>
   return (
     <>
       {insights && (
