@@ -22,6 +22,7 @@ import VendorPlaceholder from "../components/placeholder/VendorPlaceholder"
 import HeaderPlaceholder from "../components/placeholder/HeaderPlaceholder"
 import { Grid } from "@mui/material"
 
+const api_url = process.env.REACT_APP_API_URL
 
 const Vendors = () => {
   const [userVendors, setUserVendors] = useState("")
@@ -37,7 +38,7 @@ const Vendors = () => {
   useEffect(() => {
     const fetchData = () => {
       axios
-        .get("http://localhost:5000/users/vendorsOfUser", {
+        .get(`${api_url}/users/vendorsOfUser`, {
           headers: {
             Authorization: localStorage.getItem("token"),
           },
@@ -63,7 +64,7 @@ const Vendors = () => {
     const fetchData = async() => {
       if (!currentVendor._id) return
       try{
-        const allInsightsResponse = await axios.get(`http://localhost:5000/items/all_insights/${currentVendor._id}`, {
+        const allInsightsResponse = await axios.get(`${api_url}/items/all_insights/${currentVendor._id}`, {
           headers: {
             Authorization: localStorage.getItem("token"),
           },
@@ -71,7 +72,7 @@ const Vendors = () => {
         setInsights(allInsightsResponse.data)
 
         const timeStatsResponse = await axios
-        .get(`http://localhost:5000/orders/timeStats/${currentVendor._id}`, {
+        .get(`${api_url}/orders/timeStats/${currentVendor._id}`, {
           headers: {
             Authorization: localStorage.getItem("token"),
           },
@@ -79,7 +80,7 @@ const Vendors = () => {
         setTimeStats(timeStatsResponse.data)
 
         const orderTakenResponse = await axios.get(
-          `http://localhost:5000/orders/orderTaken/${currentVendor._id}`,
+          `${api_url}/orders/orderTaken/${currentVendor._id}`,
           {
             headers: {
               Authorization: localStorage.getItem("token"),
@@ -89,7 +90,7 @@ const Vendors = () => {
         setOrderTaken(orderTakenResponse.data)
         
         const orderTypeResponse = await axios
-        .get(`http://localhost:5000/items/countValues/${currentVendor._id}`, {
+        .get(`${api_url}/items/countValues/${currentVendor._id}`, {
           headers: {
             Authorization: localStorage.getItem("token"),
           },

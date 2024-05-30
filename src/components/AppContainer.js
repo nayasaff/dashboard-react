@@ -246,7 +246,7 @@ const DrawerApp = ({ isHovered }) => {
 
   const clearCache = async () => {
     try {
-      axios.delete("http://localhost:5000/users/clearCache", {
+      axios.delete(`${process.env.REACT_APP_API_URL}/users/clearCache`, {
         headers: {
           Authorization: localStorage.getItem("token"),
         },

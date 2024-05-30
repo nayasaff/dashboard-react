@@ -7,7 +7,7 @@ import CardActions from "@mui/material/CardActions"
 import Avatar from "@mui/material/Avatar"
 import { Button, Chip, Collapse, List, ListItem, Stack, Typography } from "@mui/material"
 import { Delete, Edit } from "@mui/icons-material"
-import { ExpandMore as ExpandMoreIcon } from "@mui/icons-material"
+import { ExpandMore as ExpandMoreIcon, ExpandLess } from "@mui/icons-material"
 import ExpandMore from "@mui/material/IconButton"
 import UserModal from "./UserModal"
 import DeleteModal from "./DeleteModal"
@@ -94,14 +94,14 @@ const UserCard = ({ user }) => {
                   },
                 }}
               >
-                Show more
+                {expanded ? "Show less" : "Show more"}
                 <ExpandMore
                   expand={expanded}
                   onClick={() => setExpanded((prev) => !prev)}
                   aria-expanded={expanded}
                   aria-label="show more"
                 >
-                  <ExpandMoreIcon sx={{ mr: 1 }} />
+                  {expanded ? <ExpandLess sx={{mr :1}}/> : <ExpandMoreIcon sx={{ mr: 1 }} />}
                 </ExpandMore>
               </Typography>
             </ListItem>

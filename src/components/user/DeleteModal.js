@@ -31,7 +31,7 @@ export default function DeleteModal({openDialogue, setOpenDialogue, userId}) {
 
     const removeUser = async() => {
         try{
-            const response = await axios.delete(`http://localhost:5000/users/delete/${userId}`, {
+            const response = await axios.delete(`${process.env.REACT_APP_API_URL}/users/delete/${userId}`, {
                 headers: {
                     Authorization: localStorage.getItem("token"),
                 },

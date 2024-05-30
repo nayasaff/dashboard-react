@@ -9,6 +9,8 @@ import { setUsers, setVendors } from "../redux/UserReducer"
 import { PersonAddAlt1 } from "@mui/icons-material"
 import { blue } from "@mui/material/colors"
 
+const api_url = process.env.REACT_APP_API_URL
+
 const Admin = () => {
   const state = useSelector((state) => state.users)
   const { users } = state
@@ -20,7 +22,7 @@ const Admin = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/users/", {
+        const response = await axios.get(`${api_url}/users/`, {
           headers: {
             Authorization: localStorage.getItem("token"),
           },
@@ -36,7 +38,7 @@ const Admin = () => {
   useEffect(() => {
     try {
       axios
-        .get("http://localhost:5000/users/vendors", {
+        .get(`${api_url}/users/vendors`, {
           headers: {
             Authorization: localStorage.getItem("token"),
           },

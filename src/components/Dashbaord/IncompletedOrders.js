@@ -9,22 +9,11 @@ import Tag from "../Tag"
 import { randomColor, sliceArray } from "../../utils/utils"
 import axios from "axios"
 
-const IncompletedOrders = ({ insightsLength, cancelledOrders }) => {
+const IncompletedOrders = ({ insightsLength, cancelledOrders, totalOrders }) => {
 
   const state = useSelector((state) => state.app)
   const { number} = state
-  const [totalOrders, setTotalOrders] = useState(0)
-
-  useEffect(() => {
-    const fetchData = () => {
-      axios.get("http://localhost:5000/orders/totalOrders", {
-        headers: {
-          Authorization: localStorage.getItem("token"),
-        }
-      }).then(res => setTotalOrders(res.data))
-    }
-    fetchData()
-  },[])
+  
 
   if (!cancelledOrders) return <TagPlaceholder />
   return (
@@ -67,7 +56,7 @@ const IncompletedOrders = ({ insightsLength, cancelledOrders }) => {
             title: "Incompleted Orders",
             legend: { x: 0.6, y: 1.3 },
             paper_bgcolor: "transparent",
-            height: 320,
+            height: 380,
             xaxis : {
               automargin : "height",
               tickangle: 45,
@@ -94,7 +83,7 @@ const IncompletedOrders = ({ insightsLength, cancelledOrders }) => {
           layout={{
             title: "Subtotal of Cancelled Orders",
             paper_bgcolor: "transparent",
-            height: 320,
+            height: 380,
             xaxis : {
               automargin : "height",
               tickangle: 45,

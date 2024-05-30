@@ -17,11 +17,14 @@ import { useDispatch, useSelector } from "react-redux"
 import { MenuItem, Select } from "@mui/material"
 import AppSnackbar from "../snackbar/AppSnackbar"
 
+const api_url = process.env.REACT_APP_API_URL
+
 const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
   const [value, setValue] = useState(null)
   const [selectedVendors, setSelectedVendors] = useState(
     isEditable ? user.vendors : []
   )
+
 
   const state = useSelector((state) => state.users)
   const { vendors } = state
@@ -65,7 +68,7 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/users/create",
+        `${api_url}/users/create`,
         { username, password, role ,vendors: selectedVendors },
         {
           headers: {
@@ -99,7 +102,7 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
 
     try {
       const response = await axios.patch(
-        `http://localhost:5000/users/edit/${user._id}`,
+        `${api_url}/users/edit/${user._id}`,
         {
           username,
           vendors: selectedVendors,
