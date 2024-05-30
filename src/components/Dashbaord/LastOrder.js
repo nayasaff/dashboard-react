@@ -62,7 +62,7 @@ const LastOrder = ({lastOrders, lastUpdatedItems}) => {
         <Plot
           data={[
             {
-              x: sliceArray(lastUpdatedItems["upated_item"], number),
+              x: sliceArray(lastUpdatedItems["updated_item"], number),
               y: sliceArray(lastUpdatedItems["vendor_name"], number),
               type: "bar",
               mode: "markers",

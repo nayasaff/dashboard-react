@@ -20,6 +20,7 @@ import HeaderPlaceholder from "../components/placeholder/HeaderPlaceholder"
 import Empty from "../components/Empty"
 import { useLocation } from "react-router-dom"
 import StockLog from "../components/dashbaord/StockLog"
+import dayjs from "dayjs";
 
 const api_url = process.env.REACT_APP_API_URL
 
@@ -28,7 +29,6 @@ const Orders = () => {
   const state = useSelector((state) => state.app)
   const { number, startDate, endDate, isAscending } = state
   const location = useLocation()
-
 
   const [insights, setInsights] = useState()
   const [noData, setNoData] = useState(false)
@@ -42,25 +42,37 @@ const Orders = () => {
   const [stockLogCount, setStockLogCount] = useState()
   const [stockLog, setStockLog] = useState()
   const [totalOrders, setTotalOrders] = useState(0)
-  
+
+
 
   useEffect(() => {
     const fetchData = () => {
-      axios.get(`${process.env.REACT_APP_API_URL}/orders/totalOrders?startDate=${startDate.format(
-        "YYYY-MM-DD"
-      )}&endDate=${endDate.format("YYYY-MM-DD")}`, {
-        headers: {
-          Authorization: localStorage.getItem("token"),
-        }
-      }).then(res => setTotalOrders(res.data))
-      .catch(err =>{
-        if(err.response && err.response.status === 400 && err.response.data.message.includes("No data found")){
-          setNoData(true)
-        }
-      })
+      axios
+        .get(
+          `${
+            process.env.REACT_APP_API_URL
+          }/orders/totalOrders?startDate=${startDate.format(
+            "YYYY-MM-DD"
+          )}&endDate=${endDate.format("YYYY-MM-DD")}`,
+          {
+            headers: {
+              Authorization: localStorage.getItem("token"),
+            },
+          }
+        )
+        .then((res) => setTotalOrders(res.data))
+        .catch((err) => {
+          if (
+            err.response &&
+            err.response.status === 400 &&
+            err.response.data.message.includes("No data found")
+          ) {
+            setNoData(true)
+          }
+        })
     }
     fetchData()
-  },[startDate, endDate])
+  }, [startDate, endDate])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -92,7 +104,6 @@ const Orders = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-
       try {
         const cancelledOrdersResponse = await axios.get(
           `${api_url}/orders/cancellationRate?isAscending=${isAscending}&startDate=${startDate.format(
@@ -131,6 +142,29 @@ const Orders = () => {
         )
         setDeliveryTime(deliveryTimeResponse.data)
 
+        const lastItemUpdatedResponse = await axios.get(
+          `${api_url}/items/lastItemUpdated?isAscending=${isAscending}&startDate=${startDate.format(
+            "YYYY-MM-DD"
+          )}&endDate=${endDate.format("YYYY-MM-DD")}`,
+          {
+            headers: {
+              Authorization: localStorage.getItem("token"),
+            },
+          }
+        )
+        setLastUpdatedItems(lastItemUpdatedResponse.data)
+
+        const lastOrdersResponse = await axios.get(
+          `${api_url}/orders/lastOrder?isAscending=${isAscending}&startDate=${startDate.format(
+            "YYYY-MM-DD"
+          )}&endDate=${endDate.format("YYYY-MM-DD")}`,
+          {
+            headers: {
+              Authorization: localStorage.getItem("token"),
+            },
+          }
+        )
+        setLastOrders(lastOrdersResponse.data)
       } catch (e) {
         setNoData(true)
       }
@@ -142,26 +176,6 @@ const Orders = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const lastItemUpdatedResponse = await axios.get(
-          `${api_url}/items/lastItemUpdated?isAscending=${isAscending}`,
-          {
-            headers: {
-              Authorization: localStorage.getItem("token"),
-            },
-          }
-        )
-        setLastUpdatedItems(lastItemUpdatedResponse.data)
-
-        const lastOrdersResponse = await axios.get(
-          `${api_url}/orders/lastOrder?isAscending=${isAscending}`,
-          {
-            headers: {
-              Authorization: localStorage.getItem("token"),
-            },
-          }
-        )
-        setLastOrders(lastOrdersResponse.data)
-
         const stockLogCountResponse = await axios.get(
           `${api_url}/items/stockLogCount?isAscending=${isAscending}`,
           {
@@ -181,8 +195,6 @@ const Orders = () => {
           }
         )
         setStockLog(stockLogResponse.data)
-
-        
       } catch (e) {}
     }
     fetchData()
@@ -290,6 +302,7 @@ const Orders = () => {
                     onChange={(newValue) => dispatch(setEndDate(newValue))}
                     sx={{ bgcolor: "white" }}
                     minDate={startDate}
+                    maxDate={dayjs()}
                   />
                 </div>
               </Box>
@@ -300,7 +313,7 @@ const Orders = () => {
           <Box marginTop={2} />
           <Stack direction="column" sx={{ gap: "1rem" }}>
             <IncompletedOrders
-            totalOrders={totalOrders}
+              totalOrders={totalOrders}
               insightsLength={insights && insights.length}
               cancelledOrders={cancelledOrders}
             />
