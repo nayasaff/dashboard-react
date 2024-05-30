@@ -23,7 +23,7 @@ import TablePlaceholder from "../placeholder/TablePlaceholder"
 const columns = [
   { name: "Total Orders", value: "total_orders" },
   { name: "Cancellation Rate", value: "cancellation_rate" },
-  { name: "Total price loss", value: "total_price" },
+  { name: "Total price loss", value: "subtotal_loss" },
   { name: "Last Order", value: "last_order" },
   { name: "Avg Response Time", value: "average_response_time" },
   { name: "Avg Delivery Time", value: "average_delivery_time" },
