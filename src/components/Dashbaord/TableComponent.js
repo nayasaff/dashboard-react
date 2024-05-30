@@ -333,7 +333,7 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
                   {formateNumber(insight.cancellation_rate)}%
                 </TableCell>
                 <TableCell align="center">
-                  {formateNumber(insight.subtotal)}
+                  {formateNumber(insight.subtotal_loss)}
                 </TableCell>
                 <TableCell align="center">
                   {insight.last_order} days ago

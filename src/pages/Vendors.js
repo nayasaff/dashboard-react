@@ -172,7 +172,7 @@ const Vendors = () => {
             <Grid item xl={3} lg={3} md={6} sm={6}>
             <Tag
               title="Total Price Loss"
-              count={formateDecimal(insights[0]["subtotal"])}
+              count={formateDecimal(insights[0]["subtotal_loss"])}
               icon={<MoneyOff sx={{ fontSize: "3rem" }} />}
             />
             </Grid>

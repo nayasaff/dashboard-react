@@ -23,8 +23,8 @@ const OrderType = ({ orderType }) => {
           style={{ width: "100%", height: "100%" }}
           data={[
             {
-              values: orderType["itemsTypeCount"],
-              labels: orderType["itemsType"],
+              values: orderType["items_type_count"],
+              labels: orderType["items_type"],
               type: "pie",
               marker: {
                 colors: ["#519DE9", "#F4C145","#E25668", "#4CB140"],
@@ -54,8 +54,8 @@ const OrderType = ({ orderType }) => {
           style={{ width: "100%", height: "100%" }}
           data={[
             {
-              values: orderType["orderTypeCount"],
-              labels: orderType["orderType"],
+              values: orderType["order_type_count"],
+              labels: orderType["order_type"],
               type: "pie",
               marker: {
                 colors: ["#519DE9", "#F4C145","#E25668", "#4CB140"],
@@ -84,8 +84,8 @@ const OrderType = ({ orderType }) => {
           style={{ width: "100%", height: "90%" }}
           data={[
             {
-              values: orderType["orderStatusCount"],
-              labels: orderType["orderStatus"],
+              values: orderType["order_status_count"],
+              labels: orderType["order_status"],
               type: "pie",
               marker: {
                 colors: ["#519DE9", "#F4C145","#E25668", "#4CB140"],

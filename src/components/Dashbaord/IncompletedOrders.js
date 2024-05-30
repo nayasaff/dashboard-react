@@ -49,14 +49,14 @@ const IncompletedOrders = ({ insightsLength, cancelledOrders }) => {
           data={[
             {
               x: sliceArray(cancelledOrders["percentage"]["vendor_name"], number),
-              y: sliceArray(cancelledOrders["percentage"]["total_count"], number),
+              y: sliceArray(cancelledOrders["percentage"]["total_orders"], number),
               type: "bar",
               marker: { color: "#004B95", textPosition: "top" },
               name: "Total Orders",
             },
             {
               x: sliceArray(cancelledOrders["percentage"]["vendor_name"], number),
-              y: sliceArray(cancelledOrders["percentage"]["cancelled_count"], number),
+              y: sliceArray(cancelledOrders["percentage"]["cancelled_orders"], number),
               type: "bar",
               marker: { color: "#EC7A08", textPosition: "top" },
               name: "Cancelled Orders",
@@ -69,7 +69,8 @@ const IncompletedOrders = ({ insightsLength, cancelledOrders }) => {
             paper_bgcolor: "transparent",
             height: 320,
             xaxis : {
-              automargin : "height"
+              automargin : "height",
+              tickangle: 45,
             }
           }}
         />
@@ -78,7 +79,7 @@ const IncompletedOrders = ({ insightsLength, cancelledOrders }) => {
           data={[
             {
               x: sliceArray(cancelledOrders["subtotal"]["vendor_name"], number),
-              y: sliceArray(cancelledOrders["subtotal"]["subtotal"], number),
+              y: sliceArray(cancelledOrders["subtotal"]["subtotal_loss"], number),
               type: "bar",
               marker: {
                 color: randomColor(
@@ -95,7 +96,8 @@ const IncompletedOrders = ({ insightsLength, cancelledOrders }) => {
             paper_bgcolor: "transparent",
             height: 320,
             xaxis : {
-              automargin : "height"
+              automargin : "height",
+              tickangle: 45,
             }
           }}
         />
