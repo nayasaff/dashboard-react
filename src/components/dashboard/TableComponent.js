@@ -18,7 +18,7 @@ import { visuallyHidden } from "@mui/utils"
 import TableSortLabel from "@mui/material/TableSortLabel"
 import { useState } from "react"
 import { Link, useLocation } from "react-router-dom"
-import TablePlaceholder from "../placeholder/TablePlaceholder"
+import TablePlaceholder from "../placeholder/TablePlacehold"
 
 const columns = [
   { name: "Total Orders", value: "total_orders" },
