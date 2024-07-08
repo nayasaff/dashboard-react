@@ -52,7 +52,7 @@ const Admin = () => {
 
   return (
     <>
-      <Stack direction="row" spacing={3}>
+      <Stack direction="row" spacing={2}>
         <Typography
           variant="h4"
           sx={{ margin: "1rem 2rem", fontWeight: "550" }}
