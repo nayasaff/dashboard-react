@@ -16,6 +16,8 @@ import { addUser, updateUser } from "../../redux/UserReducer"
 import { useDispatch, useSelector } from "react-redux"
 import { MenuItem, Select } from "@mui/material"
 import AppSnackbar from "../snackbar/AppSnackbar"
+import FormHelperText from '@mui/material/FormHelperText';
+
 
 const api_url = process.env.REACT_APP_API_URL
 
@@ -31,10 +33,14 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
 
   const [username, setUsername] = useState(isEditable ? user.username : "")
   const [usernameError, setUsernameError] = useState(false)
+  const [roleError, setRoleError] = useState(false)
+  const [vendorsError, setVendorsError] = useState(false)
+
   const [passwordError, setPasswordError] = useState(false)
   const [password, setPassword] = useState("")
+
+  const [errorMessage, setErrorMessage] = useState(false)
   const [openSnackbar, setOpenSnackbar] = useState(false)
-  const [errorMessage, setErrorMessage] = useState("")
 
   const [role, setRole] = useState(isEditable ? user.role : "member")
 
@@ -61,8 +67,8 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
       setPasswordError("Password is required")
       return
     }
-    if (password.length < 6) {
-      setPasswordError("Password must be atleast 6 characters long")
+    if (password.length < 8) {
+      setPasswordError("Password must be atleast 8 characters long")
       return
     }
 
@@ -81,22 +87,22 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
         dispatch(addUser(response.data))
       }
     } catch (err) {
-      if (err.response && err.response.username) {
-        setUsernameError(err.response.username)
-      }
-      if (err.response && err.response.password) {
-        setUsernameError(err.response.password)
-      }
       if(err.response && err.response.status === 403){
         setOpenSnackbar(true)
         setErrorMessage(err.response.data.message)
+      }
+      else if (err.response && err.response.data ) {
+        setUsernameError(err.response.data.username)
+        setPasswordError(err.response.data.password)
+        setRoleError(err.response.data.role)
+        setVendorsError(err.response.data.vendors)
       }
     }
   }
 
   const editUser = async () => {
-    if (password !== "" && password.length < 6) {
-      setPasswordError("Password must be atleast 6 characters long")
+    if (password !== "" && password.length < 8) {
+      setPasswordError("Password must be atleast 8 characters long")
       return
     }
 
@@ -123,6 +129,12 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
       if(err.response && err.response.status === 403){
         setOpenSnackbar(true)
         setErrorMessage(err.response.data.message)
+      }
+      else if(err.response && err.response.data){
+        setUsernameError(err.response.data.username)
+        setPasswordError(err.response.data.password)
+        setRoleError(err.response.data.role)
+        setVendorsError(err.response.data.vendors)
       }
     }
   }
@@ -213,11 +225,12 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
                 onChange={(e) => setRole(e.target.value)}
                 displayEmpty
                 inputProps={{ "aria-label": "Without label" }}
+                error={roleError}
               >
-                <MenuItem value="superadmin">Super admin</MenuItem>
                 <MenuItem value="admin">Admin</MenuItem>
                 <MenuItem value="member">Member</MenuItem>
               </Select>
+              <FormHelperText>{roleError}</FormHelperText>
             </Box>
           )}
 
@@ -265,6 +278,8 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
                   variant="outlined"
                   clearIcon={null}
                   value={value}
+                  helperText={vendorsError}
+                  error={vendorsError}
                 />
               )}
             />
