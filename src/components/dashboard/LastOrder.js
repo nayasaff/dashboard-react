@@ -13,6 +13,16 @@ const LastOrder = ({lastOrders, lastUpdatedItems}) => {
 
   const { number } = state
 
+  const getMinimumDate = (datas) => {
+    const parseDate = datas.map((data) => new Date(data))
+
+    const minDate = new Date(Math.min.apply(null,parseDate));
+    console.log(minDate)
+    const dayBefore = new Date(minDate.getTime())
+    dayBefore.setDate(dayBefore.getDate() - 5)
+    return dayBefore
+  }
+
   if (!(lastOrders && lastUpdatedItems)) return <GraphPlaceholder numberOfGraph={2} />
 
   return (

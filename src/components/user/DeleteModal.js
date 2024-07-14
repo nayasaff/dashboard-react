@@ -26,7 +26,6 @@ const theme = createTheme({
 export default function DeleteModal({openDialogue, setOpenDialogue, userId}) {
 
     const dispatch = useDispatch()
-    const [openSnackbar, setOpenSnackbar] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
 
     const removeUser = async() => {
@@ -43,7 +42,6 @@ export default function DeleteModal({openDialogue, setOpenDialogue, userId}) {
             }
         }
         catch(error){
-          setOpenSnackbar(true)
           setErrorMessage(error.response.data.message)
         }
     }
@@ -83,7 +81,7 @@ export default function DeleteModal({openDialogue, setOpenDialogue, userId}) {
           </Button>
         </DialogActions>
       </Dialog>
-      <AppSnackbar message={errorMessage} open={openSnackbar} setOpen={setOpenSnackbar} color="#d32f2f" />
+      <AppSnackbar message={errorMessage} onClose={()=> setErrorMessage(false)} color="#d32f2f" />
     </React.Fragment>
   );
 }

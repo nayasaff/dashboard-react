@@ -234,10 +234,8 @@ const list = [
 const DrawerApp = ({ isHovered }) => {
   const location = useLocation()
   const navigate = useNavigate()
-  const [openSnackbar, setOpenSnackbar] = React.useState({
-    message: "",
-    open: false,
-  })
+  
+  const [message, setMessage] = React.useState("")
 
   const logout = () => {
     localStorage.clear()
@@ -253,10 +251,10 @@ const DrawerApp = ({ isHovered }) => {
       })
 
       if (response.status === 200) {
-        setOpenSnackbar({ message: response.data.message, open: true })
+        setMessage(response.data.message)
       }
     } catch (err) {
-      setOpenSnackbar({ message: "Error in clearing cache", open: true })
+      setMessage("Error in clearing cache")
     }
   }
 
@@ -489,9 +487,8 @@ const DrawerApp = ({ isHovered }) => {
         </ListItem>
       </List>
       <AppSnackbar
-        message={openSnackbar.message}
-        open={openSnackbar.open}
-        setOpen={setOpenSnackbar}
+        message={message}
+        onClose={() => setMessage(false)}
         color="#2e7d32"
       />
     </>

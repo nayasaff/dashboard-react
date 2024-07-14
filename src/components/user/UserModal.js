@@ -40,7 +40,6 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
   const [password, setPassword] = useState("")
 
   const [errorMessage, setErrorMessage] = useState(false)
-  const [openSnackbar, setOpenSnackbar] = useState(false)
 
   const [role, setRole] = useState(isEditable ? user.role : "member")
 
@@ -88,7 +87,6 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
       }
     } catch (err) {
       if(err.response && err.response.status === 403){
-        setOpenSnackbar(true)
         setErrorMessage(err.response.data.message)
       }
       else if (err.response && err.response.data ) {
@@ -127,7 +125,6 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
       }
     } catch (err) {
       if(err.response && err.response.status === 403){
-        setOpenSnackbar(true)
         setErrorMessage(err.response.data.message)
       }
       else if(err.response && err.response.data){
@@ -306,7 +303,7 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
         </ModalContent>
       </Fade>
     </Modal>
-    <AppSnackbar message={errorMessage} open={openSnackbar} setOpen={setOpenSnackbar} color="#d32f2f" />
+    <AppSnackbar message={errorMessage}  onClose={()=> setErrorMessage(false)} color="#d32f2f" />
     </>
   )
 

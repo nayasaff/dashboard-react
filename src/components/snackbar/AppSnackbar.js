@@ -6,12 +6,8 @@ import CloseIcon from "@mui/icons-material/Close"
 import SnackbarContent from '@mui/material/SnackbarContent';
 
 
-const AppSnackbar = ({ message, open, setOpen, color }) => {
+const AppSnackbar = ({ message, onClose, color }) => {
 
-
-  const handleClose = () => {
-    setOpen({message : "", open : false})
-  }
 
   const action = (
     <React.Fragment>
@@ -19,7 +15,7 @@ const AppSnackbar = ({ message, open, setOpen, color }) => {
         size="small"
         aria-label="close"
         color="inherit"
-        onClick={handleClose}
+        onClick={onClose}
       >
         <CloseIcon fontSize="small" />
       </IconButton>
@@ -30,9 +26,9 @@ const AppSnackbar = ({ message, open, setOpen, color }) => {
     <Box sx={{ width: 500 }}>
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        open={open}
+        open={message}
         autoHideDuration={6000}
-        onClose={handleClose}
+        onClose={onClose}
       >
         <SnackbarContent
           message={message}
