@@ -76,7 +76,8 @@ const Login = () => {
            }
         }
         catch(err){
-            if(err.response.data.message){
+       
+            if(err.response && err.response.data.message){
                 setShowError(err.response.data.message)
             }
         }

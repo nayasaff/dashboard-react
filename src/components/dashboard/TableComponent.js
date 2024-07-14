@@ -67,6 +67,7 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
   const pagesNumber = location.pathname === "/table" ? 10 : 5
 
   const [searchValue, setSearchValue] = useState("")
+  
 
   const emptyRows =
     page === Math.ceil(insights.length / pagesNumber) - 1
@@ -116,7 +117,7 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
         backgroundColor: "white",
         padding: "1rem 1.5rem",
         display: {
-          sm: "none",
+          sm: location.pathname === "/table" ? "flex" : "none",
           md: "flex",
         },
         flexDirection: "column",

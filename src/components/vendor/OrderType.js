@@ -54,8 +54,8 @@ const OrderType = ({ orderType }) => {
           style={{ width: "100%", height: "100%" }}
           data={[
             {
-              values: orderType["order_type_count"],
-              labels: orderType["order_type"],
+              values: orderType["orders_type_count"],
+              labels: orderType["orders_type"],
               type: "pie",
               marker: {
                 colors: ["#519DE9", "#F4C145","#E25668", "#4CB140"],

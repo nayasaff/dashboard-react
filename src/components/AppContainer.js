@@ -246,16 +246,15 @@ const DrawerApp = ({ isHovered }) => {
 
   const clearCache = async () => {
     try {
-      axios.delete(`${process.env.REACT_APP_API_URL}/users/clearCache`, {
+      const response = await  axios.delete(`${process.env.REACT_APP_API_URL}/users/clearCache`, {
         headers: {
           Authorization: localStorage.getItem("token"),
         },
       })
 
-      setOpenSnackbar({
-        message: "The cache is being updated. This process might take 5 mins",
-        open: true,
-      })
+      if (response.status === 200) {
+        setOpenSnackbar({ message: response.data.message, open: true })
+      }
     } catch (err) {
       setOpenSnackbar({ message: "Error in clearing cache", open: true })
     }
@@ -348,7 +347,7 @@ const DrawerApp = ({ isHovered }) => {
                   md: "center",
                 },
                 backgroundColor:
-                  location.pathname === "/configuration" ? "#f21f10" : "",
+                  location.pathname === "/table" ? "#f21f10" : "",
               }}
             >
               <ListItemIcon
