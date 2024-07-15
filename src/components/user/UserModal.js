@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { MenuItem, Select } from "@mui/material"
 import AppSnackbar from "../snackbar/AppSnackbar"
 import FormHelperText from '@mui/material/FormHelperText';
+import { useNavigate } from "react-router-dom"
 
 
 const api_url = process.env.REACT_APP_API_URL
@@ -27,7 +28,7 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
     isEditable ? user.vendors : []
   )
 
-
+  const navigate = useNavigate()
   const state = useSelector((state) => state.users)
   const { vendors } = state
 
@@ -89,6 +90,9 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
       if(err.response && err.response.status === 403){
         setErrorMessage(err.response.data.message)
       }
+      else if(err.response && err.response.status === 401){
+        navigate("/login", {state : {message : "Your session has expired. Please login again."}})
+      }
       else if (err.response && err.response.data ) {
         setUsernameError(err.response.data.username)
         setPasswordError(err.response.data.password)
@@ -126,6 +130,9 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
     } catch (err) {
       if(err.response && err.response.status === 403){
         setErrorMessage(err.response.data.message)
+      }
+      else if(err.response && err.response.status === 401){
+        navigate("/login", {state : {message : "Your session has expired. Please login again."}})
       }
       else if(err.response && err.response.data){
         setUsernameError(err.response.data.username)

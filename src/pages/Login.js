@@ -13,7 +13,8 @@ import {
 import { Visibility, VisibilityOff } from "@mui/icons-material"
 import axios from "axios"
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import AppSnackbar from "../components/snackbar/AppSnackbar";
 
 
 function Copyright(props) {
@@ -48,6 +49,9 @@ const Login = () => {
 
   const [showError, setShowError] = useState(false)
   const navigate = useNavigate()
+
+  const location = useLocation()
+  const [errorMessage, setErrorMessage] = useState(location.state ? location.state.message : false)
 
   const handleSubmit = async(event) => {
     event.preventDefault()
@@ -172,6 +176,7 @@ const Login = () => {
         </Box>
       </Box>
       <Copyright sx={{ mt: 8, mb: 4 }} />
+      <AppSnackbar message={errorMessage} onClose={()=> setErrorMessage(false)} color="#d32f2f" />
     </Container>
 
   )

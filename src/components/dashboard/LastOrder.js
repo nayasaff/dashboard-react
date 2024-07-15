@@ -13,14 +13,19 @@ const LastOrder = ({lastOrders, lastUpdatedItems}) => {
 
   const { number } = state
 
-  const getMinimumDate = (datas) => {
-    const parseDate = datas.map((data) => new Date(data))
-
-    const minDate = new Date(Math.min.apply(null,parseDate));
-    console.log(minDate)
-    const dayBefore = new Date(minDate.getTime())
-    dayBefore.setDate(dayBefore.getDate() - 5)
-    return dayBefore
+  const uniqueValues = (arr)=>{
+    const unique = [...new Set(arr)]
+      if (unique.length === 1){
+        let dayBefore = new Date(arr[0])
+        dayBefore.setDate(dayBefore.getDate() - 1)
+        let year = dayBefore.getFullYear();
+        let month = String(dayBefore.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+        let day = String(dayBefore.getDate()).padStart(2, '0');
+        dayBefore = `${year}-${month}-${day}`;
+        console.log([dayBefore, unique[0]])
+        return [dayBefore, unique[0]]
+    }
+    return false
   }
 
   if (!(lastOrders && lastUpdatedItems)) return <GraphPlaceholder numberOfGraph={2} />
@@ -42,7 +47,6 @@ const LastOrder = ({lastOrders, lastUpdatedItems}) => {
               x: sliceArray(lastOrders["last_order"], number),
               y: sliceArray(lastOrders["vendor_name"], number),
               type: "bar",
-              mode: "markers",
               marker: { color: randomColor(["#EC7A08", "#F4B678", "#EF9234"], lastOrders["vendor_name"]),
                size: 10 },
               name: "Last Order Date",
@@ -53,7 +57,7 @@ const LastOrder = ({lastOrders, lastUpdatedItems}) => {
           layout={{
             title: "Last Order Date",
             yaxis: { type: "category", automargin : "width"},
-            xaxis: { type: "date", autorange: true },
+            xaxis: { type: "date", range : uniqueValues(sliceArray(lastOrders["last_order"], number)) },
             height: 350,
             paper_bgcolor: "transparent",
           }}
@@ -75,7 +79,7 @@ const LastOrder = ({lastOrders, lastUpdatedItems}) => {
               x: sliceArray(lastUpdatedItems["updated_item"], number),
               y: sliceArray(lastUpdatedItems["vendor_name"], number),
               type: "bar",
-              mode: "markers",
+              //mode: "markers",
               marker: { color: randomColor(["#06C", "#8BC1F7", "#519DE9"], lastUpdatedItems["vendor_name"]), 
               size: 10 },
               orientation : "h",
@@ -85,7 +89,7 @@ const LastOrder = ({lastOrders, lastUpdatedItems}) => {
           layout={{
             title: "Last Updated Item Date",
             yaxis: { type: "category" ,  automargin : "width"},
-            xaxis: { type: "date", autorange: true },
+            xaxis: { type: "date",  range : uniqueValues(sliceArray(lastUpdatedItems["updated_item"], number)) },
             height: 350,
             paper_bgcolor: "transparent",
           }}

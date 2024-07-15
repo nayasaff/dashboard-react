@@ -447,7 +447,7 @@ const DrawerApp = ({ isHovered }) => {
                     xl: "block",
                   },
                 }}
-                primary="Update Cache"
+                primary="Clear Cache"
               />
             </ListItemButton>
           </ListItem>

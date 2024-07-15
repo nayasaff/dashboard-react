@@ -11,6 +11,7 @@ import { useDispatch } from 'react-redux';
 import { deleteUser } from '../../redux/UserReducer';
 import { createTheme } from "@mui/material"
 import AppSnackbar from '../snackbar/AppSnackbar';
+import { useNavigate } from 'react-router-dom';
 
 const theme = createTheme({
   breakpoints: {
@@ -27,6 +28,7 @@ export default function DeleteModal({openDialogue, setOpenDialogue, userId}) {
 
     const dispatch = useDispatch()
     const [errorMessage, setErrorMessage] = useState("")
+    const navigate = useNavigate()
 
     const removeUser = async() => {
         try{
@@ -42,7 +44,13 @@ export default function DeleteModal({openDialogue, setOpenDialogue, userId}) {
             }
         }
         catch(error){
-          setErrorMessage(error.response.data.message)
+          if(error.response && error.response.status === 403){
+            setErrorMessage(error.response.data.message)
+            
+          }
+          else if(error.response && error.response.status === 401){
+            navigate("/login", {state : {message : "Your session has expired. Please login again."}})
+          }
         }
     }
 

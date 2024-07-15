@@ -159,21 +159,21 @@ const Vendors = () => {
             <Grid item xl={3} lg={3} md={6} sm={6}>
             <Tag
               title="Total Orders"
-              count={insights[0]["total_orders"]}
+              count={insights.length === 0 ? null : insights[0]["total_orders"]}
               icon={<ShoppingCart sx={{ fontSize: "3rem" }} />}
             />
             </Grid>
             <Grid item xl={3} lg={3} md={6} sm={6}>
             <Tag
               title="Cancelled Orders"
-              count={formateDecimal(insights[0]["cancellation_rate"], true)}
+              count={insights.length === 0 ? null : formateDecimal(insights[0]["cancellation_rate"], true)}
               icon={<RemoveShoppingCart sx={{ fontSize: "3rem" }} />}
             />
             </Grid>
             <Grid item xl={3} lg={3} md={6} sm={6}>
             <Tag
               title="Total Price Loss"
-              count={formateDecimal(insights[0]["subtotal_loss"])}
+              count={insights.length === 0 ? null :formateDecimal(insights[0]["subtotal_loss"])}
               icon={<MoneyOff sx={{ fontSize: "3rem" }} />}
             />
             </Grid>
@@ -181,7 +181,7 @@ const Vendors = () => {
             <Tag
               title="Last Order"
               subtitle="days ago"
-              count={insights[0]["last_order"]}
+              count={insights.length === 0 ? null : insights[0]["last_order"]}
               icon={<Event sx={{ fontSize: "3rem" }} />}
             />
             </Grid>
@@ -202,7 +202,7 @@ const Vendors = () => {
           <Grid item xl={3} lg={3} md={6} sm={6}>
           <Tag
             title="Total Items"
-            count={insights[0]["total_items"]}
+            count={insights.length === 0 ? null :insights[0]["total_items"]}
             icon={<ShoppingBasket sx={{ fontSize: "3rem" }} />}
           />
           </Grid>
@@ -210,21 +210,21 @@ const Vendors = () => {
           <Tag
             title="Last Updated Item"
             subtitle="days ago"
-            count={insights[0]["upated_item"]}
+            count={insights.length === 0 ? null :insights[0]["upated_item"]}
             icon={<EditCalendar sx={{ fontSize: "3rem" }} />}
           />
           </Grid>
           <Grid item xl={3} lg={3} md={6} sm={6}>
           <Tag
             title="Count of Stock Update"
-            count={insights[0]["stock_update_count"]}
+            count={insights.length === 0 ? null :insights[0]["stock_update_count"]}
             icon={<Inventory2 sx={{ fontSize: "3rem" }} />}
           />
           </Grid>
           <Grid item xl={3} lg={3} md={6} sm={6}>
           <Tag
             title="Total Stock Update"
-            count={insights[0]["stock_update"]}
+            count={insights.length === 0 ? null : insights[0]["stock_update"]}
             icon={<Inventory sx={{ fontSize: "3rem" }} />}
           />
           </Grid>

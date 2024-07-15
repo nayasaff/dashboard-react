@@ -18,7 +18,7 @@ import TableComponent from "../components/dashboard/TableComponent"
 import LastOrder from "../components/dashboard/LastOrder"
 import HeaderPlaceholder from "../components/placeholder/HeaderPlaceholder"
 import Empty from "../components/Empty"
-import { useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import StockLog from "../components/dashboard/StockLog"
 import dayjs from "dayjs";
 
@@ -43,6 +43,7 @@ const Orders = () => {
   const [stockLog, setStockLog] = useState()
   const [totalOrders, setTotalOrders] = useState(0)
 
+  const navigate = useNavigate()
 
 
   useEffect(() => {
@@ -96,6 +97,10 @@ const Orders = () => {
           e.response.data.message.includes("No data found")
         ) {
           setNoData(true)
+        }
+        if(e.response && e.response.status === 401) {
+          localStorage.removeItem("token")
+          navigate("/login", {state : {message : "Your session has expired. Please login again."}})
         }
       }
     }
@@ -166,7 +171,18 @@ const Orders = () => {
         )
         setLastOrders(lastOrdersResponse.data)
       } catch (e) {
-        setNoData(true)
+        if (
+          e.response &&
+          e.response.status === 400 &&
+          e.response.data.message.includes("No data found")
+        ) {
+          setNoData(true)
+        }
+
+        if(e.response && e.response.status === 401) {
+          localStorage.removeItem("token")
+          navigate("/login", {state : {message : "Your session has expired. Please login again."}})
+        }
       }
     }
 
@@ -195,7 +211,20 @@ const Orders = () => {
           }
         )
         setStockLog(stockLogResponse.data)
-      } catch (e) {}
+      } catch (e) {
+        if (
+          e.response &&
+          e.response.status === 400 &&
+          e.response.data.message.includes("No data found")
+        ) {
+          setNoData(true)
+        }
+
+        if(e.response && e.response.status === 401) {
+          localStorage.removeItem("token")
+          navigate("/login", {state : {message : "Your session has expired. Please login again."}})
+        }
+      }
     }
     fetchData()
   }, [isAscending])
