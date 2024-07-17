@@ -166,7 +166,7 @@ const Vendors = () => {
             <Grid item xl={3} lg={3} md={6} sm={6}>
             <Tag
               title="Cancelled Orders"
-              count={insights.length === 0 ? null : formateDecimal(insights[0]["cancellation_rate"], true)}
+              count={insights.length === 0 ? null : insights[0]["incompleted_orders"] }
               icon={<RemoveShoppingCart sx={{ fontSize: "3rem" }} />}
             />
             </Grid>
@@ -216,16 +216,19 @@ const Vendors = () => {
           </Grid>
           <Grid item xl={3} lg={3} md={6} sm={6}>
           <Tag
-            title="Count of Stock Update"
+            title="Stock Updates"
             count={insights.length === 0 ? null :insights[0]["stock_update_count"]}
-            icon={<Inventory2 sx={{ fontSize: "3rem" }} />}
+            icon={<Inventory2 sx={{ fontSize: "3rem" }}
+             />}
+             subtitle="(Last 2 weeks)"
           />
           </Grid>
           <Grid item xl={3} lg={3} md={6} sm={6}>
           <Tag
-            title="Total Stock Update"
+            title="Items Update"
             count={insights.length === 0 ? null : insights[0]["stock_update"]}
             icon={<Inventory sx={{ fontSize: "3rem" }} />}
+            subtitle="(Last 2 weeks)"
           />
           </Grid>
         </Grid>

@@ -80,25 +80,22 @@ const StockLog = ({ stockLog, stockLogCount }) => {
           <Plot
             data={[
               {
-                y: sliceArray(
-                  Object.keys(stockLog).map((value) => 100),
-                  number
-                ),
+                y: sliceArray(stockLog["stock_update"],number ),
                 x: sliceArray(stockLog["vendor_name"], number),
                 type: "bar",
                 marker: { color: "#C0DFA9", textPosition: "top" },
-                name: "",
+                name: "Updated Items",
               },
               {
                 x: sliceArray(stockLog["vendor_name"], number),
-                y: sliceArray(stockLog["percentage_updated_items"], number),
+                y: sliceArray(stockLog["total_items"], number),
                 type: "bar",
                 marker: {
                   color: "#00A652",
                   textPosition: "top",
                 },
-                name: "% of updated items",
-              },
+                name: "Total Items",
+              }
             ]}
             style={{ width: "100%", height: "100%" }}
             layout={{

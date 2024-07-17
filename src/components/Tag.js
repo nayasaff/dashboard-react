@@ -41,6 +41,7 @@ const Tag = ({ title, count, icon, subtitle }) => {
               {title}
             </Typography>
           </Box>
+          
           {icon}
         </Stack>
       </CardContent>

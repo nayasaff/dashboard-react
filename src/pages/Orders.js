@@ -28,7 +28,8 @@ const Orders = () => {
   const dispatch = useDispatch()
   const state = useSelector((state) => state.app)
   const { number, startDate, endDate, isAscending } = state
-  const location = useLocation()
+ 
+  const [isLoading, setIsLoading] = useState(true)
 
   const [insights, setInsights] = useState()
   const [noData, setNoData] = useState(false)
@@ -76,6 +77,7 @@ const Orders = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true)
       try {
         const response = await axios.get(
           `${api_url}/orders/all_insights?deliveryDay=${filteredValue.value}&startDate=${startDate.format(
@@ -90,6 +92,7 @@ const Orders = () => {
 
         if (response.status === 200) {
           setInsights(response.data)
+          setIsLoading(false)
         }
       } catch (e) {
         if (
@@ -342,6 +345,7 @@ const Orders = () => {
             insights={insights}
             filteredValue={filteredValue}
             setFilteredValue={setFilteredValue}
+            isLoading={isLoading}
           />
         )}
         <Box marginTop={2} />

@@ -25,7 +25,7 @@ const OrderTaken = ({ orderTaken, timeStats, name }) => {
                 x: orderTaken["createdAt"],
                 y: orderTaken["count"],
                 type: "scatter",
-                mode: "lines+markers",
+                mode: "spline",
                 marker: { color: "#1CD0BB", size: 5 },
               },
             ]}

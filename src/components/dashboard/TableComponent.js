@@ -19,18 +19,21 @@ import TableSortLabel from "@mui/material/TableSortLabel"
 import { useState } from "react"
 import { Link, useLocation } from "react-router-dom"
 import TablePlaceholder from "../placeholder/TablePlaceholder"
+import CircularProgress from '@mui/material/CircularProgress';
 
 const columns = [
   { name: "Total Orders", value: "total_orders" },
-  { name: "Cancellation Rate", value: "cancellation_rate" },
-  { name: "Total price loss", value: "subtotal_loss" },
+  { name: "Incompleted Orders", value: "incompleted_orders" },
+  {name : "Cancellation Rate", value : "cancellation_rate"},
+  { name: "Expected Income", value: "subtotal_loss" },
   { name: "Last Order", value: "last_order" },
-  { name: "Avg Response Time", value: "average_response_time" },
-  { name: "Avg Delivery Time", value: "average_delivery_time" },
+  { name: "Avg Response Time", value: "average_response_time", label : "in minutes" },
+  { name: "Avg Delivery Time", value: "average_delivery_time", label : "in hours" },
   { name: "Total Items", value: "total_items" },
   { name: "Last Updated Item", value: "upated_item" },
-  // {name : "Stock Update", value : "stock_update"},
-  // {name : "Stock Update Count", value : "stock_update_count"}
+  {name : "Num Items Update", value : "stock_update", label : "(last 2 weeks)"},
+  {name : "Stock Updates", value : "stock_update_count", label : "(last 2 weeks)"},
+  {name : "Last Stocklog Update", value : "last_update_date"}
 ]
 
 function stableSort(array, order, orderBy) {
@@ -57,7 +60,7 @@ function stableSort(array, order, orderBy) {
   })
 }
 
-const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
+const TableComponent = ({ insights, filteredValue, setFilteredValue, isLoading }) => {
   const [page, setPage] = useState(0)
 
   const [order, setOrder] = useState("desc")
@@ -85,11 +88,22 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
     return number.toFixed(2)
   }
 
+  const formatDate = (datetime) =>{
+    if(datetime === "N/A")
+      return datetime
+
+    const date = datetime.split(" ")[0].split("-")
+    return `${date[2]}/${date[1]}/${date[0]}`
+  }
+
   const handleRequestSort = (property) => {
     const isAsc = orderBy === property && order === "asc"
     setOrder(isAsc ? "desc" : "asc")
     setOrderBy(property)
   }
+
+
+  console.log(insights)
 
   const filteredInsights = React.useMemo(() => {
     return insights.filter((insight) =>
@@ -109,6 +123,8 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
   if (insights === undefined || insights === null) return <TablePlaceholder />
 
   return (
+    <>
+    
     <Box
       sx={{
         borderRadius: "16px",
@@ -123,6 +139,8 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
         flexDirection: "column",
       }}
     >
+      <Box sx={{display : "flex", justifyContent : "space-between"}}>
+      <Box>
       <Typography variant="h4" sx={{ fontWeight: "bold" }} margin={0}>
         Vendors
       </Typography>
@@ -199,7 +217,9 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
           )}
         </PopupState>
       </Stack>
-
+      </Box>
+      {isLoading && <CircularProgress/>}
+      </Box>
       {/********************************************TABLE************************************************************ */}
       <TableContainer sx={{ overflowX: "auto", maxWidth : '1180px' }} component={Paper}>
         <Table aria-label="simple table">
@@ -230,6 +250,23 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
                     onClick={() => handleRequestSort(column.value)}
                     sx={{ textAlign: "center" }}
                   >
+                    {column.label ?
+                    <>
+                  <Box>
+                    <Typography variant="body2">{column.name}</Typography>
+                    <Typography variant="caption" sx={{ whiteSpace: "nowrap" }}>
+                      {column.label}
+                    </Typography>
+                  </Box>
+                  {orderBy === column.value ? (
+                    <Box component="span" sx={visuallyHidden}>
+                      {order === "desc"
+                        ? "sorted descending"
+                        : "sorted ascending"}
+                    </Box>
+                  ) : null}
+                    </>
+                    : <>
                     {column.name}
                     {orderBy === column.value ? (
                       <Box component="span" sx={visuallyHidden}>
@@ -238,64 +275,11 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
                           : "sorted ascending"}
                       </Box>
                     ) : null}
+                    </>}
                   </TableSortLabel>
                 </TableCell>
               ))}
-              <TableCell
-                sortDirection={
-                  orderBy === "Stock Update (last 2 weeks)" ? order : false
-                }
-              >
-                <TableSortLabel
-                  active={orderBy === "stock_update"}
-                  direction={orderBy === "stock_update" ? order : "asc"}
-                  onClick={() => handleRequestSort("stock_update")}
-                  sx={{ textAlign: "center" }}
-                >
-                  <Box>
-                    <Typography variant="body2">Stock Update Count</Typography>
-                    <Typography variant="caption" sx={{ whiteSpace: "nowrap" }}>
-                      Last 2 weeks
-                    </Typography>
-                  </Box>
-                  {orderBy === "stock_update" ? (
-                    <Box component="span" sx={visuallyHidden}>
-                      {order === "desc"
-                        ? "sorted descending"
-                        : "sorted ascending"}
-                    </Box>
-                  ) : null}
-                </TableSortLabel>
-              </TableCell>
-
-              <TableCell
-                sortDirection={
-                  orderBy === "Stock Update Count (last 2 weeks)"
-                    ? order
-                    : false
-                }
-              >
-                <TableSortLabel
-                  active={orderBy === "stock_update_count"}
-                  direction={orderBy === "stock_update_count" ? order : "asc"}
-                  onClick={() => handleRequestSort("stock_update_count")}
-                  sx={{ textAlign: "center" }}
-                >
-                  <Box>
-                    <Typography variant="body2">Stock Update Count</Typography>
-                    <Typography variant="caption" sx={{ whiteSpace: "nowrap" }}>
-                      Last 2 weeks
-                    </Typography>
-                  </Box>
-                  {orderBy === "stock_update_count" ? (
-                    <Box component="span" sx={visuallyHidden}>
-                      {order === "desc"
-                        ? "sorted descending"
-                        : "sorted ascending"}
-                    </Box>
-                  ) : null}
-                </TableSortLabel>
-              </TableCell>
+    
             </TableRow>
           </TableHead>
           <TableBody>
@@ -331,8 +315,9 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
                 </TableCell>
                 <TableCell align="center">{insight.total_orders}</TableCell>
                 <TableCell align="center">
-                  {formateNumber(insight.cancellation_rate)}%
+                  {insight.incompleted_orders}
                 </TableCell>
+                <TableCell align="center">{formateNumber(insight.cancellation_rate)}%</TableCell>
                 <TableCell align="center">
                   {formateNumber(insight.subtotal_loss)}
                 </TableCell>
@@ -362,11 +347,12 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
                   {insight.average_delivery_time}
                 </TableCell>
                 <TableCell align="center">{insight.total_items}</TableCell>
-                <TableCell align="center">{insight.upated_item}</TableCell>
+                <TableCell align="center">{insight.upated_item} days ago</TableCell>
                 <TableCell align="center">{insight.stock_update}</TableCell>
                 <TableCell align="center">
                   {insight.stock_update_count}
                 </TableCell>
+                <TableCell align="center">{formatDate(insight.last_update_date)}</TableCell>
               </TableRow>
             ))}
 
@@ -379,7 +365,7 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
           </TableBody>
         </Table>
       </TableContainer>
-
+      
       {/********************************************Table Pages************************************************************ */}
       <Box
         sx={{ display: "flex", justifyContent: "center", marginTop: "1rem" }}
@@ -391,6 +377,8 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue }) => {
         />
       </Box>
     </Box>
+  
+    </>
   )
 }
 
