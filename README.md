@@ -69,6 +69,5 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
 
-### Create Docekr container
-docker build -t image-name .
-docker run -d -p 3000:3000 image-name
+### Run Docekr container
+docker compose up
