@@ -245,7 +245,6 @@ const Orders = () => {
   return (
     <>
       <React.Fragment>
-        <Box marginTop={3} />
         {insights !== undefined && <DateSelection /> }
         <Box marginTop={2} />
         {insights && (

@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { Modal as BaseModal } from "@mui/base/Modal"
 import { styled, css } from "@mui/system"
 import Fade from "@mui/material/Fade"
@@ -8,8 +8,60 @@ import { Typography, Stack, Button as MuiButton } from "@mui/material"
 import { MenuItem, Select } from "@mui/material"
 import { red, blue } from "@mui/material/colors"
 import { FormControl, InputLabel } from "@mui/material"
+import { DoDisturbOn } from "@mui/icons-material"
 
 const DateModal = ({ openModal, setOpenModal }) => {
+  const [dateRange, setDateRange] = useState([])
+  const [value, setValue] = useState()
+
+  const [unit, setUnit] = useState()
+
+  const [helperText, setHelperText] = useState("just a helper text")
+
+  useEffect(() => {
+    const fetchData = () => {
+      fetch(`${process.env.REACT_APP_API_URL}/users/duration`)
+        .then((response) => response.json())
+        .then((data) => {
+          setDateRange(data)
+        })
+    }
+    fetchData()
+  }, [])
+
+  
+  const handleNumberChange = (e) => {
+    const newValue = e.target.value;
+    //Allow only numbers
+    if (/^\d*$/.test(newValue)) {
+      setValue(newValue);
+    }
+  }
+
+  const handleAdd = () => {
+
+    const number = Number(value);
+    if(!(number && unit) ){
+      return;
+    }
+
+    if(number === 0){
+      return;
+    }
+
+
+    const newDate = number === 1 ? `${number} ${unit}` : `${number} ${unit}s`
+    if(dateRange.includes(newDate)){
+      setHelperText("Date range already exists")
+      return;
+    }
+    setDateRange([...dateRange, newDate])
+  }
+
+  const handleDelete = (date) => {
+
+  }
+
   return (
     <>
       <Modal
@@ -29,6 +81,7 @@ const DateModal = ({ openModal, setOpenModal }) => {
             >
               Date Range
             </h2>
+            <Box sx={{display : "flex", flexDirection : "column", gap : "0.2rem"}}>
             <Box
               sx={{
                 display: "flex",
@@ -41,8 +94,11 @@ const DateModal = ({ openModal, setOpenModal }) => {
                 type="text"
                 size="small"
                 sx={{ width: "auto" }}
+                value={value}
+                onChange={(e) => handleNumberChange(e)}
+                error={helperText}
               />
-              <FormControl sx={{ minWidth: 120 }} size="small">
+              <FormControl sx={{ minWidth: 120 }} size="small" error={helperText}>
                 <InputLabel id="demo-select-small-label">Unit</InputLabel>
                 <Select
                   labelId="demo-select-small-label"
@@ -50,41 +106,71 @@ const DateModal = ({ openModal, setOpenModal }) => {
                   label="Sort By"
                   size="small"
                   sx={{ bgcolor: "white" }}
+                  value={unit}
+                  onChange={(e) => setUnit(e.target.value)}
+
                 >
-                  <MenuItem>Day</MenuItem>
-                  <MenuItem>Month</MenuItem>
-                  <MenuItem>Year</MenuItem>
+                  <MenuItem value="Day">Day</MenuItem>
+                  <MenuItem value="Month">Month</MenuItem>
+                  <MenuItem value="Year">Year</MenuItem>
                 </Select>
               </FormControl>
-              <MuiButton size="small" variant="contained" sx={{ bgcolor: blue[700] }}>
+              <MuiButton
+                size="small"
+                variant="contained"
+                sx={{ bgcolor: blue[700] }}
+                onClick={() => handleAdd()}
+              >
                 Add
               </MuiButton>
             </Box>
-            <Box marginTop={1} />
-            <Box sx={{
-                display: "flex",
-                justifyContent: "space-between",
-            }}>
-            <Typography variant="h6" className="modal-description">1 Year</Typography>
-            <MuiButton
-          variant="contained"
-          sx={{ backgroundColor: red[500], color : "white" }}
-        >
-          Delete
-        </MuiButton>
+            <Typography variant="caption" sx={{color : "#d32f2f"}}>
+              {helperText}
+            </Typography>
             </Box>
-            
-            <Box marginTop={2}/>
+
+            <Box marginTop={1} />
+            <Box
+              sx={{
+                display: "flex",
+                columnGap: "3rem",
+                rowGap: "0.5rem",
+                flexWrap: "wrap",
+              }}
+            >
+              {dateRange &&
+                dateRange.map((date, index) => (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      gap: "1rem",
+                    }}
+                    key={index}
+                  >
+                    <DoDisturbOn sx={{ color: red[500], cursor : "pointer" }} onClick={()=> handleDelete(date)} />
+                    <Typography
+                      variant="subtitle2"
+                      className="modal-description"
+                    >
+                      {date}
+                    </Typography>
+                  </Box>
+                ))}
+            </Box>
+            <Box marginTop={2} />
             {/*************************************************BUTTON************************************************** */}
             <Stack direction="row" justifyContent="end" spacing={1}>
               <MuiButton
                 variant="outlined"
                 size="small"
                 sx={{ color: "black" }}
+                onClick={() => setOpenModal(false)}
               >
                 Cancel
               </MuiButton>
-              <MuiButton variant="contained" size="small">Save</MuiButton>
+              <MuiButton variant="contained" size="small">
+                Save
+              </MuiButton>
             </Stack>
           </ModalContent>
         </Fade>
@@ -100,7 +186,6 @@ const Backdrop = React.forwardRef(function Backdrop({ open, ...other }, ref) {
     </Fade>
   )
 })
-
 
 const grey = {
   50: "#F3F6F9",

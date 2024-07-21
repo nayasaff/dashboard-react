@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { setUsers, setVendors } from "../redux/UserReducer"
 import { PersonAddAlt1 } from "@mui/icons-material"
 import { blue } from "@mui/material/colors"
-import DateModal from "../components/modal/DateModal"
+
 
 const api_url = process.env.REACT_APP_API_URL
 
@@ -16,7 +16,7 @@ const Admin = () => {
   const state = useSelector((state) => state.users)
   const { users } = state
 
-  const [openModal, setOpenModal] = useState(true)
+  const [openModal, setOpenModal] = useState(false)
 
   const dispatch = useDispatch()
 
@@ -53,42 +53,9 @@ const Admin = () => {
 
   return (
     <>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
-        <Box
-          sx={{
-            border: "1px solid #0D47A1",
-            padding: "0.3rem 4rem",
-            borderTopLeftRadius: "10px",
-            borderBottomLeftRadius: "10px",
-            cursor: "pointer",
-            backgroundColor: "#0D47A1",
-            color: "#fff",
-          }}
-        >
-          <Typography variant="h5">Users</Typography>
-        </Box>
-        <Box
-          sx={{
-            border: "1px solid #0D47A1",
-            padding: "0.3rem 4rem",
-            borderTopRightRadius: "10px",
-            borderBottomRightRadius: "10px",
-            cursor: "pointer",
-            color: "#0D47A1",
-          }}
-        >
-          <Typography variant="h5">Date</Typography>
-        </Box>
-      </Box>
-      <Box marginTop={1.5} />
       <Stack direction="row" alignItems="center" spacing={2}>
         <Typography
-          variant="h5"
+          variant="h4"
           sx={{ margin: "1rem 2rem", fontWeight: "550" }}
         >
           Authorised Users
@@ -148,15 +115,13 @@ const Admin = () => {
           <div>Loading...</div>
         )}
       </Box>
-      {/* {openModal && (
+      {openModal && (
         <UserModal
           setUsers={setUsers}
           openModal={openModal}
           setOpenModal={setOpenModal}
         />
-      )} */}
-      <Typography variant="h4">Date Range</Typography>
-      <DateModal openModal={openModal} setOpenModal={setOpenModal} />
+      )}
     </>
   )
 }
