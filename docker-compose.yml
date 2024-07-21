@@ -2,8 +2,6 @@ version: "3.8"
 services:
   web:
     build: .
-    volumes:
-      - .:/dashboard-react
     ports:
       - "3000:3000"
     env_file:

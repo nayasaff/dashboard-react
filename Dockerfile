@@ -3,5 +3,5 @@ WORKDIR /dashboard-react
 COPY . .
 RUN npm install -g npm@10.8.2
 RUN npm install
-CMD ["npm","start"]
 EXPOSE 3000
+CMD ["npm","start"]
