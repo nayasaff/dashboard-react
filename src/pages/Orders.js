@@ -18,7 +18,7 @@ import TableComponent from "../components/dashboard/TableComponent"
 import LastOrder from "../components/dashboard/LastOrder"
 import HeaderPlaceholder from "../components/placeholder/HeaderPlaceholder"
 import Empty from "../components/Empty"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import StockLog from "../components/dashboard/StockLog"
 import dayjs from "dayjs"
 
