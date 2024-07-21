@@ -3,11 +3,12 @@ import { Box, Grid, Stack, Typography } from "@mui/material"
 import { Button } from "@mui/material"
 import UserCard from "../components/user/UserCard"
 import axios from "axios"
-import UserModal from "../components/user/UserModal"
+import UserModal from "../components/modal/UserModal"
 import { useDispatch, useSelector } from "react-redux"
 import { setUsers, setVendors } from "../redux/UserReducer"
 import { PersonAddAlt1 } from "@mui/icons-material"
 import { blue } from "@mui/material/colors"
+import DateModal from "../components/modal/DateModal"
 
 const api_url = process.env.REACT_APP_API_URL
 
@@ -15,7 +16,7 @@ const Admin = () => {
   const state = useSelector((state) => state.users)
   const { users } = state
 
-  const [openModal, setOpenModal] = useState(false)
+  const [openModal, setOpenModal] = useState(true)
 
   const dispatch = useDispatch()
 
@@ -52,9 +53,42 @@ const Admin = () => {
 
   return (
     <>
-      <Stack direction="row" spacing={2}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <Box
+          sx={{
+            border: "1px solid #0D47A1",
+            padding: "0.3rem 4rem",
+            borderTopLeftRadius: "10px",
+            borderBottomLeftRadius: "10px",
+            cursor: "pointer",
+            backgroundColor: "#0D47A1",
+            color: "#fff",
+          }}
+        >
+          <Typography variant="h5">Users</Typography>
+        </Box>
+        <Box
+          sx={{
+            border: "1px solid #0D47A1",
+            padding: "0.3rem 4rem",
+            borderTopRightRadius: "10px",
+            borderBottomRightRadius: "10px",
+            cursor: "pointer",
+            color: "#0D47A1",
+          }}
+        >
+          <Typography variant="h5">Date</Typography>
+        </Box>
+      </Box>
+      <Box marginTop={1.5} />
+      <Stack direction="row" alignItems="center" spacing={2}>
         <Typography
-          variant="h4"
+          variant="h5"
           sx={{ margin: "1rem 2rem", fontWeight: "550" }}
         >
           Authorised Users
@@ -71,9 +105,9 @@ const Admin = () => {
               sm: "12px",
             },
             whiteSpace: "nowrap",
-            maxHeight : {
-              sm: "35px"
-            }
+            maxHeight: {
+              sm: "35px",
+            },
           }}
           onClick={() => setOpenModal(true)}
         >
@@ -114,13 +148,15 @@ const Admin = () => {
           <div>Loading...</div>
         )}
       </Box>
-      {openModal && (
+      {/* {openModal && (
         <UserModal
           setUsers={setUsers}
           openModal={openModal}
           setOpenModal={setOpenModal}
         />
-      )}
+      )} */}
+      <Typography variant="h4">Date Range</Typography>
+      <DateModal openModal={openModal} setOpenModal={setOpenModal} />
     </>
   )
 }

@@ -7,8 +7,6 @@ import InputLabel from "@mui/material/InputLabel"
 import { FormControl, Select, MenuItem } from "@mui/material"
 import { useDispatch, useSelector } from "react-redux"
 import { setIsAscending } from "../redux/AppReducer"
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
 import { DatePicker } from "@mui/x-date-pickers/DatePicker"
 import { setEndDate, setNumber, setStartDate } from "../redux/AppReducer"
 import Slider from "@mui/material/Slider"
@@ -21,6 +19,7 @@ import Empty from "../components/Empty"
 import { useLocation, useNavigate } from "react-router-dom"
 import StockLog from "../components/dashboard/StockLog"
 import dayjs from "dayjs"
+import DateSelection from "../components/dashboard/DateSelection"
 
 const api_url = process.env.REACT_APP_API_URL
 
@@ -28,7 +27,7 @@ const Orders = () => {
   const dispatch = useDispatch()
   const state = useSelector((state) => state.app)
   const { number, startDate, endDate, isAscending } = state
- 
+
   const [isLoading, setIsLoading] = useState(true)
 
   const [insights, setInsights] = useState()
@@ -80,7 +79,9 @@ const Orders = () => {
       setIsLoading(true)
       try {
         const response = await axios.get(
-          `${api_url}/orders/all_insights?deliveryDay=${filteredValue.value}&startDate=${startDate.format(
+          `${api_url}/orders/all_insights?deliveryDay=${
+            filteredValue.value
+          }&startDate=${startDate.format(
             "YYYY-MM-DD"
           )}&endDate=${endDate.format("YYYY-MM-DD")}`,
           {
@@ -245,100 +246,7 @@ const Orders = () => {
     <>
       <React.Fragment>
         <Box marginTop={3} />
-        {insights !== undefined ? (
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: {
-                  sm: "start",
-                  md: "start",
-                  lg: "center",
-                },
-                justifyContent: "space-between",
-                gap: "1rem",
-                flexDirection: {
-                  sm: "column",
-                  md: "column",
-                  lg: "row",
-                },
-              }}
-            >
-              <div style={{ display: "flex", gap: "1rem" }}>
-                <Typography variant="h5">Dashboard</Typography>
-
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "2rem",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: "15rem",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.5rem",
-                      marginTop: "0.2rem",
-                    }}
-                  >
-                    {/*Minimum is one*/}
-                    <span>1</span>{" "}
-                    <PrettoSlider
-                      aria-label="pretto slider"
-                      min={1}
-                      max={25}
-                      value={number}
-                      onChange={(e) => dispatch(setNumber(e.target.value))}
-                      valueLabelDisplay="on"
-                    />
-                    {/*Maximum is 25*/}
-                    <span>25</span>
-                  </div>
-                </div>
-              </div>
-              <div style={{ display: "flex", gap: "1rem" }}>
-                <FormControl sx={{ minWidth: 120 }} size="small">
-                  <InputLabel id="demo-select-small-label">Sort by</InputLabel>
-                  <Select
-                    labelId="demo-select-small-label"
-                    id="demo-select-small"
-                    label="Sort By"
-                    size="small"
-                    value={isAscending}
-                    onChange={(e) => dispatch(setIsAscending(e.target.value))}
-                    sx={{ bgcolor: "white" }}
-                  >
-                    <MenuItem value={false}>Highest</MenuItem>
-                    <MenuItem value={true}>Lowest</MenuItem>
-                  </Select>
-                </FormControl>
-                {/*Start date*/}
-                <DatePicker
-                  label="Start Date"
-                  value={startDate}
-                  slotProps={{ textField: { size: "small" } }}
-                  onChange={(newValue) => dispatch(setStartDate(newValue))}
-                  sx={{ bgcolor: "white" }}
-                  maxDate={endDate}
-                />
-                {/*End date*/}
-                <DatePicker
-                  label="End Date"
-                  value={endDate} //get current date
-                  slotProps={{ textField: { size: "small" } }}
-                  onChange={(newValue) => dispatch(setEndDate(newValue))}
-                  sx={{ bgcolor: "white" }}
-                  minDate={startDate}
-                  maxDate={dayjs()}
-                />
-              </div>
-            </Box>
-          </LocalizationProvider>
-        ) : (
-          <HeaderPlaceholder />
-        )}
+        {insights !== undefined && <DateSelection /> }
         <Box marginTop={2} />
         {insights && (
           <TableComponent
@@ -348,7 +256,76 @@ const Orders = () => {
             isLoading={isLoading}
           />
         )}
-        <Box marginTop={2} />
+        <Box marginTop={3} />
+        {insights !== undefined ?  <Box
+            sx={{
+              display: "flex",
+              alignItems: {
+                sm: "start",
+                md: "start",
+                lg: "center",
+              },
+              gap: "1.5rem",
+              flexDirection: {
+                sm: "column",
+                md: "column",
+                lg: "row",
+              },
+            }}
+          >
+            <div style={{ display: "flex", gap: "1rem" }}>
+              <Typography variant="h5">Dashboard</Typography>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "2rem",
+                }}
+              >
+                <div
+                  style={{
+                    width: "15rem",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                    marginTop: "0.2rem",
+                  }}
+                >
+                  {/*Minimum is one*/}
+                  <span>1</span>{" "}
+                  <PrettoSlider
+                    aria-label="pretto slider"
+                    min={1}
+                    max={25}
+                    value={number}
+                    onChange={(e) => dispatch(setNumber(e.target.value))}
+                    valueLabelDisplay="on"
+                  />
+                  {/*Maximum is 25*/}
+                  <span>25</span>
+                </div>
+              </div>
+            </div> 
+            <div style={{ display: "flex", gap: "1rem" }}>
+              <FormControl sx={{ minWidth: 120 }} size="small">
+                <InputLabel id="demo-select-small-label">Sort by</InputLabel>
+                <Select
+                  labelId="demo-select-small-label"
+                  id="demo-select-small"
+                  label="Sort By"
+                  size="small"
+                  value={isAscending}
+                  onChange={(e) => dispatch(setIsAscending(e.target.value))}
+                  sx={{ bgcolor: "white" }}
+                >
+                  <MenuItem value={false}>Highest</MenuItem>
+                  <MenuItem value={true}>Lowest</MenuItem>
+                </Select>
+              </FormControl>
+            </div>
+          </Box>  : <HeaderPlaceholder />}
+
+        <Box marginTop={1} /> 
         <Stack direction="column" sx={{ gap: "1rem" }}>
           <IncompletedOrders
             totalOrders={totalOrders}
@@ -363,6 +340,7 @@ const Orders = () => {
           <StockLog stockLog={stockLog} stockLogCount={stockLogCount} />
         </Stack>
       </React.Fragment>
+
     </>
   )
 }
