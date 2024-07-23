@@ -11,23 +11,12 @@ import { FormControl, InputLabel } from "@mui/material"
 import { DoDisturbOn } from "@mui/icons-material"
 
 const DateModal = ({ openModal, setOpenModal }) => {
-  const [dateRange, setDateRange] = useState([])
+  const [dateRange, setDateRange] = useState(localStorage.getItem("durations") ? JSON.parse(localStorage.getItem("durations")) : ["1 Day", "1 Week", "1 Month", "3 Months", "6 Months", "1 Year"] )
   const [value, setValue] = useState()
 
   const [unit, setUnit] = useState()
 
-  const [helperText, setHelperText] = useState("just a helper text")
-
-  useEffect(() => {
-    const fetchData = () => {
-      fetch(`${process.env.REACT_APP_API_URL}/users/duration`)
-        .then((response) => response.json())
-        .then((data) => {
-          setDateRange(data)
-        })
-    }
-    fetchData()
-  }, [])
+  const [helperText, setHelperText] = useState()
 
   
   const handleNumberChange = (e) => {
@@ -55,11 +44,11 @@ const DateModal = ({ openModal, setOpenModal }) => {
       setHelperText("Date range already exists")
       return;
     }
-    setDateRange([...dateRange, newDate])
+    setDateRange(prev=> [...prev, newDate])
   }
 
   const handleDelete = (date) => {
-
+    setDateRange(prev=> prev.filter((d)=> d !== date))
   }
 
   return (
@@ -111,6 +100,7 @@ const DateModal = ({ openModal, setOpenModal }) => {
 
                 >
                   <MenuItem value="Day">Day</MenuItem>
+                  <MenuItem value="Week">Week</MenuItem>
                   <MenuItem value="Month">Month</MenuItem>
                   <MenuItem value="Year">Year</MenuItem>
                 </Select>

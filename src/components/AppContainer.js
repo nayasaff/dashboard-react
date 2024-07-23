@@ -8,7 +8,7 @@ import ListItemButton from "@mui/material/ListItemButton"
 import ListItemIcon from "@mui/material/ListItemIcon"
 import ListItemText from "@mui/material/ListItemText"
 import Divider from "@mui/material/Divider"
-import { TableChartOutlined, Settings, ShoppingCart, Event } from "@mui/icons-material"
+import { TableChartOutlined, Settings, ShoppingCart } from "@mui/icons-material"
 import { SupervisorAccount, Logout, Memory } from "@mui/icons-material"
 import Orders from "../pages/Orders"
 import ProtectedRoute from "../ProtectedRoute"
@@ -23,11 +23,13 @@ import { IconButton, Toolbar, AppBar } from "@mui/material"
 import MenuIcon from "@mui/icons-material/Menu"
 import axios from "axios"
 import AppSnackbar from "./snackbar/AppSnackbar"
-import DateModal from "./modal/DateModal"
+
 
 const drawerWidth = { xl: 240, lg: 100, md: 100 }
 
 const AppContainer = (props) => {
+
+  
   const { window } = props
   const [mobileOpen, setMobileOpen] = React.useState(false)
   const [isClosing, setIsClosing] = React.useState(false)
@@ -238,8 +240,6 @@ const DrawerApp = ({ isHovered }) => {
 
   const [message, setMessage] = React.useState("")
 
-  const [openModal, setOpenModal] = React.useState(false)
-
   const logout = () => {
     localStorage.clear()
     navigate("/login")
@@ -419,46 +419,11 @@ const DrawerApp = ({ isHovered }) => {
                         xl: "block",
                       },
                     }}
-                    primary="Users"
+                    primary="Configuration"
                   />
                 </ListItemButton>
               </ListItem>
             </Link>
-              <ListItem disablePadding>
-                <ListItemButton
-                onClick={() => setOpenModal(true)}
-                  sx={{
-                    justifyContent: {
-                      xl: "flex-start",
-                      lg: "center",
-                      md: "center",
-                    },
-                  }}
-                >
-                  <ListItemIcon
-                    sx={{
-                      color: "white",
-                      padding: { xl: 0, lg: "0.4rem 0", md: "0.4rem 0" },
-                    }}
-                  >
-                    <Event
-                      sx={{ fontSize: { xl: "24px", lg: "27px", md: "27px" } }}
-                    />
-                  </ListItemIcon>
-                  <ListItemText
-                    sx={{
-                      color: "white",
-                      textDecoration: "none",
-                      display: {
-                        md: isHovered ? "block" : "none",
-                        lg: isHovered ? "block" : "none",
-                        xl: "block",
-                      },
-                    }}
-                    primary="Date"
-                  />
-                </ListItemButton>
-              </ListItem>
           </>
         ) : (
           <div></div>
@@ -539,7 +504,6 @@ const DrawerApp = ({ isHovered }) => {
         onClose={() => setMessage(false)}
         color="#2e7d32"
       />
-      <DateModal openModal={openModal} setOpenModal={setOpenModal}/>
     </>
   )
 }

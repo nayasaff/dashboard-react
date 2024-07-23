@@ -7,7 +7,7 @@ import GraphPlaceholder from "../placeholder/GraphPlaceholder"
 const OrderTaken = ({ orderTaken, timeStats, name }) => {
 
 
-  if (!orderTaken) return <GraphPlaceholder numberOfGraph={2} />
+  if (!orderTaken || !timeStats || !name) return <GraphPlaceholder numberOfGraph={2} />
 
   return (
     <Grid container spacing={2}>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
@@ -8,31 +8,16 @@ import { setDuration, setStartDate, setEndDate } from "../../redux/AppReducer"
 import dayjs from "dayjs"
 
 
+const durations = ["Yesterday", "Last Week", "Last Month", "All Time"]
+
 const DateSelection = () => {
 
     const dispatch = useDispatch()
     const state = useSelector((state) => state.app)
 
-    const [durations, setDurations] = useState()
 
     const { startDate, endDate, duration } = state
 
-    useEffect(()=>{
-      const fetchData = ()=>{
-        fetch(`${process.env.REACT_APP_API_URL}/users/duration`)
-        .then(response => response.json())
-        .then(data => {
-          dispatch(setDuration(data[0]))
-          setDurations(data)
-        } )
-      }
-      fetchData()
-    }, [])
-
-
-    
-    if(!durations)
-      return <div></div>
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Box sx={{display : "flex", justifyContent : "end"}}>
@@ -62,14 +47,13 @@ const DateSelection = () => {
                 label="Sort By"
                 size="small"
                 sx={{ bgcolor: "white" }}
+                defaultValue={duration}
                 value={duration}
                 onChange={(e) => dispatch(setDuration(e.target.value))}
               >
                {durations.map((date) =>
                 <MenuItem value={date}>{date}</MenuItem> 
                  )}
-                <MenuItem value="all_time">All Time</MenuItem>
-                <MenuItem value="others">Others</MenuItem>
               </Select>
             </FormControl>
             {/*Start date*/}
@@ -78,9 +62,8 @@ const DateSelection = () => {
               value={startDate}
               slotProps={{ textField: { size: "small" } }}
               onChange={(newValue) => dispatch(setStartDate(newValue))}
-              sx={{ bgcolor: "white" }}
+              sx={{ bgcolor: "white", width: "200px" }}
               maxDate={endDate}
-              disabled={duration !== "others"}
             />
             {/*End date*/}
             <DatePicker
@@ -88,10 +71,9 @@ const DateSelection = () => {
               value={endDate} //get current date
               slotProps={{ textField: { size: "small" } }}
               onChange={(newValue) => dispatch(setEndDate(newValue))}
-              sx={{ bgcolor: "white" }}
+              sx={{ bgcolor: "white", width: "200px" }}
               minDate={startDate}
               maxDate={dayjs()}
-              disabled={duration !== "others"}
             />
           </div>
         </Box>
