@@ -44,7 +44,7 @@ export default function DeleteModal({openDialogue, setOpenDialogue, userId}) {
             }
         }
         catch(error){
-          if(error.response && error.response.status === 403){
+          if(error.response && (error.response.status === 403 || error.response.status === 404)){
             setErrorMessage(error.response.data.message)
             
           }

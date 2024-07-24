@@ -9,7 +9,8 @@ import dayjs from "dayjs";
       number: 10,
       startDate : dayjs('2022-01-01'),
       endDate : dayjs(),
-      isAscending : false
+      isAscending : false,
+      duration : "Yesterday"
     },
     reducers : {
       setNumber : (state, action) => {
@@ -23,10 +24,13 @@ import dayjs from "dayjs";
       },
       setIsAscending : (state, action) => {
         state.isAscending = action.payload
+      },
+      setDuration : (state, action) => {
+        state.duration = action.payload
       }
     }
   })
 
   
-  export const { setNumber, setStartDate, setEndDate, setIsAscending } = appSlider.actions;
+  export const { setNumber, setStartDate, setEndDate, setIsAscending, setDuration } = appSlider.actions;
   export default appSlider.reducer;

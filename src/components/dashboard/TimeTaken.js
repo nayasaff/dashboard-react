@@ -52,7 +52,8 @@ const TimeTaken = ({responseTime, deliveryTime}) => {
               xaxis: {
                 title: "Vendor Name",
                 tickangle: 45,
-                automargin : 'height'
+                automargin : 'height',
+                rangeSlider: {visible : true }
               },
               paper_bgcolor: "transparent",
               height: 360

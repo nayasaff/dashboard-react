@@ -17,7 +17,7 @@ const IncompletedOrders = ({ insightsLength, cancelledOrders, totalOrders }) => 
 
   if (!cancelledOrders) return <TagPlaceholder />
   return (
-    <Stack sx={{flexDirection : {xl : "row", lg : "column-reverse", md : "column-reverse", sm : "column-reverse" }, gap : "1rem" }} spacing={2}>
+    <Stack sx={{flexDirection : {xl : "row", lg : "column-reverse", md : "column-reverse", sm : "column-reverse" }, gap : "1rem" }}>
       <Box
         sx={{
           display: {
