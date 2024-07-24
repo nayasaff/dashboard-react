@@ -56,7 +56,7 @@ const Admin = () => {
       <Stack direction="row" alignItems="center" spacing={2}>
         <Typography
           variant="h4"
-          sx={{ margin: "1rem 2rem", fontWeight: "550" }}
+          sx={{ margin: "1rem 2rem", fontWeight: "550"}}
         >
           Authorised Users
         </Typography>
@@ -72,9 +72,6 @@ const Admin = () => {
               sm: "12px",
             },
             whiteSpace: "nowrap",
-            maxHeight: {
-              sm: "35px",
-            },
           }}
           onClick={() => setOpenModal(true)}
         >

@@ -114,7 +114,7 @@ const AppContainer = (props) => {
               boxSizing: "border-box",
               backgroundColor: "#f44336",
               color: "white",
-              width: "45%",
+              width: "200px",
             },
           }}
         >

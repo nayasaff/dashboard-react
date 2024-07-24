@@ -131,11 +131,6 @@ const Orders = () => {
                 lg: "center",
               },
               gap: "1.5rem",
-              flexDirection: {
-                sm: "column",
-                md: "column",
-                lg: "row",
-              },
             }}
           >
             <div style={{ display: "flex", gap: "1rem" }}>

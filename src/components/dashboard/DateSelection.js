@@ -20,26 +20,12 @@ const DateSelection = () => {
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <Box sx={{display : "flex", justifyContent : "end"}}>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: {
-              sm: "start",
-              md: "start",
-              lg: "center",
-            },
-            justifyContent: "space-between",
-            gap: "1rem",
-            flexDirection: {
-              sm: "column",
-              md: "column",
-              lg: "row",
-            },
-          }}
-        >
-          <div style={{ display: "flex", gap: "1rem" }}>
-            <FormControl sx={{ minWidth: 150 }} size="small">
+        <Box sx={{display : "flex", justifyContent : {
+          sm : "start",
+          md : "start",
+          lg : "end"
+        }, gap : "1rem"}}>
+            {/* <FormControl sx={{ minWidth: 150 }} size="small">
               <InputLabel id="demo-select-small-label">Duration</InputLabel>
               <Select
                 labelId="demo-select-small-label"
@@ -55,14 +41,17 @@ const DateSelection = () => {
                 <MenuItem value={date}>{date}</MenuItem> 
                  )}
               </Select>
-            </FormControl>
+            </FormControl> */}
             {/*Start date*/}
             <DatePicker
               label="Start Date"
               value={startDate}
               slotProps={{ textField: { size: "small" } }}
               onChange={(newValue) => dispatch(setStartDate(newValue))}
-              sx={{ bgcolor: "white", width: "200px" }}
+              sx={{ bgcolor: "white", width: {
+                sm : "150px",
+                md : "200px"
+              } }}
               maxDate={endDate}
             />
             {/*End date*/}
@@ -71,12 +60,13 @@ const DateSelection = () => {
               value={endDate} //get current date
               slotProps={{ textField: { size: "small" } }}
               onChange={(newValue) => dispatch(setEndDate(newValue))}
-              sx={{ bgcolor: "white", width: "200px" }}
+              sx={{ bgcolor: "white", width: {
+                sm : "150px",
+                md : "200px"
+              }  }}
               minDate={startDate}
               maxDate={dayjs()}
             />
-          </div>
-        </Box>
         </Box>
       </LocalizationProvider>
     );

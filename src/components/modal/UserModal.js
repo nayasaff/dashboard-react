@@ -109,14 +109,17 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
     }
 
     try {
+      let body ={
+        username,
+        vendors: selectedVendors,
+        password: password.length > 0 ? password : null
+      }
+
+      if (localStorage.getItem("role") === "superadmin") {
+        body.role = role
+      }
       const response = await axios.patch(
-        `${api_url}/users/edit/${user._id}`,
-        {
-          username,
-          vendors: selectedVendors,
-          password: password.length > 0 ? password : null,
-          role
-        },
+        `${api_url}/users/edit/${user._id}`,body ,
         {
           headers: {
             Authorization: localStorage.getItem("token"),
@@ -128,7 +131,7 @@ const UserModal = ({ openModal, setOpenModal, isEditable, user }) => {
         dispatch(updateUser(response.data))
       }
     } catch (err) {
-      if(err.response && err.response.status === 403){
+      if(err.response && (err.response.status === 403 || err.response.status === 404)){
         setErrorMessage(err.response.data.message)
       }
       else if(err.response && err.response.status === 401){
