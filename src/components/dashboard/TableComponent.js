@@ -89,7 +89,7 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue, isLoading }
   }
 
   const formatDate = (datetime) =>{
-    if(datetime === "N/A")
+    if(datetime === "N/A" || datetime === undefined || datetime === null)
       return datetime
 
     const date = datetime.split(" ")[0].split("-")
