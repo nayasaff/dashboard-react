@@ -24,9 +24,12 @@ import MenuIcon from "@mui/icons-material/Menu"
 import axios from "axios"
 import AppSnackbar from "./snackbar/AppSnackbar"
 
+
 const drawerWidth = { xl: 240, lg: 100, md: 100 }
 
 const AppContainer = (props) => {
+
+  
   const { window } = props
   const [mobileOpen, setMobileOpen] = React.useState(false)
   const [isClosing, setIsClosing] = React.useState(false)
@@ -111,7 +114,7 @@ const AppContainer = (props) => {
               boxSizing: "border-box",
               backgroundColor: "#f44336",
               color: "white",
-              width: "45%",
+              width: "200px",
             },
           }}
         >
@@ -228,13 +231,13 @@ const list = [
       />
     ),
     link: "/vendors",
-  }
+  },
 ]
 
 const DrawerApp = ({ isHovered }) => {
   const location = useLocation()
   const navigate = useNavigate()
-  
+
   const [message, setMessage] = React.useState("")
 
   const logout = () => {
@@ -244,11 +247,14 @@ const DrawerApp = ({ isHovered }) => {
 
   const clearCache = async () => {
     try {
-      const response = await  axios.delete(`${process.env.REACT_APP_API_URL}/users/clearCache`, {
-        headers: {
-          Authorization: localStorage.getItem("token"),
-        },
-      })
+      const response = await axios.delete(
+        `${process.env.REACT_APP_API_URL}/users/clearCache`,
+        {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        }
+      )
 
       if (response.status === 200) {
         setMessage(response.data.message)
@@ -329,14 +335,17 @@ const DrawerApp = ({ isHovered }) => {
           </Link>
         ))}
         <Link to="/table">
-          <ListItem sx={{
-            display: {
-              xl : "none",
-              lg : "none",
-              md : "none",
-              sm : "block"
-            }
-          }} disablePadding>
+          <ListItem
+            sx={{
+              display: {
+                xl: "none",
+                lg: "none",
+                md: "none",
+                sm: "block",
+              },
+            }}
+            disablePadding
+          >
             <ListItemButton
               sx={{
                 justifyContent: {
@@ -374,44 +383,48 @@ const DrawerApp = ({ isHovered }) => {
           </ListItem>
         </Link>
         {localStorage.getItem("role").includes("admin") ? (
-          <Link to="/configuration">
-            <ListItem disablePadding>
-              <ListItemButton
-                sx={{
-                  justifyContent: {
-                    xl: "flex-start",
-                    lg: "center",
-                    md: "center",
-                  },
-                  backgroundColor:
-                    location.pathname === "/configuration" ? "#f21f10" : "",
-                }}
-              >
-                <ListItemIcon
+          <>
+            <Link to="/configuration">
+              <ListItem disablePadding>
+                <ListItemButton
+
                   sx={{
-                    color: "white",
-                    padding: { xl: 0, lg: "0.4rem 0", md: "0.4rem 0" },
+                    justifyContent: {
+                      xl: "flex-start",
+                      lg: "center",
+                      md: "center",
+                    },
+                    backgroundColor:
+                      location.pathname === "/configuration" ? "#f21f10" : "",
+
                   }}
                 >
-                  <Settings
-                    sx={{ fontSize: { xl: "24px", lg: "27px", md: "27px" } }}
+                  <ListItemIcon
+                    sx={{
+                      color: "white",
+                      padding: { xl: 0, lg: "0.4rem 0", md: "0.4rem 0" },
+                    }}
+                  >
+                    <Settings
+                      sx={{ fontSize: { xl: "24px", lg: "27px", md: "27px" } }}
+                    />
+                  </ListItemIcon>
+                  <ListItemText
+                    sx={{
+                      color: "white",
+                      textDecoration: "none",
+                      display: {
+                        md: isHovered ? "block" : "none",
+                        lg: isHovered ? "block" : "none",
+                        xl: "block",
+                      },
+                    }}
+                    primary="Configuration"
                   />
-                </ListItemIcon>
-                <ListItemText
-                  sx={{
-                    color: "white",
-                    textDecoration: "none",
-                    display: {
-                      md: isHovered ? "block" : "none",
-                      lg: isHovered ? "block" : "none",
-                      xl: "block",
-                    },
-                  }}
-                  primary="Configuration"
-                />
-              </ListItemButton>
-            </ListItem>
-          </Link>
+                </ListItemButton>
+              </ListItem>
+            </Link>
+          </>
         ) : (
           <div></div>
         )}

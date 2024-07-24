@@ -30,10 +30,10 @@ const columns = [
   { name: "Avg Response Time", value: "average_response_time", label : "in minutes" },
   { name: "Avg Delivery Time", value: "average_delivery_time", label : "in hours" },
   { name: "Total Items", value: "total_items" },
-  { name: "Last Updated Item", value: "upated_item" },
+  { name: "Last Updated Item", value: "updated_item" },
   {name : "Num Items Update", value : "stock_update", label : "(last 2 weeks)"},
   {name : "Stock Updates", value : "stock_update_count", label : "(last 2 weeks)"},
-  {name : "Last Stocklog Update", value : "last_update_date"}
+  {name : "Last Stocklog Update", value : "stock_update_date"}
 ]
 
 function stableSort(array, order, orderBy) {
@@ -91,9 +91,13 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue, isLoading }
   const formatDate = (datetime) =>{
     if(datetime === "N/A" || datetime === undefined || datetime === null)
       return datetime
-
+    try{
     const date = datetime.split(" ")[0].split("-")
     return `${date[2]}/${date[1]}/${date[0]}`
+    }
+    catch(e){
+      return datetime
+    }
   }
 
   const handleRequestSort = (property) => {
@@ -322,7 +326,7 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue, isLoading }
                   {formateNumber(insight.subtotal_loss)}
                 </TableCell>
                 <TableCell align="center">
-                  {insight.last_order} days ago
+                  {insight.last_order}{insight.last_order === "N/A" ? "" : insight.last_order === 1 || insight.last_order === 0 ? " day ago" : " days ago"}
                 </TableCell>
                 <TableCell
                   sx={{
@@ -347,12 +351,12 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue, isLoading }
                   {insight.average_delivery_time}
                 </TableCell>
                 <TableCell align="center">{insight.total_items}</TableCell>
-                <TableCell align="center">{insight.upated_item} days ago</TableCell>
+                <TableCell align="center">{insight.updated_item}{insight.updated_item === "N/A" ? "" : insight.updated_item === 1 || insight.updated_item === 0 ? " day ago" : " days ago"}</TableCell>
                 <TableCell align="center">{insight.stock_update}</TableCell>
                 <TableCell align="center">
                   {insight.stock_update_count}
                 </TableCell>
-                <TableCell align="center">{formatDate(insight.last_update_date)}</TableCell>
+                <TableCell align="center">{formatDate(insight.stock_update_date)}</TableCell>
               </TableRow>
             ))}
 

@@ -5,8 +5,7 @@ import { useLocation } from "react-router-dom"
 import Autocomplete from "@mui/material/Autocomplete"
 import TextField from "@mui/material/TextField"
 import Tag from "../components/Tag"
-import {
-  ShoppingBasket,ShoppingCart} from "@mui/icons-material"
+import { ShoppingBasket, ShoppingCart } from "@mui/icons-material"
 import {
   EditCalendar,
   Event,
@@ -21,95 +20,90 @@ import Empty from "../components/Empty"
 import VendorPlaceholder from "../components/placeholder/VendorPlaceholder"
 import HeaderPlaceholder from "../components/placeholder/HeaderPlaceholder"
 import { Grid } from "@mui/material"
+import { Box } from "@mui/system"
+import DateSelection from "../components/dashboard/DateSelection"
+import { useSelector } from "react-redux"
+import useCachedData from "../hooks/useData"
 
 const api_url = process.env.REACT_APP_API_URL
 
 const Vendors = () => {
   const [userVendors, setUserVendors] = useState("")
   const [currentVendor, setCurrentVendor] = useState("")
-  const [insights, setInsights] = useState("")
-  const [timeStats, setTimeStats] = useState()
-  const [orderTaken, setOrderTaken] = useState()
-  const [orderType, setOrderType] = useState()
   const [noData, setNoData] = useState(false)
+  const [loadData, setLoadData] = useState()
 
   const location = useLocation()
 
+  const state = useSelector((state) => state.app)
+  const { startDate, endDate } = state
+
   useEffect(() => {
-    const fetchData = () => {
-      axios
-        .get(`${api_url}/users/vendorsOfUser`, {
+    const fetchData = async() => {
+      try{
+        const response = await axios.get(`${api_url}/users/vendorsOfUser`, {
           headers: {
             Authorization: localStorage.getItem("token"),
-          },
+          },          
         })
-        .then((res) => {
-          setUserVendors(res.data)
-          setCurrentVendor(location.state ? location.state : res.data[0])
-        })
-        .catch((err) => {
-          if (
-            err.response && err.response.status === 400 &&
-            err.response.data.message.includes("No data found")
-          ) {
-            setNoData(true)
-          }
-        })
+
+        if(response.status === 200) {
+          setUserVendors(response.data)
+          setCurrentVendor(location.state ? location.state : response.data[0])
+        }
+
+        const cacheResponse = await axios.get(`${api_url}/checkCache`)
+        if(cacheResponse.status === 200) {
+          setLoadData(cacheResponse.data)
+        }
+      }
+      catch(error){
+        if (
+          error.response &&
+          error.response.status === 400 &&
+          error.response.data.message.includes("No data found")
+        ) {
+          setNoData(true)
+        }
+      }
     }
 
     fetchData()
   }, [])
 
-  useEffect(() => {
-    const fetchData = async() => {
-      if (!currentVendor._id) return
-      try{
-        const allInsightsResponse = await axios.get(`${api_url}/items/all_insights/${currentVendor._id}`, {
-          headers: {
-            Authorization: localStorage.getItem("token"),
-          },
-        })
-        setInsights(allInsightsResponse.data)
 
-        const timeStatsResponse = await axios
-        .get(`${api_url}/orders/timeStats/${currentVendor._id}`, {
-          headers: {
-            Authorization: localStorage.getItem("token"),
-          },
-        })
-        setTimeStats(timeStatsResponse.data)
+  const [insights] = useCachedData(
+    `/items/all_insights/${currentVendor._id}?startDate=${startDate.format(
+      "YYYY-MM-DD"
+    )}&endDate=${endDate.format("YYYY-MM-DD")}`,
+    [currentVendor, startDate, endDate],
+    loadData
+  )
+  const [timeStats] = useCachedData(
+    `/orders/timeStats/${currentVendor._id}?startDate=${startDate.format(
+      "YYYY-MM-DD"
+    )}&endDate=${endDate.format("YYYY-MM-DD")}`,
+    [currentVendor, startDate, endDate],
+    loadData
+  )
+  const [orderTaken] = useCachedData(
+    `/orders/orderTaken/${currentVendor._id}?startDate=${startDate.format(
+      "YYYY-MM-DD"
+    )}&endDate=${endDate.format("YYYY-MM-DD")}`,
+    [currentVendor, startDate, endDate],
+    loadData
+  )
+  const [orderType] = useCachedData(
+    `/items/countValues/${currentVendor._id}?startDate=${startDate.format(
+      "YYYY-MM-DD"
+    )}&endDate=${endDate.format("YYYY-MM-DD")}`,
+    [currentVendor, startDate, endDate],
+    loadData
+  )
 
-        const orderTakenResponse = await axios.get(
-          `${api_url}/orders/orderTaken/${currentVendor._id}`,
-          {
-            headers: {
-              Authorization: localStorage.getItem("token"),
-            },
-          }
-        )
-        setOrderTaken(orderTakenResponse.data)
-        
-        const orderTypeResponse = await axios
-        .get(`${api_url}/items/countValues/${currentVendor._id}`, {
-          headers: {
-            Authorization: localStorage.getItem("token"),
-          },
-        })
-        setOrderType(orderTypeResponse.data)
-
-      }
-      catch(err){
-        console.log(err)
-      }
-    }
-
-    fetchData()
-  }, [currentVendor])
-
-  const formateDecimal =(number, percent)=>{
-    if (typeof(number) === 'string')
-    return number
-    if (percent){
+  const formateDecimal = (number, percent) => {
+    if (typeof number === "string") return number
+    if (percent) {
       return number.toFixed(2) + "%"
     }
     return number.toFixed(2)
@@ -117,122 +111,161 @@ const Vendors = () => {
 
   if (noData) return <Empty />
 
-  if (!currentVendor) return <div></div>
-
   return (
     <Stack direction="column" alignItems="" spacing={2}>
-      {insights ? (
-        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-          <Typography variant="h4" gutterBottom>
-            Select vendor
-          </Typography>
-          <FormControl sx={{ minWidth: 120, width: "25%" }}>
-            <Autocomplete
-              fullWidth
-              options={userVendors}
-              onChange={(e, value) => setCurrentVendor(value)}
-              getOptionLabel={(option) => option["name"]["en"]}
-              disableClearable
-              defaultValue={currentVendor}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Vendors"
-                  size="small"
-                  fullWidth
-                  variant="outlined"
-                  clearIcon={null}
-                />
-              )}
-            />
-          </FormControl>
-        </div>
+      <Box marginTop={2} />
+      {currentVendor ? (
+        <Box
+          sx={{
+            display: "flex",
+            gap: {
+              sm: "1rem",
+              md: "0.7rem",
+              lg: "3rem",
+            },
+            flexDirection: {
+              sm: "column",
+              md: "column",
+              lg: "row",
+            },
+            alignItems: {
+              sm: "start",
+              md: "start",
+              lg: "center",
+            },
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "1rem",
+              flex: 1,
+            }}
+          >
+            <Typography variant="h4" gutterBottom>
+              Select vendor
+            </Typography>
+            <FormControl
+              sx={{
+                minWidth: 120,
+                width: {
+                  sm: "auto",
+                  md: "auto",
+                  lg: "50%",
+                },
+                bgcolor: "white",
+              }}
+            >
+              <Autocomplete
+                fullWidth
+                options={userVendors}
+                onChange={(e, value) => setCurrentVendor(value)}
+                getOptionLabel={(option) => option["name"]["en"]}
+                disableClearable
+                defaultValue={currentVendor}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Vendors"
+                    size="small"
+                    fullWidth
+                    variant="outlined"
+                    clearIcon={null}
+                  />
+                )}
+              />
+            </FormControl>
+          </div>
+          <DateSelection />
+        </Box>
       ) : (
         <HeaderPlaceholder />
       )}
 
-      {insights ?
-          <Grid
-            container
-            spacing={2}
-          >
-            <Grid item xl={3} lg={3} md={6} sm={6}>
+      {insights ? (
+        <Grid container spacing={2}>
+          <Grid item xl={3} lg={3} md={6} sm={6}>
             <Tag
               title="Total Orders"
-              count={insights.length === 0 ? null : insights[0]["total_orders"]}
+              count={insights["total_orders"]}
               icon={<ShoppingCart sx={{ fontSize: "3rem" }} />}
             />
-            </Grid>
-            <Grid item xl={3} lg={3} md={6} sm={6}>
+          </Grid>
+          <Grid item xl={3} lg={3} md={6} sm={6}>
             <Tag
               title="Cancelled Orders"
-              count={insights.length === 0 ? null : insights[0]["incompleted_orders"] }
+              count={insights["incompleted_orders"]}
               icon={<RemoveShoppingCart sx={{ fontSize: "3rem" }} />}
             />
-            </Grid>
-            <Grid item xl={3} lg={3} md={6} sm={6}>
+          </Grid>
+          <Grid item xl={3} lg={3} md={6} sm={6}>
             <Tag
               title="Total Price Loss"
-              count={insights.length === 0 ? null :formateDecimal(insights[0]["subtotal_loss"])}
+              count={formateDecimal(insights["subtotal_loss"])}
               icon={<MoneyOff sx={{ fontSize: "3rem" }} />}
             />
-            </Grid>
-            <Grid item xl={3} lg={3} md={6} sm={6}>
+          </Grid>
+          <Grid item xl={3} lg={3} md={6} sm={6}>
             <Tag
               title="Last Order"
               subtitle="days ago"
-              count={insights.length === 0 ? null : insights[0]["last_order"]}
+              count={insights["last_order"]}
               icon={<Event sx={{ fontSize: "3rem" }} />}
             />
-            </Grid>
-          </Grid> : <VendorPlaceholder />}
+          </Grid>
+        </Grid>
+      ) : (
+        <VendorPlaceholder />
+      )}
 
-           <OrderTaken
-           orderTaken={orderTaken}
-            timeStats={timeStats}
-            name={currentVendor["name"]["en"]}
-          />
+      <OrderTaken
+        orderTaken={orderTaken}
+        timeStats={timeStats}
+        name={currentVendor["name"] ? currentVendor["name"]["en"] : null}
+      />
 
       <Grid container spacing={2}>
-     <TimeStat timeStats={timeStats} />
-      <OrderType orderType={orderType} />
+        <TimeStat timeStats={timeStats} />
+        <OrderType orderType={orderType} />
       </Grid>
       {insights ? (
         <Grid container spacing={2}>
           <Grid item xl={3} lg={3} md={6} sm={6}>
-          <Tag
-            title="Total Items"
-            count={insights.length === 0 ? null :insights[0]["total_items"]}
-            icon={<ShoppingBasket sx={{ fontSize: "3rem" }} />}
-          />
+            <Tag
+              title="Total Items"
+              count={insights["total_items"]}
+              icon={<ShoppingBasket sx={{ fontSize: "3rem" }} />}
+            />
           </Grid>
           <Grid item xl={3} lg={3} md={6} sm={6}>
-          <Tag
-            title="Last Updated Item"
-            subtitle="days ago"
-            count={insights.length === 0 ? null :insights[0]["upated_item"]}
-            icon={<EditCalendar sx={{ fontSize: "3rem" }} />}
-          />
+            <Tag
+              title="Last Updated Item"
+              subtitle="days ago"
+              count={insights["updated_item"]}
+              icon={<EditCalendar sx={{ fontSize: "3rem" }} />}
+            />
           </Grid>
           <Grid item xl={3} lg={3} md={6} sm={6}>
-          <Tag
-            title="Stock Updates"
-            count={insights.length === 0 ? null :insights[0]["stock_update_count"]}
-            icon={<Inventory2 sx={{ fontSize: "3rem" }}
-             />}
-             subtitle="(Last 2 weeks)"
-          />
+            <Tag
+              title="Stock Updates"
+              count={insights["stock_update_count"]}
+              icon={<Inventory2 sx={{ fontSize: "3rem" }} />}
+              subtitle="(Last 2 weeks)"
+            />
           </Grid>
           <Grid item xl={3} lg={3} md={6} sm={6}>
-          <Tag
-            title="Items Update"
-            count={insights.length === 0 ? null : insights[0]["stock_update"]}
-            icon={<Inventory sx={{ fontSize: "3rem" }} />}
-            subtitle="(Last 2 weeks)"
-          />
+            <Tag
+              title="Items Update"
+              count={insights["stock_update"]}
+              icon={<Inventory sx={{ fontSize: "3rem" }} />}
+              subtitle="(Last 2 weeks)"
+            />
           </Grid>
         </Grid>
-      ) : <VendorPlaceholder />}
+      ) : (
+        <VendorPlaceholder />
+      )}
     </Stack>
   )
 }

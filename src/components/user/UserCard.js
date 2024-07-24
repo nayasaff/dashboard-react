@@ -9,8 +9,8 @@ import { Button, Chip, Collapse, List, ListItem, Stack, Typography } from "@mui/
 import { Delete, Edit } from "@mui/icons-material"
 import { ExpandMore as ExpandMoreIcon, ExpandLess } from "@mui/icons-material"
 import ExpandMore from "@mui/material/IconButton"
-import UserModal from "./UserModal"
-import DeleteModal from "./DeleteModal"
+import UserModal from "../modal/UserModal"
+import DeleteModal from "../modal/DeleteModal"
 import Box from "@mui/material/Box"
 
 const UserCard = ({ user }) => {

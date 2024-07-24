@@ -3,11 +3,12 @@ import { Box, Grid, Stack, Typography } from "@mui/material"
 import { Button } from "@mui/material"
 import UserCard from "../components/user/UserCard"
 import axios from "axios"
-import UserModal from "../components/user/UserModal"
+import UserModal from "../components/modal/UserModal"
 import { useDispatch, useSelector } from "react-redux"
 import { setUsers, setVendors } from "../redux/UserReducer"
 import { PersonAddAlt1 } from "@mui/icons-material"
 import { blue } from "@mui/material/colors"
+
 
 const api_url = process.env.REACT_APP_API_URL
 
@@ -52,10 +53,10 @@ const Admin = () => {
 
   return (
     <>
-      <Stack direction="row" spacing={2}>
+      <Stack direction="row" alignItems="center" spacing={2}>
         <Typography
           variant="h4"
-          sx={{ margin: "1rem 2rem", fontWeight: "550" }}
+          sx={{ margin: "1rem 2rem", fontWeight: "550"}}
         >
           Authorised Users
         </Typography>
@@ -71,9 +72,6 @@ const Admin = () => {
               sm: "12px",
             },
             whiteSpace: "nowrap",
-            maxHeight : {
-              sm: "35px"
-            }
           }}
           onClick={() => setOpenModal(true)}
         >
