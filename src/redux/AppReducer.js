@@ -10,7 +10,7 @@ import dayjs from "dayjs";
       startDate : dayjs('2022-01-01'),
       endDate : dayjs(),
       isAscending : false,
-      duration : "Yesterday"
+      duration : null
     },
     reducers : {
       setNumber : (state, action) => {

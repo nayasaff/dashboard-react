@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
@@ -6,18 +6,50 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker"
 import { useDispatch, useSelector } from "react-redux"
 import { setDuration, setStartDate, setEndDate } from "../../redux/AppReducer"
 import dayjs from "dayjs"
+import axios from "axios";
 
 
-const durations = ["Yesterday", "Last Week", "Last Month", "All Time"]
+
 
 const DateSelection = () => {
 
     const dispatch = useDispatch()
     const state = useSelector((state) => state.app)
 
+    const [dateRanges, setDateRanges] = useState()
 
-    const { startDate, endDate, duration } = state
+    const {duration,startDate, endDate } = state
 
+
+    useEffect(()=>{
+      axios.get(`${process.env.REACT_APP_API_URL}/items/date_range`)
+      .then((res) => {
+        const { data } = res
+        setDateRanges(data)
+        if(!duration){
+          dispatch(setDuration(data[data.length -1]))
+          dispatch(setStartDate(dayjs(data[data.length -1].start_date)))
+          dispatch(setEndDate(dayjs(data[data.length -1].end_date)))
+        }
+        
+      })
+    }, [])
+
+    const handleChange = (e) => {
+      const value = e.target.value
+      const parsedDate = JSON.parse(value)
+
+      dispatch(setStartDate(dayjs( parsedDate.start_date )))
+      dispatch(setEndDate(dayjs( parsedDate.end_date ) ))
+      dispatch(setDuration(parsedDate))
+    }
+
+    console.log(duration)
+
+    if(!dateRanges){
+      return <div></div>
+    }
+    
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Box sx={{display : "flex", justifyContent : {
@@ -25,7 +57,7 @@ const DateSelection = () => {
           md : "start",
           lg : "end"
         }, gap : "1rem"}}>
-            {/* <FormControl sx={{ minWidth: 150 }} size="small">
+            <FormControl sx={{ minWidth: 150 }} size="small">
               <InputLabel id="demo-select-small-label">Duration</InputLabel>
               <Select
                 labelId="demo-select-small-label"
@@ -33,15 +65,15 @@ const DateSelection = () => {
                 label="Sort By"
                 size="small"
                 sx={{ bgcolor: "white" }}
-                defaultValue={duration}
-                value={duration}
-                onChange={(e) => dispatch(setDuration(e.target.value))}
+                value={JSON.stringify(duration)}
+                getOptionLabel={(option) => option.name}
+                onChange={(e) => handleChange(e)}
               >
-               {durations.map((date) =>
-                <MenuItem value={date}>{date}</MenuItem> 
+               {dateRanges.map((date, index) =>
+                <MenuItem key={index} value={JSON.stringify(date)}>{date.name}</MenuItem> 
                  )}
               </Select>
-            </FormControl> */}
+            </FormControl>
             {/*Start date*/}
             <DatePicker
               label="Start Date"
