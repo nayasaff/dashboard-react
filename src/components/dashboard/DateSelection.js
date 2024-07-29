@@ -9,8 +9,6 @@ import dayjs from "dayjs"
 import axios from "axios";
 
 
-
-
 const DateSelection = () => {
 
     const dispatch = useDispatch()
@@ -44,7 +42,7 @@ const DateSelection = () => {
       dispatch(setDuration(parsedDate))
     }
 
-    console.log(duration)
+
 
     if(!dateRanges){
       return <div></div>
