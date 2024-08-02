@@ -107,7 +107,7 @@ const TableComponent = ({ insights, filteredValue, setFilteredValue, isLoading }
   }
 
 
-  console.log(insights)
+
 
   const filteredInsights = React.useMemo(() => {
     return insights.filter((insight) =>

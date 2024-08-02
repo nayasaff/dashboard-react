@@ -1,5 +1,5 @@
 import { Box, Stack } from "@mui/material"
-import React, { useEffect, useState } from "react"
+import React from "react"
 import Plot from "react-plotly.js"
 import { useSelector } from "react-redux"
 import { grey } from "@mui/material/colors"
@@ -7,7 +7,6 @@ import TagPlaceholder from "../placeholder/TagPlaceholder"
 import { People, ShoppingCart } from "@mui/icons-material"
 import Tag from "../Tag"
 import { randomColor, sliceArray } from "../../utils/utils"
-import axios from "axios"
 
 const IncompletedOrders = ({ insightsLength, cancelledOrders, totalOrders }) => {
 

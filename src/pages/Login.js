@@ -70,7 +70,7 @@ const Login = () => {
         setShowError(false)
         try{
            const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, {username, password})
-           console.log(response)
+
            if(response.status === 200){
             //if response is success then save token in local storage
             localStorage.setItem('token', response.data.token)

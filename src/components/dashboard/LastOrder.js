@@ -22,7 +22,7 @@ const LastOrder = ({lastOrders, lastUpdatedItems}) => {
         let month = String(dayBefore.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
         let day = String(dayBefore.getDate()).padStart(2, '0');
         dayBefore = `${year}-${month}-${day}`;
-        console.log([dayBefore, unique[0]])
+
         return [dayBefore, unique[0]]
     }
     return false
