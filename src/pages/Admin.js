@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react"
-import { Box, Grid, Stack, Typography } from "@mui/material"
-import { Button } from "@mui/material"
 import UserCard from "../components/user/UserCard"
 import axios from "axios"
 import UserModal from "../components/modal/UserModal"
 import { useDispatch, useSelector } from "react-redux"
 import { setUsers, setVendors } from "../redux/UserReducer"
-import { PersonAddAlt1 } from "@mui/icons-material"
-import { blue } from "@mui/material/colors"
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import PersonAddAlt1 from "@mui/icons-material/PersonAddAlt1";
+import blue from "@mui/material/colors/blue";
+
 
 
 const api_url = process.env.REACT_APP_API_URL

@@ -1,7 +1,10 @@
-import { Box, Card, CardContent, Typography } from "@mui/material"
+import Box from "@mui/material/Box"
+import Card from "@mui/material/Card"
+import CardContent from "@mui/material/CardContent"
+import Typography from "@mui/material/Typography"
+import Stack from "@mui/material/Stack"
+import grey  from "@mui/material/colors/grey"
 import React from "react"
-import { grey } from "@mui/material/colors"
-import { Stack } from "@mui/material"
 
 
 

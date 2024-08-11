@@ -1,7 +1,7 @@
 import React from "react"
 import Snackbar from "@mui/material/Snackbar"
-import { Box } from "@mui/material"
-import { IconButton } from "@mui/material"
+import Box from "@mui/material/Box"
+import IconButton from "@mui/material/IconButton"
 import CloseIcon from "@mui/icons-material/Close"
 import SnackbarContent from '@mui/material/SnackbarContent';
 

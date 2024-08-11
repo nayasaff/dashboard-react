@@ -4,17 +4,16 @@ import { styled, css } from "@mui/system"
 import Fade from "@mui/material/Fade"
 import TextField from "@mui/material/TextField"
 import Box from "@mui/material/Box"
-import {
-  Typography,
-  Stack,
-  Button as MuiButton,
-  Autocomplete,
-} from "@mui/material"
+import Stack from "@mui/material/Stack"
+import MuiButton from "@mui/material/Button"
+import Autocomplete from "@mui/material/Autocomplete"
 import Chip from "@mui/material/Chip"
+import Typography from "@mui/material/Typography"
 import axios from "axios"
 import { addUser, updateUser } from "../../redux/UserReducer"
 import { useDispatch, useSelector } from "react-redux"
-import { MenuItem, Select } from "@mui/material"
+import MenuItem from "@mui/material/MenuItem"
+import Select from "@mui/material/Select"
 import AppSnackbar from "../snackbar/AppSnackbar"
 import FormHelperText from '@mui/material/FormHelperText';
 import { useNavigate } from "react-router-dom"

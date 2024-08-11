@@ -1,11 +1,11 @@
 import React from "react"
 import Plot from "react-plotly.js"
-import { Box } from "@mui/material"
-import { grey } from "@mui/material/colors"
+import Box from "@mui/material/Box"
+import grey from "@mui/material/colors/grey"
 import GraphPlaceholder from "../placeholder/GraphPlaceholder"
 import { randomColor, sliceArray } from "../../utils/utils"
 import { useSelector } from "react-redux"
-import { Grid } from "@mui/material"
+import Grid from "@mui/material/Grid"
 
 const LastOrder = ({lastOrders, lastUpdatedItems}) => {
 

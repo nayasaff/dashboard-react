@@ -1,6 +1,8 @@
 import React from "react"
 import AppContainer from "../components/AppContainer"
-import { Container, Typography, TextField } from "@mui/material"
+import Container from "@mui/material/Container"
+import Typography from "@mui/material/Typography"
+import TextField from "@mui/material/TextField"
 
 const Edit = () => {
   return (

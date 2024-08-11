@@ -1,8 +1,9 @@
 import React from "react"
-import { Box, Grid } from "@mui/material"
+import Box from "@mui/material/Box"
+import Grid from "@mui/material/Grid"
 import Plot from "react-plotly.js"
 import { useSelector } from "react-redux"
-import { grey } from "@mui/material/colors"
+import grey from "@mui/material/colors/grey"
 import GraphPlaceholder from "../placeholder/GraphPlaceholder"
 import { randomColor, sliceArray } from "../../utils/utils"
 

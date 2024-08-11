@@ -1,7 +1,8 @@
 import React from "react"
-import { Box, Typography } from "@mui/material"
+import Box from "@mui/material/Box"
+import Typography from "@mui/material/Typography"
+import blue from "@mui/material/colors/blue"
 import Button from "@mui/material/Button"
-import { blue } from "@mui/material/colors"
 import { useNavigate } from "react-router-dom"
 
 export default function Error() {

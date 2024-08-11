@@ -1,10 +1,15 @@
 import React from "react"
 import Plot from "react-plotly.js"
-import { Box, Typography, Grid } from "@mui/material"
-import { grey } from "@mui/material/colors"
-import { TableContainer, Table } from "@mui/material"
-import { TableHead, TableBody } from "@mui/material"
-import { TableRow, Paper } from "@mui/material"
+import Box from "@mui/material/Box"
+import Typography from "@mui/material/Typography"
+import Grid from "@mui/material/Grid"
+import grey from "@mui/material/colors/grey";
+import TableContainer from "@mui/material/TableContainer";
+import Table from "@mui/material/Table";
+import TableHead from "@mui/material/TableHead";
+import TableBody from "@mui/material/TableBody";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles"
 import TableCell, { tableCellClasses } from "@mui/material/TableCell"
 import GraphPlaceholder from "../placeholder/GraphPlaceholder"

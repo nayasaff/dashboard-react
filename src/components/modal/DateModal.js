@@ -1,14 +1,20 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { Modal as BaseModal } from "@mui/base/Modal"
 import { styled, css } from "@mui/system"
 import Fade from "@mui/material/Fade"
 import TextField from "@mui/material/TextField"
 import Box from "@mui/material/Box"
-import { Typography, Stack, Button as MuiButton } from "@mui/material"
-import { MenuItem, Select } from "@mui/material"
-import { red, blue } from "@mui/material/colors"
-import { FormControl, InputLabel } from "@mui/material"
-import { DoDisturbOn } from "@mui/icons-material"
+import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
+import MuiButton from "@mui/material/Button";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import red from "@mui/material/colors/red";
+import blue from "@mui/material/colors/blue";
+import FormControl from "@mui/material/FormControl"
+import InputLabel from "@mui/material/InputLabel"
+import DoDisturbOn from "@mui/icons-material/DoDisturbOn"
+
 
 const DateModal = ({ openModal, setOpenModal }) => {
   const [dateRange, setDateRange] = useState(localStorage.getItem("durations") ? JSON.parse(localStorage.getItem("durations")) : ["1 Day", "1 Week", "1 Month", "3 Months", "6 Months", "1 Year"] )

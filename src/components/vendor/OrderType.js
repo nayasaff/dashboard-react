@@ -1,7 +1,8 @@
 import React from "react"
-import {  Box, Grid } from "@mui/material"
 import Plot from "react-plotly.js"
-import { grey } from "@mui/material/colors"
+import Grid from "@mui/material/Grid"
+import Box from "@mui/material/Box"
+import grey from "@mui/material/colors/grey"
 import GraphPlaceholder from "../placeholder/GraphPlaceholder"
 
 const OrderType = ({ orderType }) => {

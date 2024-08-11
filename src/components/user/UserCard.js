@@ -1,13 +1,22 @@
 import React, { useState } from "react"
-import { red, blue } from "@mui/material/colors"
+import red from "@mui/material/colors/red"
+import blue from "@mui/material/colors/blue"
 import Card from "@mui/material/Card"
 import CardHeader from "@mui/material/CardHeader"
 import CardContent from "@mui/material/CardContent"
 import CardActions from "@mui/material/CardActions"
 import Avatar from "@mui/material/Avatar"
-import { Button, Chip, Collapse, List, ListItem, Stack, Typography } from "@mui/material"
-import { Delete, Edit } from "@mui/icons-material"
-import { ExpandMore as ExpandMoreIcon, ExpandLess } from "@mui/icons-material"
+import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
+import Collapse from "@mui/material/Collapse";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import Delete from "@mui/icons-material/Delete";
+import Edit from "@mui/icons-material/Edit";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/material/IconButton"
 import UserModal from "../modal/UserModal"
 import DeleteModal from "../modal/DeleteModal"

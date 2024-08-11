@@ -1,7 +1,8 @@
 import React from "react"
 import Plot from "react-plotly.js"
-import { Grid, Box } from "@mui/material"
-import { grey } from "@mui/material/colors"
+import Grid from "@mui/material/Grid"
+import Box from "@mui/material/Box"
+import grey from "@mui/material/colors/grey"
 import GraphPlaceholder from "../placeholder/GraphPlaceholder"
 
 const OrderTaken = ({ orderTaken, timeStats, name }) => {

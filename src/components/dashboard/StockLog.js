@@ -2,8 +2,9 @@ import React from "react"
 import Plot from "react-plotly.js"
 import { useSelector } from "react-redux"
 import { randomColor, sliceArray } from "../../utils/utils"
-import { Grid, Box } from "@mui/material"
-import { grey } from "@mui/material/colors"
+import Box from "@mui/material/Box"
+import Grid from "@mui/material/Grid"
+import grey from "@mui/material/colors/grey"
 import GraphPlaceholder from "../placeholder/GraphPlaceholder"
 
 const StockLog = ({ stockLog, stockLogCount }) => {

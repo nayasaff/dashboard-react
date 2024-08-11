@@ -1,26 +1,28 @@
 import axios from "axios"
 import React, { useEffect, useState } from "react"
-import { FormControl, Typography, Stack } from "@mui/material"
+import FormControl from "@mui/material/FormControl"
+import Typography from "@mui/material/Typography"
+import Stack from "@mui/material/Stack"
 import { useLocation } from "react-router-dom"
 import Autocomplete from "@mui/material/Autocomplete"
 import TextField from "@mui/material/TextField"
 import Tag from "../components/Tag"
-import { ShoppingBasket, ShoppingCart } from "@mui/icons-material"
-import {
-  EditCalendar,
-  Event,
-  MoneyOff,
-  RemoveShoppingCart,
-} from "@mui/icons-material"
-import { Inventory2, Inventory } from "@mui/icons-material"
+import ShoppingBasket from "@mui/icons-material/ShoppingBasket";
+import ShoppingCart from "@mui/icons-material/ShoppingCart";
+import EditCalendar from "@mui/icons-material/EditCalendar";
+import Event from "@mui/icons-material/Event";
+import MoneyOff from "@mui/icons-material/MoneyOff";
+import RemoveShoppingCart from "@mui/icons-material/RemoveShoppingCart";
+import Inventory2 from "@mui/icons-material/Inventory2";
+import Inventory from "@mui/icons-material/Inventory";
 import { TimeStat } from "../components/vendor/TimeStat"
 import OrderType from "../components/vendor/OrderType"
 import OrderTaken from "../components/vendor/OrderTaken"
 import Empty from "../components/Empty"
 import VendorPlaceholder from "../components/placeholder/VendorPlaceholder"
 import HeaderPlaceholder from "../components/placeholder/HeaderPlaceholder"
-import { Grid } from "@mui/material"
-import { Box } from "@mui/system"
+import Grid from "@mui/material/Grid"
+import Box from "@mui/system/Box"
 import DateSelection from "../components/dashboard/DateSelection"
 import { useSelector } from "react-redux"
 import useCachedData from "../hooks/useData"

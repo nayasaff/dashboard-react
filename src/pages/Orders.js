@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from "react"
 import IncompletedOrders from "../components/dashboard/IncompletedOrders"
 import TimeTaken from "../components/dashboard/TimeTaken"
-import { Box, Stack } from "@mui/material"
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography"
 import InputLabel from "@mui/material/InputLabel"
-import { FormControl, Select, MenuItem } from "@mui/material"
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 import { useDispatch, useSelector } from "react-redux"
 import { setIsAscending } from "../redux/AppReducer"
 import { setNumber } from "../redux/AppReducer"
 import Slider from "@mui/material/Slider"
 import { styled } from "@mui/material/styles"
-import axios from "axios"
 import TableComponent from "../components/dashboard/TableComponent"
 import LastOrder from "../components/dashboard/LastOrder"
 import HeaderPlaceholder from "../components/placeholder/HeaderPlaceholder"
 import Empty from "../components/Empty"
-import { useNavigate } from "react-router-dom"
 import StockLog from "../components/dashboard/StockLog"
 import DateSelection from "../components/dashboard/DateSelection"
 import useCachedData from "../hooks/useData"

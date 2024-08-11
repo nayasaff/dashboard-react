@@ -5,7 +5,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { red } from '@mui/material/colors';
+import red from '@mui/material/colors/red';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { deleteUser } from '../../redux/UserReducer';
