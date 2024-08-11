@@ -64,7 +64,7 @@ const Orders = () => {
     loadData
   )
 
-  console.log(responseTime)
+
   const [deliveryTime] = useCachedData(
     `/orders/deliveryTime?isAscending=${isAscending}&startDate=${startDate.format(
       "YYYY-MM-DD"
