@@ -1,0 +1,6 @@
+[
+  {
+    "name": "web",
+    "imageUri": "092620891884.dkr.ecr.us-east-1.amazonaws.com/react-web:latest"
+  }
+]

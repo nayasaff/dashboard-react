@@ -1,0 +1,26 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 092620891884.dkr.ecr.us-east-1.amazonaws.com
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker build -t react-web .
+      - docker tag react-web:latest 092620891884.dkr.ecr.us-east-1.amazonaws.com/react-web:latest
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker image...
+      - docker push 092620891884.dkr.ecr.us-east-1.amazonaws.com/react-web:latest
+      
+      # ---> ADD THIS SECTION TO GENERATE THE REQUIRED FILE <---
+      - echo Writing image definitions file...
+      - printf '[{"name":"web","imageUri":"092620891884.dkr.ecr.us-east-1.amazonaws.com/react-web:latest"}]' > imagedefinitions.json
+
+artifacts:
+  files:
+    - imagedefinitions.json
