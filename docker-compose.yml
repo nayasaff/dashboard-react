@@ -6,3 +6,6 @@ services:
       - "3000:3000"
     env_file:
       - .env
+    volumes:
+      - .:/app                 # Mounts your local folder into /app in the container
+      - /app/node_modules      # Protects container's node_modules from being overwritten by local host
